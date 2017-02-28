@@ -2,6 +2,7 @@
 buildscript {
 
     ext.kotlin_version = '1.0.6'
+    ext.dokka_version = '0.9.13'
 
     repositories {
         mavenCentral()
@@ -11,6 +12,9 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // https://github.com/Kotlin/dokka/blob/master/README.md
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
     }
 }
 
@@ -28,6 +32,7 @@ allprojects {
 subprojects {
 
     apply plugin: "kotlin"
+    apply plugin: 'org.jetbrains.dokka'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -40,6 +45,40 @@ subprojects {
         testCompile 'org.testng:testng:6.10'
         testCompile 'com.natpryce:hamkrest:1.3.0.0'
     }
+
+
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    // FIXME automatically execute dokka task on package
+    dokka {
+//        moduleName = 'data'
+        outputFormat = 'javadoc'
+//        outputDirectory = "$buildDir/javadoc"
+//        processConfigurations = ['compile', 'extra']
+//        includes = ['packages.md', 'extra.md']
+//        samples = ['samples/basic.kt', 'samples/advanced.kt']
+//        linkMapping {
+//            dir = "src/main/kotlin"
+//            url = "https://github.com/cy6erGn0m/vertx3-lang-kotlin/blob/master/src/main/kotlin"
+//            suffix = "#L"
+//        }
+//        sourceDirs = files('src/main/kotlin')
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
 }
 
 project(':swing') {
