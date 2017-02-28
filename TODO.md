@@ -15,6 +15,7 @@
     * travis build
     * jacoco, codecov
     * versioneye
+* dokka generates nasty warnings in build console: `Can't find node by signature com.github.christophpickl.kpotpourri.common$toPrettyString(kotlin.collections.List((kotlin.Any)))`
 
 ## Low
 

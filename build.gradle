@@ -40,6 +40,8 @@ subprojects { subproject ->
 
     apply plugin: "kotlin"
     apply plugin: 'org.jetbrains.dokka'
+//    apply plugin: 'maven'
+//    apply plugin: 'signing'
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
@@ -57,27 +59,20 @@ subprojects { subproject ->
     }
 
     test {
-        useTestNG() {
-            // https://docs.gradle.org/current/groovydoc/org/gradle/api/tasks/testing/testng/TestNGOptions.html
-            excludeGroups 'uiTest', 'mTest'
+        useTestNG()
 
-            //parallel = 'classes'
-            //threadCount = 1 // !!!! only increase thread count for real unit tests (will break HSQLDB enabled tests!!!)
-        }
-
-//        include 'com/github/christophpickl/kpotpourri/**'
         scanForTestClasses true
         reports {
             junitXml.enabled = true
             html.enabled = true
         }
 
-        beforeTest { desc ->
-            print "[KPOT] ${desc.className.substring("com.github.christophpickl.kpotpourri..".length())}: ${desc.name.replace("_", " ")}"
-        }
-        afterTest { desc, result ->
-            println " -> ${result.resultType}"
-        }
+//        beforeTest { desc ->
+//            print "[KPOT] ${desc.className.substring("com.github.christophpickl.kpotpourri..".length())}: ${desc.name.replace("_", " ")}"
+//        }
+//        afterTest { desc, result ->
+//            println " -> ${result.resultType}"
+//        }
     }
 
     jar {
@@ -86,20 +81,6 @@ subprojects { subproject ->
                     'Implementation-Vendor': 'Christoph Pickl',
                     'Implementation-Version': version
         }
-    }
-
-
-    // FIXME automatically execute dokka task on package
-    dokka {
-//        moduleName = 'data'
-//        processConfigurations = ['compile', 'extra']
-//        includes = ['packages.md', 'extra.md']
-//        samples = ['samples/basic.kt', 'samples/advanced.kt']
-//        linkMapping {
-//            dir = "src/main/kotlin"
-//            url = "https://github.com/cy6erGn0m/vertx3-lang-kotlin/blob/master/src/main/kotlin"
-//            suffix = "#L"
-//        }
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {
@@ -134,5 +115,25 @@ subprojects { subproject ->
         archives testJar
     }
 
+//    signing {
+//        required { hasProperty("sign") || gradle.taskGraph.hasTask("uploadArchives") }
+//        sign configurations.archives
+//    }
+
+//    task ossrhAuthentication << {
+//        if (!(project.hasProperty('ossrh.username') && project.hasProperty('ossrh.password'))) {
+//            throw new InvalidUserDataException("no OSSRH username and/or password!")
+//        }
+//    }
+
+//    uploadArchives {
+//        dependsOn ossrhAuthentication
+//    https://github.com/npryce/hamkrest/blob/master/build.gradle
+
+//    task wrapper(type: Wrapper) {
+//        gradleVersion = '2.14'
+//        distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+//    }
 }
+
 
