@@ -1,4 +1,4 @@
-package com.github.christophpickl.kotlin_potpourri
+package com.github.christophpickl.kpotpourri.common
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo

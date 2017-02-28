@@ -1,4 +1,4 @@
-package com.github.christophpickl.kotlin_potpourri
+package com.github.christophpickl.kpotpourri.common
 
 
 fun List<Any>.toPrettyString() = map { "- ${it.toString()}" }.joinToString("\n")

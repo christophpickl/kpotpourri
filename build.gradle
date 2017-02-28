@@ -1,5 +1,8 @@
+
 buildscript {
+
     ext.kotlin_version = '1.0.6'
+
     repositories {
         mavenCentral()
         maven {
@@ -11,21 +14,36 @@ buildscript {
     }
 }
 
-repositories {
-    jcenter()
-    mavenCentral()
+allprojects {
+    group = 'com.github.christophpickl.kpotpourri'
+    version = '1.0-SNAPSHOT'
+
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
 }
 
-apply plugin: "kotlin"
+subprojects {
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+    apply plugin: "kotlin"
 
-dependencies {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    // compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    testCompile 'org.testng:testng:6.10'
-    testCompile 'com.natpryce:hamkrest:1.3.0.0'
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        // compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+        testCompile 'org.testng:testng:6.10'
+        testCompile 'com.natpryce:hamkrest:1.3.0.0'
+    }
+}
+
+project(':swing') {
+    dependencies {
+        compile project(':common')
+    }
 }
