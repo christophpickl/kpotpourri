@@ -6,6 +6,7 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -15,18 +16,24 @@ buildscript {
 
         // https://github.com/Kotlin/dokka/blob/master/README.md
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
+
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
+apply plugin: 'com.jfrog.bintray'
+
 allprojects {
     group = 'com.github.christophpickl.kpotpourri'
-    version = '1.0-SNAPSHOT'
-
+    version = '1.0'
 
     repositories {
         jcenter()
         mavenCentral()
     }
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java'
 }
 
 subprojects {
@@ -84,5 +91,79 @@ subprojects {
 project(':swing') {
     dependencies {
         compile project(':common')
+    }
+}
+
+
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '2.4'
+//}
+
+
+
+// plugin howto:
+//   https://github.com/bintray/gradle-bintray-plugin
+// how to ReSTful upload:
+//   https://bintray.com/docs/api/#_upload_content
+// $ ./gradlew bintrayUpload
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    configurations = ['archives']
+    publications = ['MyPublication']
+    pkg {
+        repo = 'cpickl'
+        name = 'kpotpourri'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/christophpickl/kpotpourri.git'
+//        labels = ['gear', 'gore', 'gorilla']
+        publicDownloadNumbers = true
+//        attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
+        version {
+            name = '1.0'
+            desc = 'KPotpourri'
+            released = new Date()
+//            vcsTag = '1.0'
+//            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
+    }
+}
+
+def pomConfig = {
+//    licenses {
+//        license {
+//            name "The Apache Software License, Version 2.0"
+//            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+//            distribution "repo"
+//        }
+//    }
+    developers {
+        developer {
+            id "cpickl"
+            name "Christoph Pickl"
+            email "christoph.pickl@gmail.com"
+        }
+    }
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            // TODO this does not work :-(
+//            artifact sourcesJar
+//            artifact javadocJar
+            groupId 'com.github.christophpickl.kpotpourri'
+            artifactId 'kpotpourri'
+            version '1.0'
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Some common extensions to kotlin which i am desperately missing')
+                root.appendNode('name', 'kpotpourri')
+                root.appendNode('url', 'https://github.com/christophpickl/kpotpourri/')
+                root.children().last() + pomConfig
+            }
+        }
     }
 }
