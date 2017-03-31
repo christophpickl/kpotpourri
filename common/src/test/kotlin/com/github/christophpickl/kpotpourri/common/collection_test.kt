@@ -22,3 +22,23 @@ import org.testng.annotations.Test
     }
 
 }
+
+
+@Test class ArrayExtensionsTest {
+
+    fun `toPrettyString given empty array should return empty string`() {
+        assertThat(arrayOf<String>().toPrettyString(),
+                equalTo(""))
+    }
+
+    fun `toPrettyString given single element should return single line`() {
+        assertThat(arrayOf("a").toPrettyString(),
+                equalTo("- a"))
+    }
+
+    fun `toPrettyString given two elements should return two lines`() {
+        assertThat(arrayOf("a", "b").toPrettyString(),
+                equalTo("- a\n- b"))
+    }
+
+}
