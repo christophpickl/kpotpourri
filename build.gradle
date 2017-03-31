@@ -1,9 +1,11 @@
 
-// version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
-// println "building version ${version}"
+// $ ./gradlew bintrayUpload
+
 
 buildscript {
 
+    // version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
+    ext.myVersion = '1.1'
     ext.kotlin_version = '1.1.1'
     ext.dokka_version = '0.9.13'
 
@@ -24,9 +26,10 @@ buildscript {
     }
 }
 
+println "[KPOT] Building version: ${myVersion}"
+println "[KPOT] -D BINTRAY_USER=${System.getenv('BINTRAY_USER')}"
 
 group = 'com.github.christophpickl.kpotpourri'
-myVersion = '1.1'
 version = myVersion
 
 allprojects {
@@ -156,18 +159,11 @@ subprojects { subproject ->
 //        dependsOn ossrhAuthentication
 //    https://github.com/npryce/hamkrest/blob/master/build.gradle
 
-//    task wrapper(type: Wrapper) {
-//        gradleVersion = '2.14'
-//        distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
-//    }
-
 
 // plugin howto:
 //   https://github.com/bintray/gradle-bintray-plugin
 // how to ReSTful upload:
 //   https://bintray.com/docs/api/#_upload_content
-// $ ./gradlew bintrayUpload
-
 
     def pomConfig = {
 //    licenses {
