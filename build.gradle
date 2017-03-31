@@ -26,11 +26,12 @@ buildscript {
 
 
 group = 'com.github.christophpickl.kpotpourri'
-version = '1.0'
+myVersion = '1.0'
+version = myVersion
 
 allprojects {
     group = 'com.github.christophpickl.kpotpourri'
-    version = '1.0'
+    version = myVersion
     repositories {
         jcenter()
         mavenCentral()
@@ -88,7 +89,7 @@ subprojects { subproject ->
         manifest {
             attributes 'Implementation-Title': 'kpotpourri - ${subproject.name}',
                     'Implementation-Vendor': 'Christoph Pickl',
-                    'Implementation-Version': version
+                    'Implementation-Version': myVersion
         }
     }
 
@@ -194,7 +195,7 @@ subprojects { subproject ->
             artifact javadocJar
                 groupId 'com.github.christophpickl.kpotpourri'
                 artifactId subproject.name
-                version '1.0'
+                version myVersion
                 pom.withXml {
                     def root = asNode()
                     root.appendNode('description', 'Some common extensions to kotlin which i am desperately missing')
@@ -227,7 +228,7 @@ subprojects { subproject ->
             publicDownloadNumbers = true
 //        attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
             version {
-                name = '1.0'
+                name = myVersion
                 desc = 'KPotpourri'
                 released = new Date()
                 vcsTag = 'tags/1.0'
@@ -237,8 +238,6 @@ subprojects { subproject ->
     }
 
 }
-
-
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
