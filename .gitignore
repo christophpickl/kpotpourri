@@ -3,3 +3,5 @@
 /common/build/
 /swing/build/
 /gradle/
+/.gradle/**
+
