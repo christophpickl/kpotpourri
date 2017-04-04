@@ -58,7 +58,7 @@ checkLastCommand
 echo
 myEcho "Verifying release build (TODOs, test)"
 myEcho "------------------------------------"
-./gradlew check checkTodo test ${NEXT_VERSION_SYSPROPERTY}
+./gradlew clean check checkTodo test ${NEXT_VERSION_SYSPROPERTY}
 checkLastCommand
 
 myEcho "Local changes"
