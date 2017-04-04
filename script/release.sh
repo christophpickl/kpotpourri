@@ -28,6 +28,7 @@ MAJOR_VERSION=$(echo ${version}| cut -d "." -f 1)
 CURRENT_MINOR_VERSION=$(echo ${version}| cut -d "." -f 2)
 NEXT_MINOR_VERSION=$(($CURRENT_MINOR_VERSION + 1))
 NEXT_VERSION="$MAJOR_VERSION.$NEXT_MINOR_VERSION"
+NEXT_VERSION_SYSPROPERTY="-Dkpotpourri.version=${NEXT_VERSION}"
 
 myEcho "Release Summary:"
 myEcho "------------------------------------"
@@ -57,7 +58,7 @@ checkLastCommand
 echo
 myEcho "Verifying release build (TODOs, test)"
 myEcho "------------------------------------"
-./gradlew check checkTodo test
+./gradlew check checkTodo test ${NEXT_VERSION_SYSPROPERTY}
 checkLastCommand
 
 myEcho "Local changes"
@@ -70,10 +71,9 @@ checkLastCommand
 git tag ${NEXT_VERSION}
 checkLastCommand
 
-
 myEcho "Uploading to bintray"
 myEcho "------------------------------------"
-./gradlew bintrayUpload -Dkpotpourri.version=${NEXT_VERSION}
+./gradlew bintrayUpload ${NEXT_VERSION_SYSPROPERTY}
 
 myEcho "Pushing to GIT"
 myEcho "------------------------------------"
