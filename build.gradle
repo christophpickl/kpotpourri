@@ -3,9 +3,8 @@
 
 
 buildscript {
-
-    // version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
-    ext.myVersion = '1.1'
+    // version()
+    ext.myVersion = System.getProperty("kpotpourri.version", "SNAPSHOT")
     ext.kotlin_version = '1.1.1'
     ext.dokka_version = '0.9.13'
 
@@ -23,6 +22,7 @@ buildscript {
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
 
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.autoscout24.gradle:gradle-todo-plugin:1.0'
     }
 }
 
@@ -52,7 +52,7 @@ subprojects { subproject ->
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
-
+    apply plugin: 'com.autoscout24.gradle.todo'
 //    apply plugin: 'maven'
 //    apply plugin: 'signing'
 
@@ -87,6 +87,14 @@ subprojects { subproject ->
 //            println " -> ${result.resultType}"
 //        }
     }
+
+    todo {
+        todoPattern = "//[\\t\\s]*(FIXME|TODO) (.*)"
+        failIfFound = true
+        sourceFolder = "${subproject.name}/src" // in order to look into main and test folders
+        fileExtensions = ["kt"]
+    }
+
 
     jar {
         manifest {
@@ -212,7 +220,7 @@ subprojects { subproject ->
     publications = ['MyPublication']
 
 //        dryRun = false //Whether to run this as dry-run, without deploying
-//        publish = true //If version should be auto published after an upload
+        publish = true //If version should be auto published after an upload
 
         pkg {
             repo = 'cpickl'
@@ -223,11 +231,14 @@ subprojects { subproject ->
 //        labels = ['gear', 'gore', 'gorilla']
             publicDownloadNumbers = true
 //        attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
+            githubRepo = 'christophpickl/kpotpourri' //Optional Github repository
+            githubReleaseNotesFile = 'README.md' //Optional Github readme file
+
             version {
                 name = myVersion
-                desc = 'KPotpourri'
+                desc = "KPotpourri"
                 released = new Date()
-                vcsTag = 'tags/1.0'
+                vcsTag = "tags/$myVersion"
                 attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
             }
         }
