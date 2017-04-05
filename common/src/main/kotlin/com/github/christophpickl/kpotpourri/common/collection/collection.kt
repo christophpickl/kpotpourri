@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.common
+package com.github.christophpickl.kpotpourri.common.collection
 
 
 fun List<Any>.toPrettyString(prefix: String = "- ") = map { listItem -> "$prefix$listItem" }.joinToString("\n")

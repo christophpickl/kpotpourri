@@ -1,4 +1,10 @@
 
+# Konkurrenzanalyse
+
+* https://github.com/MarioAriasC/KotlinPrimavera/wiki
+    * KotlinPrimavera is a set of Kotlin libraries to support Spring portfolio projects
+* asdf
+
 # TODOs
 
 ## High

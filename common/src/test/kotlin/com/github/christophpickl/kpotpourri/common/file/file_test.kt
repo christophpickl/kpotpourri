@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.common
+package com.github.christophpickl.kpotpourri.common.file
 
 import org.testng.annotations.Test
 

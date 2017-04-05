@@ -1,5 +1,6 @@
-package com.github.christophpickl.kpotpourri.common
+package com.github.christophpickl.kpotpourri.common.collection
 
+import com.github.christophpickl.kpotpourri.common.collection.toPrettyString
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test

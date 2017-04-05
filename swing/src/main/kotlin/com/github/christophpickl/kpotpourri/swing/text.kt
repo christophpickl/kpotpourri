@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.swing
 
-import com.github.christophpickl.kpotpourri.common.prettyPrint
+import com.github.christophpickl.kpotpourri.common.collection.prettyPrint
 import java.awt.Component
 import java.awt.Font
 
