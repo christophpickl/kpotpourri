@@ -66,7 +66,7 @@ subprojects { subproject ->
 
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-        // compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
         compile 'org.slf4j:slf4j-api:1.7.25'
         compile 'com.google.guava:guava:21.0'
 
@@ -242,7 +242,7 @@ subprojects { subproject ->
     publications = ['MyPublication']
 
 //        dryRun = false //Whether to run this as dry-run, without deploying
-//        publish = true //If version should be auto published after an upload
+        publish = true //If version should be auto published after an upload
 
         pkg {
             repo = 'cpickl'
