@@ -7,7 +7,7 @@ import org.testng.annotations.Test
 
 @Test class StringExtensionsTest {
 
-    @DataProvider//(name = "luckyDataProvider")
+    @DataProvider
     fun nullIfEmptyProvider(): Array<Array<out Any?>> = arrayOf(
             arrayOf("a", "a"),
             arrayOf(" ", " "),
