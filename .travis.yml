@@ -10,11 +10,10 @@ before_install:
   - "chmod +x gradlew"
 
 script:
-#  - "./gradlew test jacocoTestReport versioneye-update"
-  - "./gradlew test"
+  - "./gradlew test jacocoTestReport" # versioneye-update not necessary
 
-#after_success:
-#  - bash <(curl -s https://codecov.io/bash)
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 notifications:
   email:
