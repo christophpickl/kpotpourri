@@ -244,7 +244,18 @@ subprojects { subproject ->
         }
     }
 
+    task verifyNotSnapshotVersion {
+        println("[KPOT] Checking version for SNPASHOT ...")
+        if (myVersion.equals("SNAPSHOT")) {
+            println("no please dont!")
+            throw new GradleException("[KPOT] Tried to upload a SNAPSHOT version to bintray! Use the release script which defines -Dkpotpourri.version for that purpose.")
+        }
+    }
+
+    bintrayUpload.dependsOn verifyNotSnapshotVersion
+
 }
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
