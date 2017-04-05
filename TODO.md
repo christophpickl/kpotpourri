@@ -17,7 +17,7 @@
     * versioneye
 * dokka generates nasty warnings in build console: `Can't find node by signature com.github.christophpickl.kpotpourri.common$toPrettyString(kotlin.collections.List((kotlin.Any)))`
 * new modules: gmail, gcal, doodle
-
+* own http client abstraction like slf4j for logging
 ## Low
 
 * add README badges:
