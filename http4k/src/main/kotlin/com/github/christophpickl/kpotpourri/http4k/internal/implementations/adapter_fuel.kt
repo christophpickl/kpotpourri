@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.http4k
+package com.github.christophpickl.kpotpourri.http4k.internal.implementations
 
 
 //internal class FuelRestClient : RestClient {
