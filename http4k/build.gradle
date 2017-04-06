@@ -1,6 +1,6 @@
 // shc4k build.gradle
 
-// ./gradlew :shc4k:test
+// ./gradlew :http4k:test
 
 dependencies {
     compile project(':common')
