@@ -1,0 +1,9 @@
+// github build.gradle
+
+dependencies {
+    compile project(':common')
+    compile project(':http4k')
+
+    testCompile project(':common').sourceSets.test.output
+    testCompile "com.github.tomakehurst:wiremock:2.5.1"
+}

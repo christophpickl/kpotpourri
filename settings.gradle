@@ -2,3 +2,4 @@
 include 'common'
 include 'swing'
 include 'http4k'
+include 'github'

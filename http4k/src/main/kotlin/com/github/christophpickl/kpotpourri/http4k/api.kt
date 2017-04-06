@@ -28,15 +28,24 @@ fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit): Http4k {
 
 
 interface Http4k {
-
-    fun get(url: String, withOpts: Http4kGetOpts.() -> Unit = {}): Response4k
-
     // MINOR could not add "returnType: KClass<R> = Response4k::class" ... :(
+
     fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit = {}): R
 
-    fun post(url: String, withOpts: Http4kPostOpts.() -> Unit = {}): Response4k
+    fun get(url: String, withOpts: Http4kGetOpts.() -> Unit = {}): Response4k {
+        return get(url, Response4k::class, withOpts)
+    }
 
     fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: Http4kPostOpts.() -> Unit = {}): R
+
+    fun post(url: String, withOpts: Http4kPostOpts.() -> Unit = {}): Response4k {
+        return post(url, Response4k::class, withOpts)
+    }
+
+    // TODO test me
+    fun <R : Any> post(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: Http4kPostOpts.() -> Unit = {}): R {
+        return post(url, returnType, { bodyJson(jacksonObject); withOpts(this) })
+    }
 }
 
 data class Response4k(
@@ -48,6 +57,12 @@ data class Response4k(
 )
 
 // MINOR see com.github.tomakehurst.wiremock.http.RequestMethod
+//   GET("GET"),
+//POST("POST"),
+//PUT("PUT"),
+//DELETE("DELETE"),
+//PATCH("PATCH"),
+//HEAD("HEAD")
 enum class HttpMethod4k(val isRequestBodySupported: Boolean = false) {
     GET(),
     POST(isRequestBodySupported = true)

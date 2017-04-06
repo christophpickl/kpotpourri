@@ -24,6 +24,9 @@ data class Http4kPostOpts (
 ) : Http4kAnyOpts
 
 
+// requestEntity
+// ---------------------------------------------------------------------------------------------------------------------
+// TODO test me
 fun bodyDisabled() = RequestBody.None
 fun bodyString(body: String) = RequestBody.StringBody(body)
 fun bodyJson(jacksonObject: Any) = RequestBody.JsonBody(jacksonObject)

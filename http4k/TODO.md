@@ -1,12 +1,14 @@
 
 # TODOs High
 
-* Support POST/PUT/DELETE/...
+* fix GitHub API issues
+* Support POST/PUT/DELETE/PATCH...
 * query param (proper URL combination)
 * introduce jackson and un/marshall JSON for request/response body
 
 # TODOs Med
 
+* add opt to implicitly check for 2xx, and possibility to inject own behaviour/ (status code) validator
 * support 2nd implementation (fuel)
 * request/response cookies
 
@@ -14,6 +16,7 @@
 
 * binary upload
 * multi form upload
+* support variable replacement in passed URL
 
 # IDEAs
 

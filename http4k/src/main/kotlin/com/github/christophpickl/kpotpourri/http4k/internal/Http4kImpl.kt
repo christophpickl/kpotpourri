@@ -22,7 +22,7 @@ internal class Http4kImpl(
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .registerKotlinModule()
 
-    override fun get(url: String, withOpts: Http4kGetOpts.() -> Unit) = get(url, Response4k::class, withOpts)
+//    override fun get(url: String, withOpts: Http4kGetOpts.() -> Unit)
 
     override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit): R {
         val requestOpts = Http4kGetOpts().apply { withOpts(this) }
@@ -35,8 +35,6 @@ internal class Http4kImpl(
 
         return castReturnType(response, returnType)
     }
-
-    override fun post(url: String, withOpts: Http4kPostOpts.() -> Unit) = post(url, Response4k::class, withOpts)
 
     override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: Http4kPostOpts.() -> Unit): R {
         val requestOpts = Http4kPostOpts().apply { withOpts(this) }

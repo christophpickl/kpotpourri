@@ -59,6 +59,10 @@ subprojects { subproject ->
     apply plugin: "com.github.kt3k.coveralls"
 //    apply plugin: 'maven'
 //    apply plugin: 'signing'
+    apply plugin: "kotlin-noarg"
+    noArg {
+        annotation("com.github.christophpickl.kpotpourri.common.KotlinNoArg")
+    }
 
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
