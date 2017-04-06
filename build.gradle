@@ -23,6 +23,7 @@ buildscript {
 
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.autoscout24.gradle:gradle-todo-plugin:1.0'
+        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1" // as i dont know how to apply via plugins {} to submodules
     }
 }
 
@@ -39,6 +40,8 @@ allprojects {
         jcenter()
         mavenCentral()
     }
+
+    apply plugin: 'idea'
 }
 
 subprojects { subproject ->
@@ -47,12 +50,13 @@ subprojects { subproject ->
 
     apply plugin: "kotlin"
     apply plugin: 'org.jetbrains.dokka'
-
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
     apply plugin: 'com.autoscout24.gradle.todo'
+    apply plugin: "jacoco"
+    apply plugin: "com.github.kt3k.coveralls"
 //    apply plugin: 'maven'
 //    apply plugin: 'signing'
 
@@ -62,30 +66,22 @@ subprojects { subproject ->
 
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-        // compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        compile 'org.slf4j:slf4j-api:1.7.25'
+        compile 'com.google.guava:guava:21.0'
 
-        compile 'org.slf4j:slf4j-api:1.7.22'
-
-
-        testCompile 'org.testng:testng:6.10'
+        testCompile 'org.testng:testng:6.11'
         testCompile 'com.natpryce:hamkrest:1.3.0.0'
+        testCompile "com.nhaarman:mockito-kotlin:1.4.0"
     }
 
     test {
         useTestNG()
-
         scanForTestClasses true
         reports {
             junitXml.enabled = true
             html.enabled = true
         }
-
-//        beforeTest { desc ->
-//            print "[KPOT] ${desc.className.substring("com.github.christophpickl.kpotpourri..".length())}: ${desc.name.replace("_", " ")}"
-//        }
-//        afterTest { desc, result ->
-//            println " -> ${result.resultType}"
-//        }
     }
 
     todo {
@@ -95,6 +91,32 @@ subprojects { subproject ->
         fileExtensions = ["kt"]
     }
 
+    jacoco {
+        toolVersion = "0.7.9"
+    }
+
+    test {
+        testLogging.showStandardStreams = false
+        reports.junitXml.destination = file("${buildDir}/test-results/unit")
+        useTestNG() {
+//            excludeGroups 'uiTest', 'mTest'
+        }
+
+        testLogging {
+            events "skipped", "failed", "standardError"
+            exceptionFormat "full"
+        }
+        jacoco {
+            append = true
+        }
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true // coveralls plugin depends on xml format report
+            html.enabled = true
+        }
+    }
 
     jar {
         manifest {
@@ -244,8 +266,20 @@ subprojects { subproject ->
         }
     }
 
+    task verifyNotSnapshotVersion() {
+        doFirst {
+            println("[KPOT] Checking version for SNAPSHOT ...")
+            if (myVersion.equals("SNAPSHOT")) {
+                println("no please dont!")
+                throw new GradleException("[KPOT] Tried to upload a SNAPSHOT version to bintray! Use the release script which defines -Dkpotpourri.version for that purpose.")
+            }
+        }
+    }
+
+    bintrayUpload.dependsOn verifyNotSnapshotVersion
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
-}
+
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '3.1'
+//}
