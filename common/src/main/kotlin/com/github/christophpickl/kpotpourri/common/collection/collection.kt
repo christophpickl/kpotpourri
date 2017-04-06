@@ -3,8 +3,8 @@ package com.github.christophpickl.kpotpourri.common.collection
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import java.util.HashMap
 
-private val DEFAULT_PREFIX = "- "
-private val DEFAULT_JOINER = "\n"
+val KPOT_DEFAULT_PREFIX = "- "
+val KPOT_DEFAULT_JOINER = "\n"
 
 // ARRAY
 // =====================================================================================================================
@@ -13,13 +13,13 @@ private val DEFAULT_JOINER = "\n"
  * Prints each item prefixed and joined.
  * @see toPrettyString for List
  */
-fun Array<out Any>.toPrettyString(prefix: String = DEFAULT_PREFIX, joiner: String = DEFAULT_JOINER) =
+fun Array<out Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) =
         map { prefix + it }.joinToString(joiner)
 
 /**
  * Prints the output of `toPrettyString` to std out.
  */
-fun Array<out Any>.prettyPrint(prefix: String = DEFAULT_PREFIX, joiner: String = DEFAULT_JOINER) {
+fun Array<out Any>.prettyPrint(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) {
     println(toPrettyString(prefix, joiner))
 }
 
@@ -31,13 +31,13 @@ fun Array<out Any>.prettyPrint(prefix: String = DEFAULT_PREFIX, joiner: String =
  * Prints each item prefixed and joined.
  * @see toPrettyString for Array
  */
-fun List<Any>.toPrettyString(prefix: String = DEFAULT_PREFIX, joiner: String = DEFAULT_JOINER) =
+fun List<Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) =
         map { prefix + it }.joinToString(joiner)
 
 /**
  * Prints the output of `toPrettyString` to std out.
  */
-fun List<Any>.prettyPrint(prefix: String = DEFAULT_PREFIX, joiner: String = DEFAULT_JOINER) {
+fun List<Any>.prettyPrint(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) {
     println(toPrettyString(prefix, joiner))
 }
 
@@ -74,3 +74,9 @@ fun <K, V> Iterable<Pair<K, V>>.toMutableMap(): Map<K, V> {
     map.putAll(immutableMap)
     return map
 }
+
+// ENUM
+// =====================================================================================================================
+
+inline fun <reified T : Enum<T>> toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) =
+        enumValues<T>().toList().toPrettyString(prefix, joiner)

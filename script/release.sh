@@ -66,7 +66,7 @@ myEcho "------------------------------------"
 changeVersion ${NEXT_VERSION}
 git add .
 checkLastCommand
-git commit -m "[Auto-Release] current release version: $NEXT_VERSION"
+git commit -m "[Auto-Release] KPotpourri version: $NEXT_VERSION"
 checkLastCommand
 git tag ${NEXT_VERSION}
 checkLastCommand

@@ -15,6 +15,7 @@
 
 ## High
 
+* go through yobu (random stuff)
 * go through gadsu (swing as well) and harvest stuff
 * dokka generates nasty warnings in build console: `Can't find node by signature com.github.christophpickl.kpotpourri.common$toPrettyString(kotlin.collections.List((kotlin.Any)))`
 

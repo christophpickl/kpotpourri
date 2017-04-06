@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.common.collection
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test
@@ -92,6 +93,19 @@ import org.testng.annotations.Test
     fun `toMutableMap`() {
         assertThat(listOf(1 to "einz").toMutableMap(),
                 equalTo(mapOf(1 to "einz")))
+    }
+
+}
+
+
+// ENUM
+// =====================================================================================================================
+@Test class EnumExtensionsTest {
+
+    private enum class Foo { Bar1, Bar2 }
+
+    fun `toPrettyString - Given Foo enum, Should format elements in order`() {
+        toPrettyString<Foo>() shouldMatchValue "- Bar1\n- Bar2"
     }
 
 }
