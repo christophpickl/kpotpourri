@@ -1,12 +1,20 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 
-fun baseUrlBy(fullUrl: String) = BaseUrl.BaseUrlByString(fullUrl)
-fun baseUrlBy(config: UrlConfig) = BaseUrl.BaseUrlByConfig(config)
-fun baseUrlDisabled() = BaseUrl.NoBaseUrl
-
 interface DefaultsOpts {
     var baseUrl: BaseUrl
+
+    fun baseUrlDisabled() {
+        baseUrl = BaseUrl.NoBaseUrl
+    }
+
+    fun baseUrlBy(fullUrl: String) {
+        baseUrl = BaseUrl.BaseUrlByString(fullUrl)
+    }
+
+    fun baseUrlBy(config: UrlConfig) {
+        baseUrl = BaseUrl.BaseUrlByConfig(config)
+    }
 }
 
 interface DefaultsOptsReadOnly {

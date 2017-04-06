@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream
 internal class ApacheHttpClientRestClient : RestClient {
 
     override fun execute(request: Request4k): Response4k {
+        println("[KPOT] execute apache request: $request")
         val httpRequest = request.toHttpRequest()
         httpRequest.setHeaders(request.headers.entries.map { BasicHeader(it.key, it.value) }.toTypedArray())
         httpRequest.addBodyIfNecessary(request)

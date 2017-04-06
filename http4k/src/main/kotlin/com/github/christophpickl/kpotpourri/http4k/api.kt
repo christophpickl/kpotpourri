@@ -47,11 +47,15 @@ data class Response4k(
         // cookies
 )
 
-enum class HttpMethod4k(val isRequestBodySupported: Boolean) {
-    GET(false),
-    POST(true)
-    // PUT(true)
-    // PATCH(true)
+// MINOR see com.github.tomakehurst.wiremock.http.RequestMethod
+enum class HttpMethod4k(val isRequestBodySupported: Boolean = false) {
+    GET(),
+    POST(isRequestBodySupported = true)
+    // PUT(isRequestBodySupported = true)
     // DELETE
-    // ...
+    // PATCH(isRequestBodySupported = true)
+    // OPTIONS
+    // HEAD
+    // TRACE
+    // ANY
 }

@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.non_test
 
+import com.github.christophpickl.kpotpourri.http4k.BaseUrl.BaseUrlByString
 import com.github.christophpickl.kpotpourri.http4k.Http4k
-import com.github.christophpickl.kpotpourri.http4k.baseUrlBy
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -19,7 +19,7 @@ const val WIREMOCK_DEFAULT_URL = "http://$WIREMOCK_HOSTNAME:$WIREMOCK_PORT"
 @Test(groups = arrayOf("wiremock"))
 abstract class WiremockTest {
 
-    protected val wiremockBaseUrl = baseUrlBy(WIREMOCK_DEFAULT_URL)
+    protected val wiremockBaseUrl = BaseUrlByString(WIREMOCK_DEFAULT_URL)
 
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer
@@ -46,9 +46,10 @@ abstract class WiremockTest {
     @BeforeMethod
     fun `defaultHttp4k re-set`() {
         defaultHttp4k = buildHttp4k {
-            withDefaults {
+            // MINOR architectural glitch?! :-/
+//            withDefaults {
                 baseUrl = wiremockBaseUrl
-            }
+//            }
         }
     }
 
