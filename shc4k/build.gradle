@@ -1,0 +1,9 @@
+// shc4k build.gradle
+
+dependencies {
+    compile project(':common')
+    compile 'org.apache.httpcomponents:httpclient:4.5.3'
+
+    testCompile project(':common').sourceSets.test.output
+    // testCompile wire mock
+}
