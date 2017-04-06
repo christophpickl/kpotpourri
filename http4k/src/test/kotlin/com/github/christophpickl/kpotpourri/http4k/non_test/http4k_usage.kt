@@ -22,8 +22,8 @@ fun main(args: Array<String>) {
 
 
 fun withWiremock(port: Int = WIREMOCK_PORT, action: () -> Unit) {
-    WireMock.configureFor("localhost", WIREMOCK_PORT)
-    val server = WireMockServer(WireMockConfiguration.wireMockConfig().port(WIREMOCK_PORT))
+    WireMock.configureFor("localhost", port)
+    val server = WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
     server.start()
 
     action()
