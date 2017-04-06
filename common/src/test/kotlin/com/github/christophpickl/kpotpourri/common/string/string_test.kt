@@ -13,11 +13,11 @@ import org.testng.annotations.Test
             arrayOf(" ", " "),
             arrayOf("", null)
     )
+
     @Test(dataProvider = "nullIfEmptyProvider")
     fun `nullIfEmpty`(given: String, expected: String?) {
         assertThat(given.nullIfEmpty(), equalTo(expected))
     }
-
 
     @DataProvider fun timesProvider(): Array<Array<Any>> = arrayOf(
             arrayOf("x", 0, ""),
@@ -30,4 +30,25 @@ import org.testng.annotations.Test
         assertThat(symbol.times(count),
                 equalTo(expected))
     }
+
+    fun `wrapIf`() {
+        assertThat("a".wrapIf(false, "1", "2"), equalTo("a"))
+        assertThat("a".wrapIf(true, "1", "2"), equalTo("1a2"))
+    }
+
+    fun `wrapParenthesisIf`() {
+        assertThat("a".wrapParenthesisIf(false), equalTo("a"))
+        assertThat("a".wrapParenthesisIf(true), equalTo("(a)"))
+    }
+
+    fun `removePreAndSuffix`() {
+        assertThat("-a-".removePreAndSuffix("-"), equalTo("a"))
+        assertThat("a-a".removePreAndSuffix("-"), equalTo("a-a"))
+    }
+
+    fun `htmlize`() {
+        assertThat("a".htmlize(), equalTo("<html>a</html>"))
+        assertThat("a\nb".htmlize(), equalTo("<html>a<br/>b</html>"))
+    }
+
 }
