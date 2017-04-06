@@ -1,12 +1,13 @@
 # KPotpourri
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.1.1-blue.svg)](http://kotlinlang.org)
+[ ![jcenter](https://api.bintray.com/packages/christophpickl/cpickl/kpotpourri/images/download.svg) ](https://bintray.com/christophpickl/cpickl/kpotpourri/_latestVersion)
 [![Travis](https://img.shields.io/travis/christophpickl/kpotpourri.svg)](https://travis-ci.org/christophpickl/kpotpourri)
 [![codecov](https://codecov.io/gh/christophpickl/kpotpourri/branch/master/graph/badge.svg)](https://codecov.io/gh/christophpickl/kpotpourri)
 [![Issues](https://img.shields.io/github/issues/christophpickl/kpotpourri.svg)](https://github.com/christophpickl/kpotpourri/issues?q=is%3Aopen)
 [![Dependency Versions](https://www.versioneye.com/user/projects/58e51229d6c98d0041747763/badge.svg?style=flat)](https://www.versioneye.com/user/projects/58e51229d6c98d0041747763)
 
-Some common extensions to kotlin which i am desperately missing.
+Some common extensions to Kotlin which I am desperately missing.
 
 # Usage
 
@@ -22,8 +23,8 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.christophpickl.kpotpourri:common:1.0'
-  compile 'com.github.christophpickl.kpotpourri:swing:1.0'
+  compile 'com.github.christophpickl.kpotpourri:common:1.x'
+  compile 'com.github.christophpickl.kpotpourri:swing:1.x'
 }
 ```
 

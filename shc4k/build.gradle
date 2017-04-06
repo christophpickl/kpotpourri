@@ -1,9 +1,13 @@
 // shc4k build.gradle
 
+// ./gradlew :shc4k:test
+
 dependencies {
     compile project(':common')
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
+//    compile 'com.github.kittinunf.fuel:fuel:1.5.0'
 
     testCompile project(':common').sourceSets.test.output
-    // testCompile wire mock
+    testCompile "com.github.tomakehurst:wiremock:2.5.1"
+
 }
