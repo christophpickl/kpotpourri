@@ -1,9 +1,13 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.http4k.non_test.WiremockTest
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.natpryce.hamkrest.MatchResult
+import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.describe
 import com.natpryce.hamkrest.equalTo
 
 class Http4kIntegrationTestes : WiremockTest() {
@@ -20,7 +24,8 @@ class Http4kIntegrationTestes : WiremockTest() {
 
         assertThat(response, equalTo(Response4k(
                 statusCode = mockStatusCode,
-                bodyAsString = mockResponseBody
+                bodyAsString = mockResponseBody,
+                headers = response.headers // ignore headers for this test
         )))
 
         verify(getRequestedFor(urlEqualTo(mockBasePath)))
@@ -38,23 +43,46 @@ class Http4kIntegrationTestes : WiremockTest() {
         )
     }
 
+    fun `Given default Http4k and wiremocked header, When get URL, Then headers are set in response`() {
+        val headerName = "X-http4k-test"
+        val headerValue = "testHeaderValue"
+        wiremockStubGetCall() {
+            withHeader(headerName, headerValue)
+        }
+
+        val response = defaultHttp4k.get(mockBasePath)
+
+        // mapContains at least custom header, but additionally others from wiremock
+        assertThat(response.headers, mapContains(headerName to headerValue))
+        verify(getRequestedFor(urlEqualTo(mockBasePath)))
+    }
+
 //        val responseDto = http4k.execute(
 //                method = HttpMethod4k.POST,
-//                url = "/my",
-//                headers = listOf("a" to "b")
 //                // queryGetParams
 //                // cookies
-//                // binary upload
-//                // multi form
-//                body = anyInstanceMarshalledViaJacksonsObjectMapper,
+
 //                returnType = MyResponseDto.class
 //        )
 
 
-    private fun wiremockStubGetCall() {
+    private fun wiremockStubGetCall(withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
         stubFor(get(urlEqualTo(mockBasePath)).willReturn(
                 aResponse()
                         .withStatus(mockStatusCode)
-                        .withBody(mockResponseBody)))
+                        .withBody(mockResponseBody)
+                        .apply { withResponse(this) }))
     }
+}
+
+fun <K, V> mapContains(entry: Pair<K, V>): Matcher<Map<K, V>> = object : Matcher.Primitive<Map<K, V>>() {
+    override fun invoke(actual: Map<K, V>): MatchResult {
+        return if (actual.containsKey(entry.first) && actual[entry.first] == entry.second) {
+            MatchResult.Match
+        } else {
+            MatchResult.Mismatch("was ${describe(actual)}")
+        }
+    }
+    override val description: String get() = "contains ${describe(entry)}"
+    override val negatedDescription: String get() = "does not contain ${describe(entry)}"
 }

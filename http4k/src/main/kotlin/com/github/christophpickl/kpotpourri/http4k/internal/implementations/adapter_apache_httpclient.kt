@@ -17,10 +17,15 @@ internal class ApacheHttpClientRestClient : RestClient {
         get.setHeaders(request.headers.entries.map { BasicHeader(it.key, it.value) }.toTypedArray())
 
         val response = client.execute(get)
+
+        // MINOR lazily store bodyAsString
         val outStream = ByteArrayOutputStream()
         response.entity.writeTo(outStream)
         val bodyAsString = String(outStream.toByteArray(), Charsets.UTF_8)
-        return Response4k(response.statusLine.statusCode, bodyAsString)
+
+        val headers = response.allHeaders.map { it.name to it.value }.toMap()
+
+        return Response4k(response.statusLine.statusCode, bodyAsString, headers)
     }
 
 }

@@ -5,6 +5,7 @@ import com.github.christophpickl.kpotpourri.http4k.baseUrlBy
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
@@ -49,6 +50,10 @@ abstract class WiremockTest {
                 baseUrl = wiremockBaseUrl
             }
         }
+    }
+
+    protected fun verifyGetRequest(url: String) {
+        verify(getRequestedFor(urlEqualTo(url)))
     }
 
 }

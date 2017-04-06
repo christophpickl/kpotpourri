@@ -41,10 +41,11 @@ interface Http4k {
 }
 
 data class Response4k(
+        val statusCode: Int,
+        val bodyAsString: String,
+        val headers: Map<String, String>
         // header
         // cookies
-        val statusCode: Int,
-        val bodyAsString: String
 )
 
 enum class HttpMethod4k {

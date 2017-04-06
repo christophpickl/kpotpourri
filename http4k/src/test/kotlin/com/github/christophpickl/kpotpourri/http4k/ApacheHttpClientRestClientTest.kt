@@ -1,12 +1,11 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
 import com.github.christophpickl.kpotpourri.http4k.internal.Request4k
 import com.github.christophpickl.kpotpourri.http4k.internal.implementations.ApacheHttpClientRestClient
 import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_DEFAULT_URL
 import com.github.christophpickl.kpotpourri.http4k.non_test.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 
 class ApacheHttpClientRestClientTest : WiremockTest() {
 
@@ -26,7 +25,9 @@ class ApacheHttpClientRestClientTest : WiremockTest() {
                 url = WIREMOCK_DEFAULT_URL + mockUrl
         ))
 
-        assertThat(response, equalTo(Response4k(mockResponseStatus, mockResponseBody)))
-        verify(getRequestedFor(urlEqualTo(mockUrl)))
+        response.statusCode shouldMatchValue mockResponseStatus
+        response.bodyAsString shouldMatchValue mockResponseBody
+        verifyGetRequest(mockUrl)
     }
+
 }
