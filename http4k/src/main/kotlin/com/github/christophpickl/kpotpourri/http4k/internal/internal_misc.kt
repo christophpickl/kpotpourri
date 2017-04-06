@@ -11,7 +11,6 @@ internal interface RestClient {
 internal data class Request4k(
         val method: HttpMethod4k,
         val url: String,
+        val requestBody: String? = null,
         val headers: Map<String, String> = emptyMap()
-        // TODO query param
-        // TODO body (only when POST/PUT)
 )

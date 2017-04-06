@@ -1,57 +1,11 @@
 package com.github.christophpickl.kpotpourri.common.testinfra
 
+import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.describe
 import com.natpryce.hamkrest.equalTo
-import org.testng.annotations.Test
 
-@Test class CustomShouldTest {
-
-    fun `shouldMatchValue given equal objects should match`() {
-        "x" shouldMatchValue  "x"
-    }
-
-    fun `shouldNotMatchValue given non-equal objects should match`() {
-        "x" shouldNotMatchValue  "y"
-    }
-
-    @Test(expectedExceptions = arrayOf(AssertionError::class))
-    fun `shouldMatchValue given non-equal objects should throw`() {
-        "x" shouldMatchValue  "y"
-    }
-
-    @Test(expectedExceptions = arrayOf(AssertionError::class))
-    fun `shouldNotMatchValue given equal objects should throw`() {
-        "x" shouldNotMatchValue  "x"
-    }
-
-}
-
-@Test class CustomMatchersTest {
-
-    fun `not given non-equal objects should match`() {
-        assertThat("x", not(equalTo("y")))
-    }
-
-    fun `notEqualTo given non-equal objects should match`() {
-        assertThat("x", notEqualTo("y"))
-    }
-
-    @Test(expectedExceptions = arrayOf(AssertionError::class))
-    fun `not given equal objects should throw`() {
-//        assertThrown<AssertionError> {
-            assertThat("x", not(equalTo("x")))
-//        }
-    }
-
-    @Test(expectedExceptions = arrayOf(AssertionError::class))
-    fun `notEqualTo given equal objects should throw`() {
-//        assertThrown<AssertionError> {
-            assertThat("x", notEqualTo("x"))
-//        }
-    }
-
-}
 
 infix fun <T> T.shouldMatchValue(expectedValue: T) {
     assertThat(this, equalTo(expectedValue))
@@ -78,3 +32,15 @@ fun <T> notEqualTo(expected: T) =
 //        }
 
 fun <T> not(negated: Matcher<T?>): Matcher<T?> = Matcher.Negation(negated)
+
+fun <K, V> mapContains(entry: Pair<K, V>): Matcher<Map<K, V>> = object : Matcher.Primitive<Map<K, V>>() {
+    override fun invoke(actual: Map<K, V>): MatchResult {
+        return if (actual.containsKey(entry.first) && actual[entry.first] == entry.second) {
+            MatchResult.Match
+        } else {
+            MatchResult.Mismatch("was ${describe(actual)}")
+        }
+    }
+    override val description: String get() = "contains ${describe(entry)}"
+    override val negatedDescription: String get() = "does not contain ${describe(entry)}"
+}

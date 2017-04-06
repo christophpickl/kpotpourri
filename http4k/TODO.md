@@ -1,8 +1,14 @@
 
 # TODOs High
 
-* introduce jackson and un/marshall JSON
-* support 2nd
+* Support POST/PUT/DELETE/...
+* query param (proper URL combination)
+* introduce jackson and un/marshall JSON for request/response body
+
+# TODOs Med
+
+* support 2nd implementation (fuel)
+* request/response cookies
 
 # TODOs Low
 

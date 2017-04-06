@@ -1,13 +1,12 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.common.testinfra.mapContains
+import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
 import com.github.christophpickl.kpotpourri.http4k.non_test.WiremockTest
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.natpryce.hamkrest.MatchResult
-import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.describe
 import com.natpryce.hamkrest.equalTo
 
 class Http4kIntegrationTestes : WiremockTest() {
@@ -16,36 +15,42 @@ class Http4kIntegrationTestes : WiremockTest() {
     private val mockResponseBody = "wiremock response body"
     private val mockBasePath = "/my"
 
+    private val headerName = "X-http4k-test"
+    private val headerValue = "testHeaderValue"
 
-    fun `Given default Http4k, When get URL, Then return response object`() {
-        wiremockStubGetCall()
+    // TODO test http4k without having baseUrl set doesnt combine URL
+
+    // GET
+    // =================================================================================================================
+
+    fun `Given default Http4k and configured response, When GET, Then proper response object`() {
+        stubFor(get(urlEqualTo(mockBasePath)).willReturn(
+                aResponse()
+                        .withStatus(mockStatusCode)
+                        .withBody(mockResponseBody)))
 
         val response = defaultHttp4k.get(mockBasePath)
 
         assertThat(response, equalTo(Response4k(
                 statusCode = mockStatusCode,
                 bodyAsString = mockResponseBody,
-                headers = response.headers // ignore headers for this test
+                headers = response.headers // ignore headers by copying
         )))
-
-        verify(getRequestedFor(urlEqualTo(mockBasePath)))
     }
 
-    fun `Given default Http4k, When get URL with header, Then verify headers are set on request`() {
+    fun `Given default Http4k, When GET with header, Then verify headers are set on request`() {
         wiremockStubGetCall()
 
         defaultHttp4k.get(mockBasePath) {
-            headers += "foo" to "bar"
+            headers += headerName to headerValue
         }
 
         verify(getRequestedFor(urlEqualTo(mockBasePath))
-                .withHeader("foo", WireMock.equalTo("bar"))
+                .withHeader(headerName, WireMock.equalTo(headerValue))
         )
     }
 
-    fun `Given default Http4k and wiremocked header, When get URL, Then headers are set in response`() {
-        val headerName = "X-http4k-test"
-        val headerValue = "testHeaderValue"
+    fun `Given default Http4k and wiremocked header, When GET, Then headers are set in response`() {
         wiremockStubGetCall() {
             withHeader(headerName, headerValue)
         }
@@ -57,32 +62,77 @@ class Http4kIntegrationTestes : WiremockTest() {
         verify(getRequestedFor(urlEqualTo(mockBasePath)))
     }
 
-//        val responseDto = http4k.execute(
-//                method = HttpMethod4k.POST,
-//                // queryGetParams
-//                // cookies
+    fun `Given default Http4k and wiremocked JSON response, When GET, Then JSON DTO should be marshalled`() {
+        wiremockStubGetCall(responseBody = PersonDto.dummy.toJson())
 
-//                returnType = MyResponseDto.class
-//        )
+        val actulJsonDto = defaultHttp4k.get(mockBasePath, PersonDto::class)
+
+        actulJsonDto shouldMatchValue PersonDto.dummy
+    }
 
 
-    private fun wiremockStubGetCall(withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
-        stubFor(get(urlEqualTo(mockBasePath)).willReturn(
+    // POST
+    // =================================================================================================================
+
+    fun `Given default Http4k, When POST, Then should be received`() {
+        stubFor(post(urlEqualTo(mockBasePath)))
+
+        defaultHttp4k.post(mockBasePath)
+
+        verify(postRequestedFor(urlEqualTo(mockBasePath)))
+    }
+
+    fun `Given default Http4k, When POST with JSON body, Then body should be received and content type set`() {
+        stubFor(post(urlEqualTo(mockBasePath)))
+
+        defaultHttp4k.post(mockBasePath) {
+            requestBody = bodyJson(PersonDto.dummy)
+        }
+
+        verify(postRequestedFor(urlEqualTo(mockBasePath))
+                .withRequestBody(WireMock.equalTo(PersonDto.dummy.toJson()))
+                .withHeader("content-type", WireMock.equalTo("application/json"))
+        )
+    }
+
+    fun `Given default Http4k, When POST with JSON body and custom content type, Then default content type should have been overridden`() {
+        stubFor(post(urlEqualTo(mockBasePath)))
+
+        defaultHttp4k.post(mockBasePath) {
+            requestBody = bodyJson(PersonDto.dummy)
+            headers += "content-type" to "application/foobar"
+        }
+
+        verify(postRequestedFor(urlEqualTo(mockBasePath))
+                .withHeader("content-type", WireMock.equalTo("application/foobar")))
+    }
+
+    fun `Given default Http4k, When POST with JSON response, Then response DTO should be returned`() {
+        stubFor(post(urlEqualTo(mockBasePath)).willReturn(aResponse().withBody(PersonDto.dummy.toJson())))
+
+        val dto = defaultHttp4k.post(mockBasePath, PersonDto::class)
+
+        dto shouldMatchValue PersonDto.dummy
+    }
+
+    private fun wiremockStubGetCall(
+            basePath: String = mockBasePath,
+            responseStatus: Int = mockStatusCode,
+            responseBody: String = mockResponseBody,
+            withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
+        stubFor(get(urlEqualTo(basePath)).willReturn(
                 aResponse()
-                        .withStatus(mockStatusCode)
-                        .withBody(mockResponseBody)
+                        .withStatus(responseStatus)
+                        .withBody(responseBody)
                         .apply { withResponse(this) }))
     }
-}
 
-fun <K, V> mapContains(entry: Pair<K, V>): Matcher<Map<K, V>> = object : Matcher.Primitive<Map<K, V>>() {
-    override fun invoke(actual: Map<K, V>): MatchResult {
-        return if (actual.containsKey(entry.first) && actual[entry.first] == entry.second) {
-            MatchResult.Match
-        } else {
-            MatchResult.Mismatch("was ${describe(actual)}")
+    private data class PersonDto(val name: String, val age: Int) {
+        companion object {
+            val dummy = PersonDto("Foobar", 42)
         }
+
+        fun toJson() = """{"name":"$name","age":$age}"""
     }
-    override val description: String get() = "contains ${describe(entry)}"
-    override val negatedDescription: String get() = "does not contain ${describe(entry)}"
+
 }
