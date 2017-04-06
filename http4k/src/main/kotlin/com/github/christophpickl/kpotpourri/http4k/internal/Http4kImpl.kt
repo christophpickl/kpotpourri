@@ -12,6 +12,8 @@ internal class Http4kImpl(
         private val defaults: DefaultsOptsReadOnly
 ) : Http4k {
 
+    override fun get(url: String, withOpts: Http4kGetOpts.() -> Unit) = get(url, Response4k::class, withOpts)
+
     override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit): R {
         val getOpts = Http4kGetOpts()
         withOpts.invoke(getOpts)

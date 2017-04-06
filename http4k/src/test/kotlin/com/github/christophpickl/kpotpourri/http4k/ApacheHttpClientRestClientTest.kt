@@ -2,26 +2,31 @@ package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.http4k.internal.Request4k
 import com.github.christophpickl.kpotpourri.http4k.internal.implementations.ApacheHttpClientRestClient
-import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_PORT
+import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_DEFAULT_URL
 import com.github.christophpickl.kpotpourri.http4k.non_test.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.natpryce.hamkrest.assertion.assertThat
-import org.testng.annotations.Test
+import com.natpryce.hamkrest.equalTo
 
-@Test class ApacheHttpClientRestClientTest : WiremockTest() {
+class ApacheHttpClientRestClientTest : WiremockTest() {
 
-    fun `get returns status and body`() {
-        stubFor(get(urlEqualTo("/foo"))
-                .willReturn(
-                        aResponse().withStatus(200).withBody("bar")
-                )
-        )
+    private val testee get() = ApacheHttpClientRestClient()
+    private val mockUrl = "/foo"
+    private val mockResponseBody = "bar"
+    private val mockResponseStatus = 200
 
-        val client = ApacheHttpClientRestClient()
-        val response = client.execute(Request4k("http://localhost:$WIREMOCK_PORT/foo", HttpMethod4k.GET))
-        println(response)
-        assertThat(response, com.natpryce.hamkrest.equalTo(Response4k(200, "bar")))
+    fun `When execute GET, Then return Response4k with OK 200 and string response body`() {
+        stubFor(get(urlEqualTo(mockUrl))
+                .willReturn(aResponse()
+                        .withStatus(mockResponseStatus)
+                        .withBody(mockResponseBody)))
 
-        verify(getRequestedFor(urlEqualTo("/foo")))
+        val response = testee.execute(Request4k(
+                method = HttpMethod4k.GET,
+                url = WIREMOCK_DEFAULT_URL + mockUrl
+        ))
+
+        assertThat(response, equalTo(Response4k(mockResponseStatus, mockResponseBody)))
+        verify(getRequestedFor(urlEqualTo(mockUrl)))
     }
 }

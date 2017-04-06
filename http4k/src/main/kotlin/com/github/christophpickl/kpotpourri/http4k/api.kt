@@ -20,7 +20,11 @@ class Http4kBuilder : DefaultsOpts, DefaultsOptsReadOnly {
     }
 }
 
-fun buildHttp4k() = Http4kBuilder()
+fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit): Http4k {
+    val builder = Http4kBuilder()
+    withBuilder.invoke(builder)
+    return builder.end()
+}
 
 /**
  * Got no body, opposed to POST/PUT requests.
@@ -30,7 +34,10 @@ data class Http4kGetOpts (
 )
 
 interface Http4k {
-    fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit): R
+
+    // MINOR could not add "returnType: KClass<R> = Response4k::class" ... :(
+    fun get(url: String, withOpts: Http4kGetOpts.() -> Unit = {}): Response4k
+    fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit = {}): R
 }
 
 data class Response4k(
