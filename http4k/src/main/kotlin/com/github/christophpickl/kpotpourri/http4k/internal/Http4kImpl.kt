@@ -27,19 +27,20 @@ internal class Http4kImpl(
 //    override fun get(url: String, withOpts: Http4kGetOpts.() -> Unit)
 
     override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit) =
-            any(url, returnType, withOpts, Http4kGetOpts())
+            any(HttpMethod4k.GET, Http4kGetOpts(), url, returnType, withOpts)
 
     override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: Http4kPostOpts.() -> Unit) =
-            any(url, returnType, withOpts, Http4kPostOpts())
+            any(HttpMethod4k.POST, Http4kPostOpts(), url, returnType, withOpts)
 
     /**
      * GET, POST, ... or any other.
      */
     private inline fun <R : Any, reified OPT : Http4kAnyOpts> any(
+            method: HttpMethod4k,
+            optInstance: OPT,
             url: String,
             returnType: KClass<R>,
-            withOpts: OPT.() -> Unit,
-            optInstance: OPT
+            withOpts: OPT.() -> Unit
     ): R {
         val requestOpts = optInstance.apply { withOpts(this) }
         val defaultHeaders = HashMap<String, String>()
@@ -50,7 +51,7 @@ internal class Http4kImpl(
 //            val user = requestOpts.basicAuth.username
 //        }
         val response = restClient.execute(Request4k(
-                method = HttpMethod4k.POST,
+                method = method,
                 url = defaults.baseUrl.combine(url),
                 headers = defaultHeaders.plus(requestOpts.headers),
                 requestBody = requestBody

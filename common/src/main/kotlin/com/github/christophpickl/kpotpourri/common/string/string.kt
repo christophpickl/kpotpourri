@@ -50,3 +50,7 @@ fun String.htmlize() =
 fun String.saveToFile(target: File) {
     Files.write(this, target, Charsets.UTF_8)
 }
+
+// TODO write tests
+fun concatUrlParts(part1: String, part2: String) =
+        part1.removeSuffix("/") + "/" + part2.removePrefix("/")

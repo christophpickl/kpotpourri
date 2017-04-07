@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
+
 
 interface DefaultsOpts {
     var baseUrl: BaseUrl
@@ -34,12 +36,14 @@ sealed class BaseUrl {
      * @param fullUrl e.g.: "http://localhost:8080".
      */
     class BaseUrlByString(private val fullUrl: String) : BaseUrl() {
-        override fun combine(url: String) = fullUrl + url
+        override fun combine(url: String) = concatUrlParts(fullUrl, url)
     }
 
     class BaseUrlByConfig(config: UrlConfig) : BaseUrl() {
-        private val urlPrefix = "${config.protocol.urlPrefix}://${config.hostName}:${config.port}${config.path}"
-        override fun combine(url: String) = urlPrefix + url
+        private val urlPrefix =
+                concatUrlParts("${config.protocol.urlPrefix}://${config.hostName}:${config.port}", config.path)
+
+        override fun combine(url: String) = concatUrlParts(urlPrefix, url)
     }
 
     abstract fun combine(url: String): String
@@ -50,9 +54,9 @@ enum class HttpProtocol(val urlPrefix: String) {
 }
 
 data class UrlConfig(
-        // defaults to: "http://localhost:8080/"
+        // defaults to: "http://localhost:8080"
         val protocol: HttpProtocol = HttpProtocol.Http,
         val hostName: String = "localhost",
         val port: Int = 80,
-        val path: String = "/" // TODO make empty, and introduce UrlUtil.concat method for joining url paths
+        val path: String = "" // e.g.: "/rest"
 )
