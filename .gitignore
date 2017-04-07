@@ -2,6 +2,7 @@
 /build/
 /common/build/
 /swing/build/
+/http4k/build/
 
 /.gradle/**
 
