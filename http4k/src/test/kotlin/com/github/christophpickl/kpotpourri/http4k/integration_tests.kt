@@ -189,7 +189,11 @@ class Http4kIntegrationTestes : WiremockTest() {
                         .apply { withResponse(this) }))
     }
 
-    private data class PersonDto(val name: String, val age: Int) {
+    private data class PersonDto(
+            // @get:JsonProperty("last_name")
+            val name: String,
+            val age: Int
+    ) {
         companion object {
             val dummy = PersonDto("Foobar", 42)
         }

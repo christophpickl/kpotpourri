@@ -10,7 +10,6 @@ import java.io.File
 fun String.nullIfEmpty() =
         if (isEmpty()) null else this
 
-
 /**
  * Duplicate this string a couple of times.
  */

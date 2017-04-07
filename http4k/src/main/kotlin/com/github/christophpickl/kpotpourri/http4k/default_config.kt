@@ -53,6 +53,6 @@ data class UrlConfig(
         // defaults to: "http://localhost:8080/"
         val protocol: HttpProtocol = HttpProtocol.Http,
         val hostName: String = "localhost",
-        val port: Int = 8080,
-        val path: String = "/"
+        val port: Int = 80,
+        val path: String = "/" // TODO make empty, and introduce UrlUtil.concat method for joining url paths
 )

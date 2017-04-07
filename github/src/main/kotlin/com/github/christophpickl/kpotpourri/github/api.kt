@@ -1,7 +1,10 @@
 package com.github.christophpickl.kpotpourri.github
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
+import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import mu.KotlinLogging
 
 
 data class GithubConfig(
@@ -25,8 +28,15 @@ interface GithubApi {
  * https://developer.github.com/v3/
  */
 class GithubApiImpl(
-        private val config: GithubConfig
+        private val config: GithubConfig,
+        private val baseUrlConfig: UrlConfig = UrlConfig(
+                protocol = HttpProtocol.Https,
+                hostName = "api.github.com",
+                path = "/repos/${config.repositoryOwner}/${config.repositoryName}"
+        )
 ) : GithubApi {
+
+    private val log = KotlinLogging.logger {}
 
     companion object {
         private val GITHUB_MIMETYPE = "application/vnd.github.v3+json"
@@ -37,10 +47,10 @@ class GithubApiImpl(
 //            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     private val http4k = buildHttp4k {
-        baseUrlBy("https://api.github.com/repos/${config.repositoryOwner}/${config.repositoryName}")
-        withDefaults {
-            //            FIXME header += "accept" to GITHUB_MIMETYPE
-        }
+        //        withDefaults {
+        baseUrlBy(baseUrlConfig)
+        //            FIXME header += "accept" to GITHUB_MIMETYPE
+//        }
     }
 
     /**
@@ -74,7 +84,7 @@ class GithubApiImpl(
 //                requestBytes = upload.file.readBytes()
         }
 
-//        log.debug("Uploaded asset: {}", response)
+        log.debug { "Uploaded asset: $response" }
         if (response.state != "uploaded") {
             System.err.println("Upload failed for ${upload.fileName}!!! ($upload, $response)")
         }
@@ -99,21 +109,21 @@ class GithubApiImpl(
 
     // state defaults to "open"
     override fun listOpenMilestones() =
-//        log.debug("listOpenMilestones()")
-        http4k.get("/milestones", Array<MilestoneJson>::class)
-                .map { it.toMilestone() }
-                .sortedBy { it.version }
+            //        log.debug("listOpenMilestones()")
+            http4k.get("/milestones", Array<MilestoneJson>::class)
+                    .map { it.toMilestone() }
+                    .sortedBy { it.version }
 
 
     override fun listIssues(milestone: Milestone) =
-//        log.debug("listIssues(milestone={})", milestone)
-        http4k.get("/issues", Array<IssueJson>::class)
+            //        log.debug("listIssues(milestone={})", milestone)
+            http4k.get("/issues", Array<IssueJson>::class)
 //                TODO queryParameters = listOf(
 //                        "state" to "all",
 //                        "milestone" to milestone.number
 //                ),
-                .map { it.toIssue() }
-                .sortedBy { it.number }
+                    .map { it.toIssue() }
+                    .sortedBy { it.number }
 
 
     /**
