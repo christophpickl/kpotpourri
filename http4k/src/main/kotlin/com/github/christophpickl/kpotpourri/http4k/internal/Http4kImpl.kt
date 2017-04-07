@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k.internal
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.christophpickl.kpotpourri.http4k.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.DefaultsOptsReadOnly
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.Http4kAnyOpts
@@ -12,6 +13,8 @@ import com.github.christophpickl.kpotpourri.http4k.Http4kWithRequestEntity
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.RequestBody
 import com.github.christophpickl.kpotpourri.http4k.Response4k
+import java.nio.charset.StandardCharsets
+import java.util.Base64
 import kotlin.reflect.KClass
 
 internal class Http4kImpl(
@@ -46,10 +49,7 @@ internal class Http4kImpl(
         val defaultHeaders = HashMap<String, String>()
         val requestBody = prepareBodyAndContentType(requestOpts, defaultHeaders)
 
-//        val auth = requestOpts.basicAuth
-//        if (auth is BasicAuth) {
-//            val user = requestOpts.basicAuth.username
-//        }
+        authHeaderIfNecessary(requestOpts, defaultHeaders)
         val response = restClient.execute(Request4k(
                 method = method,
                 url = defaults.baseUrl.combine(url),
@@ -59,7 +59,17 @@ internal class Http4kImpl(
         return castReturnType(response, returnType)
     }
 
-    private fun authHeaderIfNecessary() {}
+    private fun authHeaderIfNecessary(requestOpts: Http4kAnyOpts, headers: MutableMap<String, String>) {
+        val auth = requestOpts.basicAuth
+        if (auth is BasicAuth) {
+            headers += "Authorization" to "Basic ${buildBasicAuthString(auth.username, auth.password)}"
+        }
+    }
+
+    private fun buildBasicAuthString(user: String, pass: String): String {
+        val message = "$user:$pass".toByteArray(StandardCharsets.UTF_8)
+        return Base64.getEncoder().encodeToString(message)
+    }
 
     private fun prepareBodyAndContentType(requestOpts: Http4kAnyOpts, headers: MutableMap<String, String>): String? {
         return if (requestOpts is Http4kWithRequestEntity) {

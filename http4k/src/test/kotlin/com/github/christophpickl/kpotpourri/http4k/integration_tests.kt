@@ -176,7 +176,7 @@ class Http4kIntegrationTestes : WiremockTest() {
         }
 
         verify(getRequestedFor(urlEqualTo(mockEndpointUrl))
-                .withHeader("Authorization", WireMock.equalTo("foobar")))
+                .withHeader("Authorization", WireMock.equalTo("Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA==")))
     }
 
     // helper
