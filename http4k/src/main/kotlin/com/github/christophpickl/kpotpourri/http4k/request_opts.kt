@@ -6,13 +6,17 @@ package com.github.christophpickl.kpotpourri.http4k
  */
 interface Http4kAnyOpts {
     val headers: MutableMap<String, String> // TODO make multi value map
+    // queryParams
+    // cookies
+    var basicAuth: BasicAuthMode
 }
 
 /**
  * Got no body, opposed to POST/PUT requests.
  */
 data class Http4kGetOpts(
-        override val headers: MutableMap<String, String> = HashMap()
+        override val headers: MutableMap<String, String> = HashMap(),
+        override var basicAuth: BasicAuthMode = BasicAuthDisabled
 ) : Http4kAnyOpts
 
 /**
@@ -20,9 +24,16 @@ data class Http4kGetOpts(
  */
 data class Http4kPostOpts (
         override val headers: MutableMap<String, String> = HashMap(),
+        override var basicAuth: BasicAuthMode = BasicAuthDisabled,
         var requestBody: RequestBody = RequestBody.None
 ) : Http4kAnyOpts
 
+sealed class BasicAuthMode
+object BasicAuthDisabled : BasicAuthMode()
+data class BasicAuth(
+        val username: String,
+        val password: String
+) : BasicAuthMode()
 
 // requestEntity
 // ---------------------------------------------------------------------------------------------------------------------

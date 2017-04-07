@@ -160,6 +160,24 @@ class Http4kIntegrationTestes : WiremockTest() {
         dto shouldMatchValue PersonDto.dummy
     }
 
+    // misc
+    // =================================================================================================================
+
+    fun `Given default Http4k, When GET with basic auth, Then was requested so`() {
+        val authUsername = "authUsername"
+        val authPassword = "authPassword"
+        stubForGetMockEndpointUrl()
+
+        defaultHttp4k.get(mockEndpointUrl) {
+            basicAuth = BasicAuth(
+                    username = authUsername,
+                    password = authPassword
+            )
+        }
+
+        verify(getRequestedFor(urlEqualTo(mockEndpointUrl))
+                .withHeader("Authorization", WireMock.equalTo("foobar")))
+    }
 
     // helper
     // =================================================================================================================
@@ -176,6 +194,9 @@ class Http4kIntegrationTestes : WiremockTest() {
         abstract fun methodTranslation(url: String): MappingBuilder
     }
 
+    private fun stubForGetMockEndpointUrl() {
+        stubForSingle()
+    }
     private fun stubForSingle(
             method: WiremockMethod = WiremockMethod.GET,
             baseUrl: String = mockEndpointUrl,

@@ -9,10 +9,10 @@ class Http4kBuilder : DefaultsOpts, DefaultsOptsReadOnly {
 
     override var baseUrl: BaseUrl = BaseUrl.NoBaseUrl
 
-    fun withDefaults(wither: DefaultsOpts.() -> Unit): Http4kBuilder {
-        wither.invoke(this)
-        return this
-    }
+//    fun withDefaults(wither: DefaultsOpts.() -> Unit): Http4kBuilder {
+//        wither.invoke(this)
+//        return this
+//    }
 
     fun end(): Http4k {
         val restClient = RestClientFactory.lookupRestClientByImplementation()
