@@ -44,6 +44,11 @@ internal class Http4kImpl(
         val requestOpts = optInstance.apply { withOpts(this) }
         val defaultHeaders = HashMap<String, String>()
         val requestBody = prepareBodyAndContentType(requestOpts, defaultHeaders)
+
+//        val auth = requestOpts.basicAuth
+//        if (auth is BasicAuth) {
+//            val user = requestOpts.basicAuth.username
+//        }
         val response = restClient.execute(Request4k(
                 method = HttpMethod4k.POST,
                 url = defaults.baseUrl.combine(url),
@@ -52,6 +57,8 @@ internal class Http4kImpl(
         ))
         return castReturnType(response, returnType)
     }
+
+    private fun authHeaderIfNecessary() {}
 
     private fun prepareBodyAndContentType(requestOpts: Http4kAnyOpts, headers: MutableMap<String, String>): String? {
         return if (requestOpts is Http4kWithRequestEntity) {
