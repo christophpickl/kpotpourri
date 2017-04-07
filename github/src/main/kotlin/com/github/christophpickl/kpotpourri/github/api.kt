@@ -1,10 +1,10 @@
 package com.github.christophpickl.kpotpourri.github
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
-import mu.KotlinLogging
 
 
 data class GithubConfig(
@@ -36,21 +36,18 @@ class GithubApiImpl(
         )
 ) : GithubApi {
 
-    private val log = KotlinLogging.logger {}
+    private val log = LOG {}
 
     companion object {
         private val GITHUB_MIMETYPE = "application/vnd.github.v3+json"
     }
 
-//    private val log = LOG(javaClass)
 //    private val mapper = ObjectMapper()
 //            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
     private val http4k = buildHttp4k {
-        //        withDefaults {
         baseUrlBy(baseUrlConfig)
         //            FIXME header += "accept" to GITHUB_MIMETYPE
-//        }
         basicAuth(config.username, config.password)
     }
 
