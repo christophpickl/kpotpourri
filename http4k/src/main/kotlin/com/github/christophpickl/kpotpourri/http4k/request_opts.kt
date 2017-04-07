@@ -11,6 +11,10 @@ interface Http4kAnyOpts {
     var basicAuth: BasicAuthMode
 }
 
+interface Http4kWithRequestEntity {
+    var requestBody: RequestBody
+}
+
 /**
  * Got no body, opposed to POST/PUT requests.
  */
@@ -25,8 +29,8 @@ data class Http4kGetOpts(
 data class Http4kPostOpts (
         override val headers: MutableMap<String, String> = HashMap(),
         override var basicAuth: BasicAuthMode = BasicAuthDisabled,
-        var requestBody: RequestBody = RequestBody.None
-) : Http4kAnyOpts
+        override var requestBody: RequestBody = RequestBody.None
+) : Http4kAnyOpts, Http4kWithRequestEntity
 
 sealed class BasicAuthMode
 object BasicAuthDisabled : BasicAuthMode()

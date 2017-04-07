@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.christophpickl.kpotpourri.http4k.DefaultsOptsReadOnly
 import com.github.christophpickl.kpotpourri.http4k.Http4k
+import com.github.christophpickl.kpotpourri.http4k.Http4kAnyOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4kGetOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4kPostOpts
+import com.github.christophpickl.kpotpourri.http4k.Http4kWithRequestEntity
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.RequestBody
 import com.github.christophpickl.kpotpourri.http4k.Response4k
@@ -24,33 +26,42 @@ internal class Http4kImpl(
 
 //    override fun get(url: String, withOpts: Http4kGetOpts.() -> Unit)
 
-    override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit): R {
-        val requestOpts = Http4kGetOpts().apply { withOpts(this) }
+    override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: Http4kGetOpts.() -> Unit) =
+            any(url, returnType, withOpts, Http4kGetOpts())
 
-        val response = restClient.execute(Request4k(
-                method = HttpMethod4k.GET,
-                url = defaults.baseUrl.combine(url),
-                headers = requestOpts.headers
-        ))
+    override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: Http4kPostOpts.() -> Unit) =
+            any(url, returnType, withOpts, Http4kPostOpts())
 
-        return castReturnType(response, returnType)
-    }
-
-    override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: Http4kPostOpts.() -> Unit): R {
-        val requestOpts = Http4kPostOpts().apply { withOpts(this) }
-
+    /**
+     * GET, POST, ... or any other.
+     */
+    private inline fun <R : Any, reified OPT : Http4kAnyOpts> any(
+            url: String,
+            returnType: KClass<R>,
+            withOpts: OPT.() -> Unit,
+            optInstance: OPT
+    ): R {
+        val requestOpts = optInstance.apply { withOpts(this) }
         val defaultHeaders = HashMap<String, String>()
-        requestOpts.requestBody.toContentType()?.let {
-            defaultHeaders.put("content-type", it)
-        }
-
+        val requestBody = prepareBodyAndContentType(requestOpts, defaultHeaders)
         val response = restClient.execute(Request4k(
                 method = HttpMethod4k.POST,
                 url = defaults.baseUrl.combine(url),
                 headers = defaultHeaders.plus(requestOpts.headers),
-                requestBody = requestOpts.requestBody.toBodyString()
+                requestBody = requestBody
         ))
         return castReturnType(response, returnType)
+    }
+
+    private fun prepareBodyAndContentType(requestOpts: Http4kAnyOpts, headers: MutableMap<String, String>): String? {
+        return if (requestOpts is Http4kWithRequestEntity) {
+            requestOpts.requestBody.toContentType()?.let {
+                headers.put("content-type", it)
+            }
+            requestOpts.requestBody.toBodyString()
+        } else {
+            null
+        }
     }
 
     private fun RequestBody.toBodyString(): String? {
