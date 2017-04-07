@@ -51,6 +51,7 @@ class GithubApiImpl(
         baseUrlBy(baseUrlConfig)
         //            FIXME header += "accept" to GITHUB_MIMETYPE
 //        }
+        basicAuth(config.username, config.password)
     }
 
     /**
@@ -146,7 +147,7 @@ class GithubApiImpl(
 //                body(requestBytes)
 //            }
 //        }
-//                TODO .authenticate(config.username, config.password)
+//                .authenticate(config.username, config.password)
 //                TODO .header("Accept" to GITHUB_MIMETYPE)
 //                .apply { if (headers !=null ) { httpHeaders.putAll(headers)} }
 //                .responseString()

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.christophpickl.kpotpourri.http4k.BasicAuth
-import com.github.christophpickl.kpotpourri.http4k.DefaultsOptsReadOnly
+import com.github.christophpickl.kpotpourri.http4k.DefaultsOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.Http4kAnyOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4kGetOpts
@@ -19,7 +19,7 @@ import kotlin.reflect.KClass
 
 internal class Http4kImpl(
         private val restClient: RestClient,
-        private val defaults: DefaultsOptsReadOnly
+        private val defaults: DefaultsOpts
 ) : Http4k {
 
     private val mapper = ObjectMapper()
@@ -60,10 +60,20 @@ internal class Http4kImpl(
     }
 
     private fun authHeaderIfNecessary(requestOpts: Http4kAnyOpts, headers: MutableMap<String, String>) {
-        val auth = requestOpts.basicAuth
-        if (auth is BasicAuth) {
-            headers += "Authorization" to "Basic ${buildBasicAuthString(auth.username, auth.password)}"
-        }
+        val globalAuth = defaults.basicAuth
+        val requestAuth = requestOpts.basicAuth
+        val auth = if (globalAuth is BasicAuth && requestAuth is BasicAuth) {
+            // global auth is overridden by request auth
+            requestAuth
+        } else if (globalAuth is BasicAuth) {
+            globalAuth
+        } else if (requestAuth is BasicAuth) {
+            requestAuth
+        } else {
+            null
+        } ?: return
+
+        headers += "Authorization" to "Basic ${buildBasicAuthString(auth.username, auth.password)}"
     }
 
     private fun buildBasicAuthString(user: String, pass: String): String {

@@ -5,9 +5,10 @@ import com.github.christophpickl.kpotpourri.http4k.internal.RestClientFactory
 import kotlin.reflect.KClass
 
 
-class Http4kBuilder : DefaultsOpts, DefaultsOptsReadOnly {
+class Http4kBuilder : DefaultsOpts {
 
-    override var baseUrl: BaseUrl = BaseUrl.NoBaseUrl
+    override var baseUrl: BaseUrl = NoBaseUrl
+    override var basicAuth: BasicAuthMode = BasicAuthDisabled
 
 //    fun withDefaults(wither: DefaultsOpts.() -> Unit): Http4kBuilder {
 //        wither.invoke(this)

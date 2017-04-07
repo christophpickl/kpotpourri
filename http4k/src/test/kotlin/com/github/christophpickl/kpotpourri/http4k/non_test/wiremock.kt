@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.non_test
 
-import com.github.christophpickl.kpotpourri.http4k.BaseUrl.BaseUrlByString
+import com.github.christophpickl.kpotpourri.http4k.BaseUrlByString
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.tomakehurst.wiremock.WireMockServer

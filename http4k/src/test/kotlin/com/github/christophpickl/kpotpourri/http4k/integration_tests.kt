@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
 import com.github.christophpickl.kpotpourri.common.testinfra.mapContains
 import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
 import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_DEFAULT_URL
@@ -24,6 +25,11 @@ class Http4kIntegrationTestes : WiremockTest() {
 
     private val headerName = "X-http4k-test"
     private val headerValue = "testHeaderValue"
+
+    private val authUsername = "authUsername"
+    private val authPassword = "authPassword"
+    private val authHeaderValue ="Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA=="
+
 
     // BASE URL
     // =================================================================================================================
@@ -163,9 +169,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     // misc
     // =================================================================================================================
 
-    fun `Given default Http4k, When GET with basic auth, Then was requested so`() {
-        val authUsername = "authUsername"
-        val authPassword = "authPassword"
+    fun `Given default Http4k, When GET with basic auth, Then Authorization header is set`() {
         stubForGetMockEndpointUrl()
 
         defaultHttp4k.get(mockEndpointUrl) {
@@ -176,7 +180,36 @@ class Http4kIntegrationTestes : WiremockTest() {
         }
 
         verify(getRequestedFor(urlEqualTo(mockEndpointUrl))
-                .withHeader("Authorization", WireMock.equalTo("Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA==")))
+                .withHeader("Authorization", WireMock.equalTo(authHeaderValue)))
+    }
+
+    fun `Given basic auth configured Http4k, When GET, Then Authorization header is set`() {
+        stubForGetMockEndpointUrl()
+        val http4k = buildHttp4k {
+            basicAuth(authUsername, authPassword)
+        }
+
+        http4k.get(concatUrlParts(WIREMOCK_DEFAULT_URL, mockEndpointUrl))
+
+        verify(getRequestedFor(urlEqualTo(mockEndpointUrl))
+                .withHeader("Authorization", WireMock.equalTo(authHeaderValue)))
+    }
+
+    fun `Given basic auth configured Http4k, When GET with basic auth, Then Authorization header is set by request auth`() {
+        stubForGetMockEndpointUrl()
+        val http4k = buildHttp4k {
+            basicAuth("some other", "some password")
+        }
+
+        http4k.get(concatUrlParts(WIREMOCK_DEFAULT_URL, mockEndpointUrl)) {
+            basicAuth = BasicAuth(
+                    username = authUsername,
+                    password = authPassword
+            )
+        }
+
+        verify(getRequestedFor(urlEqualTo(mockEndpointUrl))
+                .withHeader("Authorization", WireMock.equalTo(authHeaderValue)))
     }
 
     // helper
@@ -197,6 +230,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     private fun stubForGetMockEndpointUrl() {
         stubForSingle()
     }
+
     private fun stubForSingle(
             method: WiremockMethod = WiremockMethod.GET,
             baseUrl: String = mockEndpointUrl,
