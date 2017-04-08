@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.http4k.internal.Http4kImpl
 import com.github.christophpickl.kpotpourri.http4k.internal.RestClientFactory
 import kotlin.reflect.KClass
@@ -49,8 +50,16 @@ interface Http4k {
     }
 }
 
+
+data class Request4k(
+        val method: HttpMethod4k,
+        val url: String,
+        val requestBody: String? = null,
+        val headers: Map<String, String> = emptyMap()
+)
+
 data class Response4k(
-        val statusCode: Int,
+        val statusCode: StatusCode,
         val bodyAsString: String,
         val headers: Map<String, String>
         // header
@@ -75,3 +84,5 @@ enum class HttpMethod4k(val isRequestBodySupported: Boolean = false) {
     // TRACE
     // ANY
 }
+
+class Http4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)

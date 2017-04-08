@@ -52,5 +52,8 @@ fun String.saveToFile(target: File) {
 }
 
 // TODO write tests
-fun concatUrlParts(part1: String, part2: String) =
+// combineUrlParts
+// joinUrlParts
+fun concatUrlParts(part1: String, part2: String /* vararg String */) =
         part1.removeSuffix("/") + "/" + part2.removePrefix("/")
+// infix joinUrlParts => url1 joinUrlParts url2

@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
+import com.github.christophpickl.kpotpourri.common.testinfra.assertThrown
 import com.github.christophpickl.kpotpourri.common.testinfra.mapContains
 import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
 import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_DEFAULT_URL
@@ -11,7 +12,6 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 
@@ -28,7 +28,7 @@ class Http4kIntegrationTestes : WiremockTest() {
 
     private val authUsername = "authUsername"
     private val authPassword = "authPassword"
-    private val authHeaderValue ="Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA=="
+    private val authHeaderValue = "Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA=="
 
 
     // BASE URL
@@ -46,11 +46,13 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given Http4k with baseUrl as config, When request, Then URL was called`() {
         stubFor(get(urlEqualTo(mockEndpointUrl)))
 
-        buildHttp4k { baseUrlBy(UrlConfig(
-                protocol = HttpProtocol.Http,
-                hostName = WIREMOCK_HOSTNAME,
-                port = WIREMOCK_PORT
-        )) }
+        buildHttp4k {
+            baseUrlBy(UrlConfig(
+                    protocol = HttpProtocol.Http,
+                    hostName = WIREMOCK_HOSTNAME,
+                    port = WIREMOCK_PORT
+            ))
+        }
                 .get(mockEndpointUrl)
 
         verifyGetRequest(mockEndpointUrl)
@@ -86,7 +88,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k, When GET with header, Then verify headers are set on request`() {
         stubForSingle(
                 method = WiremockMethod.GET,
-                baseUrl = mockEndpointUrl)
+                url = mockEndpointUrl)
 
         defaultHttp4k.get(mockEndpointUrl) {
             headers += headerName to headerValue
@@ -99,7 +101,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k and wiremocked header, When GET, Then headers are set in response`() {
         stubForSingle(
                 method = WiremockMethod.GET,
-                baseUrl = mockEndpointUrl) {
+                url = mockEndpointUrl) {
             withHeader(headerName, headerValue)
         }
 
@@ -113,8 +115,8 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k and wiremocked JSON response, When GET, Then JSON DTO should be marshalled`() {
         stubForSingle(
                 method = WiremockMethod.GET,
-                baseUrl = mockEndpointUrl,
-                responseBody = PersonDto.dummy.toJson())
+                url = mockEndpointUrl,
+                body = PersonDto.dummy.toJson())
 
         val actulJsonDto = defaultHttp4k.get(mockEndpointUrl, PersonDto::class)
 
@@ -134,7 +136,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     }
 
     fun `Given default Http4k, When POST with JSON body, Then body should be received and content type set`() {
-        stubForSingle(method = WiremockMethod.POST, baseUrl = mockEndpointUrl)
+        stubForSingle(method = WiremockMethod.POST, url = mockEndpointUrl)
 
         defaultHttp4k.post(mockEndpointUrl) {
             requestBody = bodyJson(PersonDto.dummy)
@@ -212,35 +214,71 @@ class Http4kIntegrationTestes : WiremockTest() {
                 .withHeader("Authorization", WireMock.equalTo(authHeaderValue)))
     }
 
+    // STATUS CODE CHECK
+    // =================================================================================================================
+
+    fun `Given default Http4k, When status check disabled and 500 returned, Then dont throw`() {
+        stubForGetMockEndpointUrl(status = 500)
+
+        defaultHttp4k.get(mockEndpointUrl) {
+            disableStatusCheck()
+        }
+    }
+
+    fun `Given default Http4k, When status check enforced to 200 and 500 returned, Then throw`() {
+        stubForGetMockEndpointUrl(status = SC_500_InternalError)
+
+        assertThrown<Http4kException> {
+            defaultHttp4k.get(mockEndpointUrl) {
+                enforceStatusCode(SC_200_Ok)
+            }
+        }
+    }
+
+    fun `Given default Http4k, When status check enforced to 200 and 200 returned, Then dont throw`() {
+        stubForGetMockEndpointUrl(status = SC_200_Ok)
+
+        defaultHttp4k.get(mockEndpointUrl) {
+            enforceStatusCode(SC_200_Ok)
+        }
+    }
+
+    // TODO StatusCheckEnforced OK
+    // TODO StatusCheckCustom OK / NOK
+    // TODO StatusCheck 2xx family
+
     // helper
     // =================================================================================================================
 
-    private enum class WiremockMethod(val method: RequestMethod) {
-        GET(RequestMethod.GET) {
-            override fun methodTranslation(url: String) = WireMock.get(urlEqualTo(url))
+    private enum class WiremockMethod() {
+        GET() {
+            override fun methodTranslation(url: String) = WireMock.get(urlEqualTo(url))!!
         },
-        POST(RequestMethod.POST) {
-            override fun methodTranslation(url: String) = WireMock.post(urlEqualTo(url))
+        POST() {
+            override fun methodTranslation(url: String) = WireMock.post(urlEqualTo(url))!!
         }
         ;
 
         abstract fun methodTranslation(url: String): MappingBuilder
     }
 
-    private fun stubForGetMockEndpointUrl() {
-        stubForSingle()
+    private fun stubForGetMockEndpointUrl(status: StatusCode = mockStatusCode) {
+        stubForSingle(status = status)
     }
 
+    /**
+     * @param url relative URL, like "/my"
+     */
     private fun stubForSingle(
             method: WiremockMethod = WiremockMethod.GET,
-            baseUrl: String = mockEndpointUrl,
-            responseStatus: Int = mockStatusCode,
-            responseBody: String = mockResponseBody,
+            url: String = mockEndpointUrl,
+            status: StatusCode = mockStatusCode,
+            body: String = mockResponseBody,
             withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
-        stubFor(method.methodTranslation(baseUrl).willReturn(
+        stubFor(method.methodTranslation(url).willReturn(
                 aResponse()
-                        .withStatus(responseStatus)
-                        .withBody(responseBody)
+                        .withStatus(status)
+                        .withBody(body)
                         .apply { withResponse(this) }))
     }
 

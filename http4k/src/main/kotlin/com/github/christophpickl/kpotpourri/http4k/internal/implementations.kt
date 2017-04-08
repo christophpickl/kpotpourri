@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.internal.implementations.ApacheHttpClientRestClient
 
 
@@ -18,9 +18,9 @@ internal object RestClientFactory {
     fun lookupRestClientByImplementation(): RestClient {
         val availableImplementations = SupportedImplementation.values().filter { reflectivelyClassExists(it.fqnToLookFor) }
         return when (availableImplementations.size) {
-            0 -> throw KPotpourriException("Could not detect any supported HTTP client! :(")
+            0 -> throw Http4kException("Could not detect any supported HTTP client! :(")
             1 -> availableImplementations[0].createAdapter()
-            else -> throw KPotpourriException("Multiple implementations found: " + availableImplementations.map { it.name }.joinToString(", "))
+            else -> throw Http4kException("Multiple implementations found: " + availableImplementations.map { it.name }.joinToString(", "))
         }
     }
 

@@ -3,16 +3,22 @@ package com.github.christophpickl.kpotpourri.http4k.internal
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.DefaultsOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.Http4kAnyOpts
+import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.Http4kGetOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4kPostOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4kWithRequestEntity
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
+import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.RequestBody
 import com.github.christophpickl.kpotpourri.http4k.Response4k
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckCustom
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckDisabled
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckEnfored
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 import kotlin.reflect.KClass
@@ -22,6 +28,7 @@ internal class Http4kImpl(
         private val defaults: DefaultsOpts
 ) : Http4k {
 
+    private val log = LOG {}
     private val mapper = ObjectMapper()
             // or use: @JsonIgnoreProperties(ignoreUnknown = true) for your DTO
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -50,13 +57,28 @@ internal class Http4kImpl(
         val requestBody = prepareBodyAndContentType(requestOpts, defaultHeaders)
 
         authHeaderIfNecessary(requestOpts, defaultHeaders)
-        val response = restClient.execute(Request4k(
+        val request4k = Request4k(
                 method = method,
                 url = defaults.baseUrl.combine(url),
                 headers = defaultHeaders.plus(requestOpts.headers),
                 requestBody = requestBody
-        ))
-        return castReturnType(response, returnType)
+        )
+
+        log.debug { "Executing: $request4k" }
+        val response4k = restClient.execute(request4k)
+        checkStatusCode(requestOpts, request4k, response4k)
+        return castReturnType(response4k, returnType)
+    }
+
+    private fun checkStatusCode(requestOpts: Http4kAnyOpts, request4k: Request4k, response4k: Response4k) {
+        // TODO support global statusCheck
+        val check = requestOpts.statusCheck
+        when (check) {
+            StatusCheckDisabled -> return // do nothing :)
+            is StatusCheckEnfored -> if (response4k.statusCode != check.expectedStatusCode)
+                throw Http4kException("Unexpected status code ${response4k.statusCode}! (Expected: ${check.expectedStatusCode})")
+            is StatusCheckCustom -> check.checker(request4k, response4k)
+        }
     }
 
     private fun authHeaderIfNecessary(requestOpts: Http4kAnyOpts, headers: MutableMap<String, String>) {

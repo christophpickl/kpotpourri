@@ -1,9 +1,11 @@
 
 * module ideas:
-    * release scripting infrastructure (github api module)
+    * release scripting infrastructure (use github api module)
+    * logback (programmatic appenders)
+    * testng (custom listeners)
+    * wiremock (reusage)
     * gmail
     * gcal
-    * own http client abstraction like slf4j for logging
 
 # Konkurrenzanalyse
 

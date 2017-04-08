@@ -1,9 +1,10 @@
 package com.github.christophpickl.kpotpourri.http4k.internal.implementations
 
-import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
+import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
-import com.github.christophpickl.kpotpourri.http4k.internal.Request4k
 import com.github.christophpickl.kpotpourri.http4k.internal.RestClient
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase
@@ -20,7 +21,6 @@ import java.io.ByteArrayOutputStream
 internal class ApacheHttpClientRestClient : RestClient {
 
     override fun execute(request: Request4k): Response4k {
-        println("[KPOT] execute apache request: $request")
         val httpRequest = request.toHttpRequest()
         httpRequest.setHeaders(request.headers.entries.map { BasicHeader(it.key, it.value) }.toTypedArray())
         httpRequest.addBodyIfNecessary(request)
@@ -38,12 +38,12 @@ internal class ApacheHttpClientRestClient : RestClient {
 
     private fun HttpRequestBase.addBodyIfNecessary(request: Request4k) {
         if (!request.method.isRequestBodySupported && request.requestBody != null) {
-            throw KPotpourriException("Invalid request! HTTP method [${request.method}] does not support request body: ${request.requestBody}")
+            throw Http4kException("Invalid request! HTTP method [${request.method}] does not support request body: ${request.requestBody}")
         }
 
         if (request.method.isRequestBodySupported) {
             if (this !is HttpEntityEnclosingRequestBase) {
-                throw KPotpourriException("Expected HTTP request to be of type HttpEntityEnclosingRequestBase, but was: $this")
+                throw Http4kException("Expected HTTP request to be of type HttpEntityEnclosingRequestBase, but was: $this")
             }
 
             request.requestBody?.let { body ->

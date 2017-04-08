@@ -9,6 +9,14 @@ interface Http4kAnyOpts {
     // queryParams
     // cookies
     var basicAuth: BasicAuthMode
+    var statusCheck: StatusCheckStrategy
+
+    fun disableStatusCheck() {
+        statusCheck = StatusCheckDisabled
+    }
+    fun enforceStatusCode(expectedStatusCode: StatusCode) {
+        statusCheck = StatusCheckEnfored(expectedStatusCode)
+    }
 }
 
 interface Http4kWithRequestEntity {
@@ -20,7 +28,8 @@ interface Http4kWithRequestEntity {
  */
 data class Http4kGetOpts(
         override val headers: MutableMap<String, String> = HashMap(),
-        override var basicAuth: BasicAuthMode = BasicAuthDisabled
+        override var basicAuth: BasicAuthMode = BasicAuthDisabled,
+        override var statusCheck: StatusCheckStrategy = StatusCheckDisabled
 ) : Http4kAnyOpts
 
 /**
@@ -29,8 +38,15 @@ data class Http4kGetOpts(
 data class Http4kPostOpts (
         override val headers: MutableMap<String, String> = HashMap(),
         override var basicAuth: BasicAuthMode = BasicAuthDisabled,
+        override var statusCheck: StatusCheckStrategy = StatusCheckDisabled,
         override var requestBody: RequestBody = RequestBody.None
 ) : Http4kAnyOpts, Http4kWithRequestEntity
+
+sealed class StatusCheckStrategy
+object StatusCheckDisabled : StatusCheckStrategy()
+class StatusCheckEnfored(val expectedStatusCode: StatusCode) : StatusCheckStrategy()
+typealias StatusCheckFunction = (Request4k, Response4k) -> Boolean
+class StatusCheckCustom(val checker: StatusCheckFunction) : StatusCheckStrategy()
 
 sealed class BasicAuthMode
 object BasicAuthDisabled : BasicAuthMode()
