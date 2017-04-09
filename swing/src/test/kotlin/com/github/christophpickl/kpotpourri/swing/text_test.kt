@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.swing
 
-import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
-import com.github.christophpickl.kpotpourri.common.testinfra.shouldNotMatchValue
+import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
+import com.github.christophpickl.kpotpourri.test4k.shouldNotMatchValue
 import org.testng.annotations.Test
 import java.awt.Font
 import javax.swing.JTextField

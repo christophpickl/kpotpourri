@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.common.testinfra
+package com.github.christophpickl.kpotpourri.test4k
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo

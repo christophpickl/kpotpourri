@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.common.testinfra
+package com.github.christophpickl.kpotpourri.test4k
 
 import org.testng.Assert
 import org.testng.SkipException

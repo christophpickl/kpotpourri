@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.common.collection
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
+import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test

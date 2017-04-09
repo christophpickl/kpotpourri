@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.common.exception
 
-import com.github.christophpickl.kpotpourri.common.testinfra.assertThrown
+import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import org.testng.annotations.Test
 
 private class MyException() : RuntimeException()

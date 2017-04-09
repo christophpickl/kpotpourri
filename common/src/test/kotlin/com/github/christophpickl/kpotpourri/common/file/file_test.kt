@@ -1,8 +1,8 @@
 package com.github.christophpickl.kpotpourri.common.file
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.testinfra.assertThrown
-import com.github.christophpickl.kpotpourri.common.testinfra.skip
+import com.github.christophpickl.kpotpourri.test4k.assertThrown
+import com.github.christophpickl.kpotpourri.test4k.skip
 import org.testng.annotations.Test
 import java.io.File
 

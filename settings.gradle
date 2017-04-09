@@ -1,5 +1,8 @@
 
 include 'common'
-include 'swing'
+include 'test4k'
 include 'http4k'
+include 'wiremock4k'
 include 'github'
+include 'swing'
+

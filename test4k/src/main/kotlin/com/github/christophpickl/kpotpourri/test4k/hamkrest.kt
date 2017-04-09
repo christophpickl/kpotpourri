@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.common.testinfra
+package com.github.christophpickl.kpotpourri.test4k
 
 import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.Matcher

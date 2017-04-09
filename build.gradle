@@ -47,6 +47,7 @@ allprojects {
 
 subprojects { subproject ->
 
+    println("[KPOT]")
     println("[KPOT] Configuring subproject '${subproject.name}' with version '${version}'")
 
     apply plugin: "kotlin"
@@ -76,10 +77,10 @@ subprojects { subproject ->
         compile 'io.github.microutils:kotlin-logging:1.4.4'
         compile 'com.google.guava:guava:21.0'
 
-        testCompile 'org.testng:testng:6.11'
-        testCompile 'com.natpryce:hamkrest:1.3.0.0'
-        testCompile "com.nhaarman:mockito-kotlin:1.4.0"
-        testRuntime "ch.qos.logback:logback-core:1.2.3"
+        if (subproject.name != "test4k") {
+            println "[KPOT] adding test4k dependency for ${subproject.name}"
+            testCompile project(':test4k')
+        }
     }
 
     test {

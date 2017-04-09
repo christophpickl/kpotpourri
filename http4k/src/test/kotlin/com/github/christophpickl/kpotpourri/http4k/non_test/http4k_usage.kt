@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.non_test
 
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*

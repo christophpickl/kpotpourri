@@ -1,4 +1,5 @@
-package com.github.christophpickl.kpotpourri.common.testinfra
+/*
+package com.github.christophpickl.kpotpourri.logback
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.LoggerContext
@@ -190,3 +191,5 @@ class LogTestEnablerListener :  ITestNGListener, ITestListener {
     override fun onTestFailedButWithinSuccessPercentage(result: ITestResult) { }
 
 }
+
+*/

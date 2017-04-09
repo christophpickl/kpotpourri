@@ -1,12 +1,8 @@
-package com.github.christophpickl.kpotpourri.common.testinfra
+package com.github.christophpickl.kpotpourri.test4k
 
 import org.testng.annotations.Test
 
-
-private open class MyException(message: String) : RuntimeException(message)
-private class MySubException(message: String) : MyException(message)
-
-@Test class ExceptionTest {
+@Test class AssertThrownTest {
 
     private val ANY_MESSAGE = "testMessage"
 
@@ -43,3 +39,7 @@ private class MySubException(message: String) : MyException(message)
     }
 
 }
+
+private open class MyException(message: String) : RuntimeException(message)
+
+private class MySubException(message: String) : MyException(message)

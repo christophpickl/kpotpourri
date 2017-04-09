@@ -1,22 +1,26 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
-import com.github.christophpickl.kpotpourri.common.testinfra.assertThrown
-import com.github.christophpickl.kpotpourri.common.testinfra.mapContains
-import com.github.christophpickl.kpotpourri.common.testinfra.shouldMatchValue
-import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_DEFAULT_URL
-import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_HOSTNAME
-import com.github.christophpickl.kpotpourri.http4k.non_test.WIREMOCK_PORT
-import com.github.christophpickl.kpotpourri.http4k.non_test.WiremockTest
+import com.github.christophpickl.kpotpourri.test4k.assertThrown
+import com.github.christophpickl.kpotpourri.test4k.mapContains
+import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import org.testng.annotations.BeforeMethod
 
 class Http4kIntegrationTestes : WiremockTest() {
 
+    private lateinit var defaultHttp4k: Http4k
+
+    private val wiremockBaseUrl = BaseUrlByString(WIREMOCK_DEFAULT_URL)
     private val mockStatusCode = 200
     private val mockResponseBody = "wiremock response body"
     private val mockEndpointUrl = "/my"
@@ -30,6 +34,16 @@ class Http4kIntegrationTestes : WiremockTest() {
     private val authPassword = "authPassword"
     private val authHeaderValue = "Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA=="
 
+
+    @BeforeMethod
+    fun `defaultHttp4k re-set`() {
+        defaultHttp4k = buildHttp4k {
+            // MINOR architectural glitch?! :-/
+//            withDefaults {
+            baseUrl = wiremockBaseUrl
+//            }
+        }
+    }
 
     // BASE URL
     // =================================================================================================================
