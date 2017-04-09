@@ -29,14 +29,19 @@ interface GithubApi {
  */
 class GithubApiImpl(
         private val config: GithubConfig,
-        private val baseUrlConfig: UrlConfig = UrlConfig(
-                protocol = HttpProtocol.Https,
-                hostName = "api.github.com",
-                path = "/repos/${config.repositoryOwner}/${config.repositoryName}"
-        )
+        private val protocol: HttpProtocol = HttpProtocol.Https,
+        private val hostName: String = "api.github.com",
+        private val port: Int = 80
 ) : GithubApi {
 
     private val log = LOG {}
+
+    private val baseUrlConfig: UrlConfig = UrlConfig(
+            protocol = protocol,
+            hostName = hostName,
+            port = port,
+            path = "/repos/${config.repositoryOwner}/${config.repositoryName}"
+    )
 
     companion object {
         private val GITHUB_MIMETYPE = "application/vnd.github.v3+json"
@@ -106,7 +111,7 @@ class GithubApiImpl(
     }
 
     // state defaults to "open"
-    override fun listOpenMilestones() =
+    override fun listOpenMilestones(): List<Milestone> =
             //        log.debug("listOpenMilestones()")
             http4k.get("/milestones", Array<MilestoneJson>::class)
                     .map { it.toMilestone() }

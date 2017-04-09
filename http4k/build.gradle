@@ -10,7 +10,4 @@ dependencies {
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"
 
     testCompile project(':wiremock4k')
-    testRuntime "ch.qos.logback:logback-classic:1.2.3"
-//    testRuntime "org.slf4j:jul-to-slf4j:1.7.25"
-//    testCompile "ch.qos.logback:logback-core:1.2.3"
 }

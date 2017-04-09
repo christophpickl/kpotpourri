@@ -81,6 +81,9 @@ subprojects { subproject ->
             println "[KPOT] adding test4k dependency for ${subproject.name}"
             testCompile project(':test4k')
         }
+        testRuntime "ch.qos.logback:logback-classic:1.2.3"
+//    testRuntime "org.slf4j:jul-to-slf4j:1.7.25"
+//    testCompile "ch.qos.logback:logback-core:1.2.3"
     }
 
     test {

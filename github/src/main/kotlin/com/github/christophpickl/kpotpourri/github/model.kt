@@ -86,6 +86,7 @@ enum class State(
     Closed("closed");
 
     companion object {
+        // MINOR test this
         fun byJsonValue(seek: String) = State.values().first { it.jsonValue == seek }
     }
 }

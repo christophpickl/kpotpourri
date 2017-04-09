@@ -14,15 +14,17 @@ const val WIREMOCK_PORT = 8042
 const val WIREMOCK_DEFAULT_URL = "http://$WIREMOCK_HOSTNAME:$WIREMOCK_PORT"
 
 @Test(groups = arrayOf("wiremock"))
-abstract class WiremockTest {
+abstract class WiremockTest(
+        private val port: Int = WIREMOCK_PORT
+) {
 
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer
 
     @BeforeClass
     fun `wiremock startup`() {
-        WireMock.configureFor(WIREMOCK_HOSTNAME, WIREMOCK_PORT)
-        server = WireMockServer(WireMockConfiguration.wireMockConfig().port(WIREMOCK_PORT))
+        WireMock.configureFor(WIREMOCK_HOSTNAME, port)
+        server = WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
         server.start()
     }
 
