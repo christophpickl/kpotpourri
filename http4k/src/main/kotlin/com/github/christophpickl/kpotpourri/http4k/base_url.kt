@@ -3,7 +3,8 @@ package com.github.christophpickl.kpotpourri.http4k
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
 
 
-interface DefaultsOpts {
+interface BaseUrlConfig {
+
     var baseUrl: BaseUrl
 
     fun baseUrlDisabled() {
@@ -18,11 +19,6 @@ interface DefaultsOpts {
         baseUrl = BaseUrlByConfig(config)
     }
 
-    var basicAuth: BasicAuthMode
-
-    fun basicAuth(username: String, password: String) {
-        basicAuth = BasicAuth(username, password)
-    }
 }
 
 sealed class BaseUrl {
@@ -49,15 +45,3 @@ class BaseUrlByConfig(config: UrlConfig) : BaseUrl() {
 
     override fun combine(url: String) = concatUrlParts(urlPrefix, url)
 }
-
-enum class HttpProtocol(val urlPrefix: String) {
-    Http("http"), Https("https")
-}
-
-data class UrlConfig(
-        // defaults to: "http://localhost:8080"
-        val protocol: HttpProtocol = HttpProtocol.Http,
-        val hostName: String = "localhost",
-        val port: Int = 80,
-        val path: String = "" // e.g.: "/rest"
-)

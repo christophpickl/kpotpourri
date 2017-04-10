@@ -2,6 +2,47 @@
 
 package com.github.christophpickl.kpotpourri.http4k
 
+
+interface StatusCheckConfig {
+    var statusCheck: StatusCheckMode
+    fun disableStatusCheck() {
+        statusCheck = StatusCheckDisabled
+    }
+    fun enforceStatusCode(expectedStatusCode: StatusCode) {
+        statusCheck = StatusCheckEnfored(expectedStatusCode)
+    }
+    fun customStatusCheck(checker: StatusCheckFunction) {
+        statusCheck = StatusCheckCustom(checker)
+    }
+    fun enforceStatusFamily(family: StatusFamily) {
+        statusCheck = StatusCheckCustom { _, response ->
+            if (response.statusCode / 100 == family.group) {
+                StatusCheckOk
+            } else {
+                StatusCheckFail("Status code ${response.statusCode} expected to be of group ${family.group}!")
+            }
+        }
+    }
+}
+
+
+sealed class StatusCheckMode
+
+object StatusCheckDisabled : StatusCheckMode()
+
+class StatusCheckEnfored(val expectedStatusCode: StatusCode) : StatusCheckMode()
+
+sealed class StatusCheckResult
+
+object StatusCheckOk : StatusCheckResult()
+
+data class StatusCheckFail(val message: String) : StatusCheckResult()
+
+typealias StatusCheckFunction = (Request4k, Response4k) -> StatusCheckResult
+
+class StatusCheckCustom(val checker: StatusCheckFunction) : StatusCheckMode()
+
+
 @Suppress("CanBeParameter")
 class Http4kStatusCodeException(
         val expected: StatusCode,

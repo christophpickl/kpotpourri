@@ -20,7 +20,7 @@ class Http4kIntegrationTestes : WiremockTest() {
 
     private lateinit var http4k: Http4k
 
-    private val wiremockBaseUrl = BaseUrlByString(WIREMOCK_DEFAULT_URL)
+    private val mockBaseUrl = WIREMOCK_DEFAULT_URL
     private val mockStatusCode = 200
     private val mockResponseBody = "wiremock response body"
     private val mockEndpointUrl = "/my"
@@ -38,7 +38,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     @BeforeMethod
     fun `http4k re-set`() {
         http4k = buildHttp4k {
-            baseUrl = wiremockBaseUrl
+            baseUrlBy(mockBaseUrl)
         }
     }
 
@@ -231,7 +231,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given global status check, When request status check also, Then request takes precedence`() {
         stubForGetMockEndpointUrl(status = SC_500_InternalError)
         val http4k = buildHttp4k {
-            baseUrl = wiremockBaseUrl
+            baseUrlBy(mockBaseUrl)
             enforceStatusCode(SC_200_Ok)
         }
 
