@@ -18,7 +18,7 @@ import org.testng.annotations.BeforeMethod
 
 class Http4kIntegrationTestes : WiremockTest() {
 
-    private lateinit var defaultHttp4k: Http4k
+    private lateinit var http4k: Http4k
 
     private val wiremockBaseUrl = BaseUrlByString(WIREMOCK_DEFAULT_URL)
     private val mockStatusCode = 200
@@ -36,12 +36,9 @@ class Http4kIntegrationTestes : WiremockTest() {
 
 
     @BeforeMethod
-    fun `defaultHttp4k re-set`() {
-        defaultHttp4k = buildHttp4k {
-            // MINOR architectural glitch?! :-/
-//            withDefaults {
+    fun `http4k re-set`() {
+        http4k = buildHttp4k {
             baseUrl = wiremockBaseUrl
-//            }
         }
     }
 
@@ -90,7 +87,7 @@ class Http4kIntegrationTestes : WiremockTest() {
                         .withStatus(mockStatusCode)
                         .withBody(mockResponseBody)))
 
-        val response = defaultHttp4k.get(mockEndpointUrl)
+        val response = http4k.get(mockEndpointUrl)
 
         assertThat(response, equalTo(Response4k(
                 statusCode = mockStatusCode,
@@ -104,7 +101,7 @@ class Http4kIntegrationTestes : WiremockTest() {
                 method = WiremockMethod.GET,
                 url = mockEndpointUrl)
 
-        defaultHttp4k.get(mockEndpointUrl) {
+        http4k.get(mockEndpointUrl) {
             headers += headerName to headerValue
         }
 
@@ -119,7 +116,7 @@ class Http4kIntegrationTestes : WiremockTest() {
             withHeader(headerName, headerValue)
         }
 
-        val response = defaultHttp4k.get(mockEndpointUrl)
+        val response = http4k.get(mockEndpointUrl)
 
         // mapContains at least custom header, but additionally others from wiremock
         assertThat(response.headers, mapContains(headerName to headerValue))
@@ -132,7 +129,7 @@ class Http4kIntegrationTestes : WiremockTest() {
                 url = mockEndpointUrl,
                 body = PersonDto.dummy.toJson())
 
-        val actulJsonDto = defaultHttp4k.get(mockEndpointUrl, PersonDto::class)
+        val actulJsonDto = http4k.get(mockEndpointUrl, PersonDto::class)
 
         actulJsonDto shouldMatchValue PersonDto.dummy
     }
@@ -144,7 +141,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k, When POST, Then should be received`() {
         stubForSingle(method = WiremockMethod.POST)
 
-        defaultHttp4k.post(mockEndpointUrl)
+        http4k.post(mockEndpointUrl)
 
         verify(postRequestedFor(urlEqualTo(mockEndpointUrl)))
     }
@@ -152,7 +149,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k, When POST with JSON body, Then body should be received and content type set`() {
         stubForSingle(method = WiremockMethod.POST, url = mockEndpointUrl)
 
-        defaultHttp4k.post(mockEndpointUrl) {
+        http4k.post(mockEndpointUrl) {
             requestBody = bodyJson(PersonDto.dummy)
         }
 
@@ -165,7 +162,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k, When POST with JSON body and custom content type, Then default content type should have been overridden`() {
         stubFor(post(urlEqualTo(mockEndpointUrl)))
 
-        defaultHttp4k.post(mockEndpointUrl) {
+        http4k.post(mockEndpointUrl) {
             requestBody = bodyJson(PersonDto.dummy)
             headers += "content-type" to "application/foobar"
         }
@@ -177,7 +174,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k, When POST with JSON response, Then response DTO should be returned`() {
         stubFor(post(urlEqualTo(mockEndpointUrl)).willReturn(aResponse().withBody(PersonDto.dummy.toJson())))
 
-        val dto = defaultHttp4k.post(mockEndpointUrl, PersonDto::class)
+        val dto = http4k.post(mockEndpointUrl, PersonDto::class)
 
         dto shouldMatchValue PersonDto.dummy
     }
@@ -188,7 +185,7 @@ class Http4kIntegrationTestes : WiremockTest() {
     fun `Given default Http4k, When GET with basic auth, Then Authorization header is set`() {
         stubForGetMockEndpointUrl()
 
-        defaultHttp4k.get(mockEndpointUrl) {
+        http4k.get(mockEndpointUrl) {
             basicAuth = BasicAuth(
                     username = authUsername,
                     password = authPassword
@@ -231,35 +228,90 @@ class Http4kIntegrationTestes : WiremockTest() {
     // STATUS CODE CHECK
     // =================================================================================================================
 
-    fun `Given default Http4k, When status check disabled and 500 returned, Then dont throw`() {
-        stubForGetMockEndpointUrl(status = 500)
+    fun `Given global status check, When request status check also, Then request takes precedence`() {
+        stubForGetMockEndpointUrl(status = SC_500_InternalError)
+        val http4k = buildHttp4k {
+            baseUrl = wiremockBaseUrl
+            enforceStatusCode(SC_200_Ok)
+        }
 
-        defaultHttp4k.get(mockEndpointUrl) {
+        http4k.get(mockEndpointUrl) {
+            enforceStatusCode(SC_500_InternalError)
+        }
+    }
+
+    fun `Given status 500, When check is disabled, Then do nothing`() {
+        stubForGetMockEndpointUrl(status = SC_500_InternalError)
+
+        http4k.get(mockEndpointUrl) {
             disableStatusCheck()
         }
     }
 
-    fun `Given default Http4k, When status check enforced to 200 and 500 returned, Then throw`() {
+    fun `Given status 200, When check enforced to 200, Then do nothing`() {
+        stubForGetMockEndpointUrl(status = SC_200_Ok)
+
+        http4k.get(mockEndpointUrl) {
+            enforceStatusCode(SC_200_Ok)
+        }
+    }
+
+    fun `Given status 500, When check enforced to 200, Then throw exception`() {
         stubForGetMockEndpointUrl(status = SC_500_InternalError)
 
-        assertThrown<Http4kException> {
-            defaultHttp4k.get(mockEndpointUrl) {
+        assertThrown<Http4kStatusCodeException>({ e -> e.expected == SC_200_Ok && e.actual == SC_500_InternalError }) {
+            http4k.get(mockEndpointUrl) {
                 enforceStatusCode(SC_200_Ok)
             }
         }
     }
 
-    fun `Given default Http4k, When status check enforced to 200 and 200 returned, Then dont throw`() {
+    fun `Given custom status check, When check succeeds, Then do nothing`() {
         stubForGetMockEndpointUrl(status = SC_200_Ok)
 
-        defaultHttp4k.get(mockEndpointUrl) {
-            enforceStatusCode(SC_200_Ok)
+        http4k.get(mockEndpointUrl) {
+            customStatusCheck { _, _ ->
+                StatusCheckOk
+            }
         }
     }
 
-    // TODO StatusCheckEnforced OK
-    // TODO StatusCheckCustom OK / NOK
-    // TODO StatusCheck 2xx family
+    fun `Given custom status check, When check fails, Then throw exception`() {
+        val exceptionMessage = "testMessage"
+        stubForGetMockEndpointUrl(status = SC_500_InternalError)
+
+        assertThrown<Http4kStatusException>({ e -> e.message == exceptionMessage }) {
+            http4k.get(mockEndpointUrl) {
+                customStatusCheck { _, _ ->
+                    StatusCheckFail(exceptionMessage)
+                }
+            }
+        }
+    }
+
+    fun `Given status family check, When check succeeds, Then do nothing`() {
+        stubForGetMockEndpointUrl(status = SC_200_Ok)
+
+        http4k.get(mockEndpointUrl) {
+            enforceStatusFamily(StatusFamily.Success_2)
+        }
+    }
+
+    fun `Given status family check, When check fails, Then throw exception`() {
+        stubForGetMockEndpointUrl(status = SC_500_InternalError)
+
+        assertThrown<Http4kStatusException> {
+            http4k.get(mockEndpointUrl) {
+                enforceStatusFamily(StatusFamily.Success_2)
+            }
+        }
+    }
+
+
+    // QUERY PARAM
+    // =================================================================================================================
+
+    // FIXME implement me
 
     // helper
     // =================================================================================================================

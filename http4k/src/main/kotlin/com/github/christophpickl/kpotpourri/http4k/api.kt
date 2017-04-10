@@ -6,15 +6,11 @@ import com.github.christophpickl.kpotpourri.http4k.internal.RestClientFactory
 import kotlin.reflect.KClass
 
 
-class Http4kBuilder : DefaultsOpts {
+class Http4kBuilder : DefaultsOpts, StatusCheckConfig {
 
     override var baseUrl: BaseUrl = NoBaseUrl
     override var basicAuth: BasicAuthMode = BasicAuthDisabled
-
-//    fun withDefaults(wither: DefaultsOpts.() -> Unit): Http4kBuilder {
-//        wither.invoke(this)
-//        return this
-//    }
+    override var statusCheck: StatusCheckStrategy = StatusCheckDisabled
 
     fun end(): Http4k {
         val restClient = RestClientFactory.lookupRestClientByImplementation()
@@ -85,4 +81,4 @@ enum class HttpMethod4k(val isRequestBodySupported: Boolean = false) {
     // ANY
 }
 
-class Http4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)
+open class Http4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)

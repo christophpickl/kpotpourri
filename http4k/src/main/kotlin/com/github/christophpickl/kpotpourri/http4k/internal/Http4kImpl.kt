@@ -8,9 +8,10 @@ import com.github.christophpickl.kpotpourri.http4k.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.DefaultsOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.Http4kAnyOpts
-import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.Http4kGetOpts
 import com.github.christophpickl.kpotpourri.http4k.Http4kPostOpts
+import com.github.christophpickl.kpotpourri.http4k.Http4kStatusCodeException
+import com.github.christophpickl.kpotpourri.http4k.Http4kStatusException
 import com.github.christophpickl.kpotpourri.http4k.Http4kWithRequestEntity
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
@@ -19,6 +20,8 @@ import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckCustom
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckDisabled
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckEnfored
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckFail
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckOk
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 import kotlin.reflect.KClass
@@ -71,13 +74,19 @@ internal class Http4kImpl(
     }
 
     private fun checkStatusCode(requestOpts: Http4kAnyOpts, request4k: Request4k, response4k: Response4k) {
-        // TODO support global statusCheck
+        // TODO support global statusCheck with lower precedence than request scoped
         val check = requestOpts.statusCheck
         when (check) {
             StatusCheckDisabled -> return // do nothing :)
             is StatusCheckEnfored -> if (response4k.statusCode != check.expectedStatusCode)
-                throw Http4kException("Unexpected status code ${response4k.statusCode}! (Expected: ${check.expectedStatusCode})")
-            is StatusCheckCustom -> check.checker(request4k, response4k)
+                throw Http4kStatusCodeException(check.expectedStatusCode, response4k.statusCode)
+            is StatusCheckCustom -> {
+                val result = check.checker(request4k, response4k)
+                when (result) {
+                    StatusCheckOk -> return // succeeded
+                    is StatusCheckFail -> throw Http4kStatusException(result.message)
+                }
+            }
         }
     }
 
