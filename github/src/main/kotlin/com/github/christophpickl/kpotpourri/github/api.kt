@@ -12,7 +12,9 @@ data class GithubConfig(
         val repositoryName: String,
         val username: String,
         val password: String
-)
+) {
+    companion object // for test extensions
+}
 
 interface GithubApi {
     fun listOpenMilestones(): List<Milestone>

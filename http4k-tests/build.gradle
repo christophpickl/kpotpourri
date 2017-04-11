@@ -1,0 +1,13 @@
+// http4k-tests build.gradle
+
+// ./gradlew :http4k-tests:test
+
+dependencies {
+    compile project(':common')
+    compile project(':http4k')
+    compile project(':http4k-apache')
+    compile project(':http4k-fuel')
+
+    testCompile project(':wiremock4k')
+    testCompile project(':http4k').sourceSets.test.output
+}

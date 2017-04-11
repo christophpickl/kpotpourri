@@ -1,0 +1,8 @@
+// release4k build.gradle
+
+dependencies {
+    compile project(':common')
+    compile project(':github')
+
+    testCompile project(':github').sourceSets.test.output
+}

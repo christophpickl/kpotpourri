@@ -11,3 +11,5 @@ package com.github.christophpickl.kpotpourri.common
  *   }
  */
 annotation class KotlinNoArg
+
+fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
