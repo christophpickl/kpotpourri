@@ -40,9 +40,8 @@ interface Http4k {
         return post(url, Response4k::class, withOpts)
     }
 
-    // TODO test me
     fun <R : Any> post(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PostRequestOpts.() -> Unit = {}): R {
-        return post(url, returnType, { bodyJson(jacksonObject); withOpts(this) })
+        return post(url, returnType, { requestBody(jacksonObject); withOpts(this) })
     }
 }
 

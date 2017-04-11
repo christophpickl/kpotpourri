@@ -3,13 +3,12 @@ package com.github.christophpickl.kpotpourri.http4k
 
 interface RequestWithEntityOpts {
     var requestBody: RequestBody
+
+    fun requestBodyDisabled() { requestBody = None}
+    fun requestBody(body: String) { requestBody = StringBody(body)}
+    fun requestBody(jacksonObject: Any) { requestBody = JsonBody(jacksonObject) }
+
 }
-
-
-// TODO TEST me
-fun bodyDisabled() = None
-fun bodyString(body: String) = StringBody(body)
-fun bodyJson(jacksonObject: Any) = JsonBody(jacksonObject)
 
 
 sealed class RequestBody

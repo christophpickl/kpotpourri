@@ -14,6 +14,7 @@ internal fun prepareBodyAndContentType(requestOpts: AnyRequestOpts): TypeAndBody
     if (requestOpts !is RequestWithEntityOpts) {
         return null
     }
+
     val body = requestOpts.requestBody
     return when (body) {
         is None -> null

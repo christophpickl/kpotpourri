@@ -6,6 +6,7 @@ import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
 import org.testng.annotations.AfterClass
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.BeforeMethod
@@ -47,6 +48,12 @@ abstract class WiremockTest(
 
     protected fun verifyGetRequest(url: String) {
         verify(getRequestedFor(urlEqualTo(url)))
+    }
+
+    protected fun verifyPostRequest(url: String, func: RequestPatternBuilder.() -> Unit = {}) {
+        val builder = postRequestedFor(urlEqualTo(url))
+        func(builder)
+        verify(builder)
     }
 
     /**
