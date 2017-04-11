@@ -2,9 +2,11 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
+import com.natpryce.hamkrest.assertion.assertThat
 
 
 class PostAndCoIT : Http4kWiremockTest() {
@@ -73,7 +75,7 @@ class PostAndCoIT : Http4kWiremockTest() {
         }
     }
 
-    fun `Given default Http4k, WHen POST with string request body, Then string body should have been sent`() {
+    fun `Given default Http4k, When POST with string request body, Then string body should have been sent`() {
         givenPostToMockEndpointUrl()
 
         http4k.post(mockEndpointUrl) {
@@ -85,8 +87,33 @@ class PostAndCoIT : Http4kWiremockTest() {
         }
     }
 
-    private fun givenPostToMockEndpointUrl() {
-        givenWiremock(method = WiremockMethod.POST, path = mockEndpointUrl)
+    fun `Given default Http4k, When POST with JSON request body and custom response body, Then both should be ok`() {
+        val requestDto = PersonDto.dummy1
+        val responseDto  = PersonDto.dummy2
+        givenPostToMockEndpointUrl() {
+            withBody(responseDto.toJson())
+        }
+
+        val actualResponseDto = http4k.post(mockEndpointUrl, PersonDto::class) {
+            requestBody(requestDto)
+        }
+
+        verifyPostRequest(mockEndpointUrl) {
+            withRequestBody(equalTo(requestDto.toJson()))
+        }
+        assertThat(actualResponseDto, com.natpryce.hamkrest.equalTo(responseDto))
+    }
+
+    private fun givenPostToMockEndpointUrl(
+            body: String? = null,
+            withResponse: ResponseDefinitionBuilder.() -> Unit = {}
+    ) {
+        givenWiremock(
+                method = WiremockMethod.POST,
+                path = mockEndpointUrl,
+                body = body,
+                withResponse = withResponse
+        )
     }
 
     // PUT

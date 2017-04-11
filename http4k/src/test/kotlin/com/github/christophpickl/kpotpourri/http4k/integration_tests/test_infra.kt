@@ -59,7 +59,9 @@ data class PersonDto(
         val age: Int
 ) {
     companion object {
-        val dummy = PersonDto("Foobar", 42)
+        val dummy = PersonDto("dummy", 42)
+        val dummy1 = PersonDto("dummy1", 1)
+        val dummy2 = PersonDto("dummy2", 2)
     }
 
     fun toJson() = """{"name":"$name","age":$age}"""
