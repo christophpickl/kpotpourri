@@ -49,16 +49,37 @@ interface Http4k {
 data class Request4k(
         val method: HttpMethod4k,
         val url: String,
-        val requestBody: String? = null,
-        val headers: Map<String, String> = emptyMap()
+        val headers: Map<String, String> = emptyMap(),
         // cookies
-)
+        val requestBody: String? = null
+) {
+    companion object {
+        private fun filterAuthorizationHeader(headers: Map<String, String>): Map<String, String> {
+            val newHeaders = HashMap<String, String>()
+            headers.forEach { (k, v) ->
+                if ("authorization" == k.toLowerCase()) {
+                    newHeaders += k to "xxxxx"
+                } else {
+                    newHeaders += k to v
+                }
+            }
+            return newHeaders
+        }
+    }
+
+    override fun toString() = "Request4k(" +
+            "method=$method, " +
+            "url=$url, " +
+            "headers=${filterAuthorizationHeader(headers)}" +
+//            "cookies=$cookies, " +
+            "requestBody=<<$requestBody>>, " +
+            ")"
+}
 
 data class Response4k(
         val statusCode: StatusCode,
         val bodyAsString: String,
         val headers: Map<String, String>
-        // header
         // cookies
 )
 

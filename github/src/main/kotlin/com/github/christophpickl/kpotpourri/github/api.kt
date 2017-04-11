@@ -24,6 +24,10 @@ interface GithubApi {
     fun uploadReleaseAsset(upload: AssetUpload)
 }
 
+fun buildGithub4k(config: GithubConfig): GithubApi {
+    return GithubApiImpl(config)
+}
+
 /**
  * https://developer.github.com/v3/
  */
@@ -31,7 +35,7 @@ class GithubApiImpl(
         private val config: GithubConfig,
         private val protocol: HttpProtocol = HttpProtocol.Https,
         private val hostName: String = "api.github.com",
-        private val port: Int = 80
+        private val port: Int = 443
 ) : GithubApi {
 
     private val log = LOG {}

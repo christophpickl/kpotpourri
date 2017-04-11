@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.http4k.internal.implementations
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
@@ -26,6 +25,10 @@ internal class ApacheHttpClientRestClient : RestClient {
         httpRequest.addBodyIfNecessary(request)
 
         val client = HttpClients.createDefault()
+//        httpRequest.config.connectTimeout
+//        httpRequest.config.connectionRequestTimeout
+//        httpRequest.config.socketTimeout
+
         val response = client.execute(httpRequest)
 
         return response.toResponse4k()
