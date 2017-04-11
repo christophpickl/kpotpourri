@@ -1,6 +1,8 @@
 package com.github.christophpickl.kpotpourri.wiremock4k
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.MappingBuilder
+import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
@@ -18,6 +20,11 @@ abstract class WiremockTest(
         private val port: Int = WIREMOCK_PORT
 ) {
 
+    companion object {
+        protected val DEFAULT_STATUS_CODE = 200
+        protected val DEFAULT_PATH = "/"
+        protected val DEFAULT_METHOD = WiremockMethod.GET
+    }
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer
 
@@ -42,4 +49,33 @@ abstract class WiremockTest(
         verify(getRequestedFor(urlEqualTo(url)))
     }
 
+    /**
+     * @param path relative URL, like "/my"
+     */
+    protected fun givenWiremock(
+            method: WiremockMethod = DEFAULT_METHOD,
+            path: String = DEFAULT_PATH,
+            statusCode: Int = DEFAULT_STATUS_CODE,
+            body: String? = null,
+            withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
+        stubFor(method.methodTranslation(path).willReturn(
+                aResponse()
+                        .withStatus(statusCode)
+                        .withBody(body)
+                        .apply { withResponse(this) }))
+    }
+
+}
+
+
+enum class WiremockMethod() {
+    GET() {
+        override fun methodTranslation(path: String) = get(urlEqualTo(path))!!
+    },
+    POST() {
+        override fun methodTranslation(path: String) = post(urlEqualTo(path))!!
+    }
+    ;
+
+    abstract fun methodTranslation(path: String): MappingBuilder
 }

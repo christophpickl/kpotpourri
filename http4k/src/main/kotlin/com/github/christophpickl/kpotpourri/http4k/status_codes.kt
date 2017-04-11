@@ -56,6 +56,7 @@ class Http4kStatusCodeException(
     }
 }
 
+// MINOR could introduce NotFoundException, BadRequestException, ... for most important status codes
 open class Http4kStatusException(
         message: String,
         cause: Exception? = null
