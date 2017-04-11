@@ -1,5 +1,15 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
+
+
+interface HeadersConfig {
+    val headers: HeadersMap
+
+    fun addHeader(header: Pair<String, String>) {
+        headers += header
+    }
+}
 
 enum class HttpProtocol(val urlPrefix: String) {
     Http("http"), Https("https")

@@ -56,8 +56,8 @@ class GithubApiImpl(
 
     private val http4k = buildHttp4k {
         baseUrlBy(baseUrlConfig)
-        //            FIXME header += "accept" to GITHUB_MIMETYPE
         basicAuth(config.username, config.password)
+        addHeader("Accept" to GITHUB_MIMETYPE)
     }
 
     /**
@@ -85,10 +85,9 @@ class GithubApiImpl(
      */
     override fun uploadReleaseAsset(upload: AssetUpload) {
         val response = http4k.post("/releases/${upload.releaseId}/assets", AssetUploadResponse::class) {
-            headers += "content-type" to upload.contentType
-            // TODO
-//                queryParameters = listOf("name" to upload.fileName),
-//                requestBytes = upload.file.readBytes()
+            addHeader("Content-Type" to upload.contentType)
+            addQueryParam("name" to upload.fileName)
+//                FIXME requestBytes = upload.file.readBytes()
         }
 
         log.debug { "Uploaded asset: $response" }
@@ -108,34 +107,32 @@ class GithubApiImpl(
         }
         // FIXME implement PATCH
 //        val response = http4k.patch("/milestones/${milestone.number}", UpdateMilestoneResponseJson::class) {
-//            bodyJson(UpdateMilestone(state = State.Closed.jsonValue))
+//            TODO bodyJson(UpdateMilestone(state = State.Closed.jsonValue))
 ////                TODO headers = listOf("X-HTTP-Method-Override" to "PATCH"), // HttpURLConnection hack which does not support PATCH method
 //        }
 //        assert(response.state == State.Closed.jsonValue)
     }
 
-    // state defaults to "open"
-    override fun listOpenMilestones(): List<Milestone> =
-            //        log.debug("listOpenMilestones()")
-            http4k.get("/milestones", Array<MilestoneJson>::class)
-                    .map { it.toMilestone() }
-                    .sortedBy { it.version }
+    /**
+     * state defaults to "open"
+     */
+    override fun listOpenMilestones(): List<Milestone> {
+        log.debug("listOpenMilestones()")
+        return http4k.get("/milestones", Array<MilestoneJson>::class)
+                .map{ it.toMilestone() }
+                .sortedBy { it.version }
+    }
 
-
-    override fun listIssues(milestone: Milestone) =
-            //        log.debug("listIssues(milestone={})", milestone)
-            http4k.get("/issues", Array<IssueJson>::class)
-//                TODO queryParameters = listOf(
-//                        "state" to "all",
-//                        "milestone" to milestone.number
-//                ),
+    override fun listIssues(milestone: Milestone): List<Issue> {
+                    log.debug("listIssues(milestone={})", milestone)
+            return http4k.get("/issues", Array<IssueJson>::class) {
+                addQueryParam("state" to "all")
+                addQueryParam("milestone" to milestone.number)
+            }
                     .map { it.toIssue() }
                     .sortedBy { it.number }
+    }
 
-
-    /**
-     * @param query parameters
-     */
     //    private fun <T> request(
 //            method: HttpMethod4k,
 //            url: String,
@@ -154,7 +151,7 @@ class GithubApiImpl(
 //            }
 //        }
 //                .authenticate(config.username, config.password)
-//                TODO .header("Accept" to GITHUB_MIMETYPE)
+//                .header("Accept" to GITHUB_MIMETYPE)
 //                .apply { if (headers !=null ) { httpHeaders.putAll(headers)} }
 //                .responseString()
 //

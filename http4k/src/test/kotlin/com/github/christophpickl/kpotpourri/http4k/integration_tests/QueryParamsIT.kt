@@ -24,7 +24,9 @@ abstract class QueryParamsIT (restClient: RestClientProducer) : Http4kWiremockTe
             queryParams += QUERY
         }
 
-        verifyGetRequest("${mockEndpointUrl}?${QUERY.first}=${QUERY.second}")
+        verifyGetRequest("$mockEndpointUrl?${QUERY.first}=${QUERY.second}")
     }
+
+    // MINOR check for query param already set in baseUrl
 
 }

@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode.Anything
+import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 import com.github.christophpickl.kpotpourri.http4k.internal.Http4kImpl
 import com.github.christophpickl.kpotpourri.http4k.internal.RestClient
 import com.github.christophpickl.kpotpourri.http4k.internal.RestClientFactory
@@ -15,7 +16,7 @@ fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit): Http4k {
 }
 
 class Http4kBuilder : GlobalHttp4kConfig {
-
+    override val headers: HeadersMap = HeadersMap()
     override var baseUrl: BaseUrl = NoBaseUrl
     override var basicAuth: BasicAuthMode = BasicAuthDisabled
     override var statusCheck: StatusCheckMode = Anything
@@ -91,4 +92,8 @@ data class Response4k(
 
 open class Http4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)
 
-interface GlobalHttp4kConfig : BaseUrlConfig, BasicAuthConfig, StatusCheckConfig
+interface GlobalHttp4kConfig :
+        BaseUrlConfig,
+        BasicAuthConfig,
+        HeadersConfig,
+        StatusCheckConfig

@@ -11,6 +11,7 @@ import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import kotlin.reflect.KClass
 
+
 internal class Http4kImpl(
         private val restClient: RestClient,
         private val globals: GlobalHttp4kConfig
@@ -36,21 +37,24 @@ internal class Http4kImpl(
     ): R {
         val requestOpts = optInstance.apply { withOpts(this) }
 
-        val defaultHeaders = HashMap<String, String>()
+        val headers = HeadersMap()
         val requestTypeAndBody = prepareBodyAndContentType(requestOpts)
         if (requestTypeAndBody != null) {
-            defaultHeaders += "Content-Type" to requestTypeAndBody.contentType
+            headers += "Content-Type" to requestTypeAndBody.contentType
         }
         val fullUrl = UrlBuilder.build(globals.baseUrl.combine(url), requestOpts.queryParams)
 
         prepareAuthHeader(requestOpts.basicAuth, globals.basicAuth)?.let {
-            defaultHeaders += it
+            headers += it
         }
+
+        headers.addAll(globals.headers)
+        headers.addAll(requestOpts.headers)
 
         val request4k = Request4k(
                 method = method,
                 url = fullUrl,
-                headers = defaultHeaders.plus(requestOpts.headers),
+                headers = headers.map,
                 requestBody = requestTypeAndBody?.requestBody
         )
 
