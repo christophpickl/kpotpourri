@@ -51,4 +51,21 @@ import org.testng.annotations.Test
         assertThat("a\nb".htmlize(), equalTo("<html>a<br/>b</html>"))
     }
 
+    @DataProvider
+    fun provideConcatUrls(): Array<Array<out Any>> = arrayOf(
+            arrayOf("", "", ""),
+            arrayOf("http://host.at", "endpoint", "http://host.at/endpoint"),
+            arrayOf("http://host.at/", "endpoint", "http://host.at/endpoint"),
+            arrayOf("http://host.at", "/endpoint", "http://host.at/endpoint"),
+            arrayOf("http://host.at/", "/endpoint", "http://host.at/endpoint"),
+            arrayOf("http://host.at/", "/endpoint/", "http://host.at/endpoint/")
+    )
+
+    @Test(dataProvider = "provideConcatUrls")
+    fun `concat urls`(part1: String, part2: String, expected: String) {
+        assertThat(concatUrlParts(part1, part2), equalTo(expected))
+        // aliase
+        assertThat(joinUrlParts(part1, part2), equalTo(expected))
+        assertThat(combineUrlParts(part1, part2), equalTo(expected))
+    }
 }

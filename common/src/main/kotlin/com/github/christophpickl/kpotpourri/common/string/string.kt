@@ -51,9 +51,23 @@ fun String.saveToFile(target: File) {
     Files.write(this, target, Charsets.UTF_8)
 }
 
-// TODO write tests
-// combineUrlParts
-// joinUrlParts
-fun concatUrlParts(part1: String, part2: String /* vararg String */) =
-        part1.removeSuffix("/") + "/" + part2.removePrefix("/")
-// infix joinUrlParts => url1 joinUrlParts url2
+/**
+ * Synonym for concatUrlParts().
+ */
+fun combineUrlParts(part1: String, part2: String) = concatUrlParts(part1, part2)
+
+
+/**
+ * Synonym for concatUrlParts().
+ */
+fun joinUrlParts(part1: String, part2: String) = concatUrlParts(part1, part2)
+
+
+/**
+ * Get sure of leading/trailing slashes.
+ */
+// or: infix joinUrlParts => url1 joinUrlParts url2
+fun concatUrlParts(part1: String, part2: String /* vararg String */): String {
+    return if (part1.isEmpty() && part2.isEmpty()) ""
+    else part1.removeSuffix("/") + "/" + part2.removePrefix("/")
+}

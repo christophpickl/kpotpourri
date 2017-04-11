@@ -3,7 +3,9 @@ package com.github.christophpickl.kpotpourri.common.collection
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import java.util.HashMap
 
+/** Default pretty print item prefix. */
 val KPOT_DEFAULT_PREFIX = "- "
+/** Default pretty print item joiner. */
 val KPOT_DEFAULT_JOINER = "\n"
 
 // ARRAY
@@ -11,7 +13,6 @@ val KPOT_DEFAULT_JOINER = "\n"
 
 /**
  * Prints each item prefixed and joined.
- * @see toPrettyString for List
  */
 fun Array<out Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) =
         map { prefix + it }.joinToString(joiner)
@@ -29,7 +30,6 @@ fun Array<out Any>.prettyPrint(prefix: String = KPOT_DEFAULT_PREFIX, joiner: Str
 
 /**
  * Prints each item prefixed and joined.
- * @see toPrettyString for Array
  */
 fun List<Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) =
         map { prefix + it }.joinToString(joiner)
