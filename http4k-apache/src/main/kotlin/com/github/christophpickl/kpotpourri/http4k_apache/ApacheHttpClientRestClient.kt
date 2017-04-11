@@ -32,10 +32,6 @@ class ApacheHttpClientRestClient : RestClient {
         httpRequest.addBodyIfNecessary(request)
 
         val client = HttpClients.createDefault()
-//        httpRequest.config.connectTimeout
-//        httpRequest.config.connectionRequestTimeout
-//        httpRequest.config.socketTimeout
-
         val response = client.execute(httpRequest)
 
         return response.toResponse4k()

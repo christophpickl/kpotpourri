@@ -7,7 +7,7 @@ val DEFAULT_AUTH_MODE = BasicAuthDisabled
  * Common settings for GET/POST/PUT/...
  */
 interface AnyRequestOpts : StatusCheckConfig {
-    val headers: MutableMap<String, String> // TODO make multi value map
+    val headers: MutableMap<String, String>
     val queryParams: MutableMap<String, String>
     // queryParams
     // cookies

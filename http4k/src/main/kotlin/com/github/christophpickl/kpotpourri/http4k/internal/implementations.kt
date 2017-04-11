@@ -28,7 +28,6 @@ internal object RestClientFactory {
         return when (availableImplementations.size) {
             0 -> throw Http4kException("Http4k could not find any available implementation! Add a new (runtime) dependency for http4k-apache, http4k-fuel, etc.")
             1 -> instantiateRestClient(availableImplementations[0])
-            // TODO could provide a system property which enforces a specific implementation
             else -> throw Http4kException("Multiple implementations found: " + availableImplementations.map { it.name }.joinToString(", "))
         }
     }
