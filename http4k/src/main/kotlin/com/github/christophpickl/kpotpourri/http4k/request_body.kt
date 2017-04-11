@@ -6,8 +6,7 @@ interface RequestWithEntityOpts {
 }
 
 
-// TODO test me
-
+// TODO TEST me
 fun bodyDisabled() = None
 fun bodyString(body: String) = StringBody(body)
 fun bodyJson(jacksonObject: Any) = JsonBody(jacksonObject)

@@ -5,6 +5,7 @@ package com.github.christophpickl.kpotpourri.http4k
  */
 interface AnyRequestOpts : StatusCheckConfig {
     val headers: MutableMap<String, String> // TODO make multi value map
+    val queryParams: MutableMap<String, String>
     // queryParams
     // cookies
     var basicAuth: BasicAuthMode
@@ -16,8 +17,9 @@ interface AnyRequestOpts : StatusCheckConfig {
  */
 data class GetRequestOpts(
         override val headers: MutableMap<String, String> = HashMap(),
-        override var basicAuth: BasicAuthMode = BasicAuthDisabled,
-        override var statusCheck: StatusCheckMode = StatusCheckDisabled
+        override val queryParams: MutableMap<String, String> = HashMap(),
+        override var statusCheck: StatusCheckMode = StatusCheckDisabled,
+        override var basicAuth: BasicAuthMode = BasicAuthDisabled
 ) : AnyRequestOpts
 
 /**
@@ -25,8 +27,9 @@ data class GetRequestOpts(
  */
 data class PostRequestOpts(
         override val headers: MutableMap<String, String> = HashMap(),
-        override var basicAuth: BasicAuthMode = BasicAuthDisabled,
+        override val queryParams: MutableMap<String, String> = HashMap(),
         override var statusCheck: StatusCheckMode = StatusCheckDisabled,
+        override var basicAuth: BasicAuthMode = BasicAuthDisabled,
         override var requestBody: RequestBody = None
 ) : AnyRequestOpts, RequestWithEntityOpts
 

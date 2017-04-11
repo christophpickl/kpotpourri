@@ -52,4 +52,6 @@ class PostAndCoIT : Http4kWiremockTest() {
         dto shouldMatchValue PersonDto.dummy
     }
 
+    // TODO TEST explicitly for custom POST response type
+
 }

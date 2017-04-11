@@ -1,12 +1,12 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
-import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfig
-import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.GetRequestOpts
-import com.github.christophpickl.kpotpourri.http4k.PostRequestOpts
+import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfig
+import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
+import com.github.christophpickl.kpotpourri.http4k.PostRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import kotlin.reflect.KClass
@@ -41,13 +41,15 @@ internal class Http4kImpl(
         if (requestTypeAndBody != null) {
             defaultHeaders += "Content-Type" to requestTypeAndBody.contentType
         }
+        val fullUrl = UrlBuilder.build(defaults.baseUrl.combine(url), requestOpts.queryParams)
+
         prepareAuthHeader(requestOpts.basicAuth, defaults.basicAuth)?.let {
             defaultHeaders += it
         }
 
         val request4k = Request4k(
                 method = method,
-                url = defaults.baseUrl.combine(url),
+                url = fullUrl,
                 headers = defaultHeaders.plus(requestOpts.headers),
                 requestBody = requestTypeAndBody?.requestBody
         )

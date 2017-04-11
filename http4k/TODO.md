@@ -3,8 +3,6 @@
 
 * fix GitHub API issues
 * Support POST/PUT/DELETE/PATCH...
-* query param (proper URL combination)
-* introduce jackson and un/marshall JSON for request/response body
 
 # TODOs Med
 
