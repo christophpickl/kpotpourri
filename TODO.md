@@ -23,6 +23,7 @@
 
 ## Low
 
+* versioneye tracks only deps for reactor project :-/
 * own android lib (harvest yobu)
 * deploy to official maven repo (see nat pryce's hamkrest for how to do that)
     * http://central.sonatype.org/pages/ossrh-guide.html
