@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
 
 internal class Http4kImpl(
         private val restClient: RestClient,
-        private val defaults: GlobalHttp4kConfig
+        private val globals: GlobalHttp4kConfig
 ) : Http4k {
 
     private val log = LOG {}
@@ -41,9 +41,9 @@ internal class Http4kImpl(
         if (requestTypeAndBody != null) {
             defaultHeaders += "Content-Type" to requestTypeAndBody.contentType
         }
-        val fullUrl = UrlBuilder.build(defaults.baseUrl.combine(url), requestOpts.queryParams)
+        val fullUrl = UrlBuilder.build(globals.baseUrl.combine(url), requestOpts.queryParams)
 
-        prepareAuthHeader(requestOpts.basicAuth, defaults.basicAuth)?.let {
+        prepareAuthHeader(requestOpts.basicAuth, globals.basicAuth)?.let {
             defaultHeaders += it
         }
 
@@ -56,7 +56,7 @@ internal class Http4kImpl(
 
         log.debug { "Executing: $request4k" }
         val response4k = restClient.execute(request4k)
-        checkStatusCode(requestOpts, request4k, response4k)
+        checkStatusCode(globals.statusCheck, requestOpts.statusCheck, request4k, response4k)
         return castReturnType(response4k, returnType)
     }
 

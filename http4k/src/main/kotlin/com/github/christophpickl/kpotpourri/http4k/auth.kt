@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.http4k
 
 
 interface BasicAuthConfig {
+
     var basicAuth: BasicAuthMode
 
     fun basicAuth(username: String, password: String) {

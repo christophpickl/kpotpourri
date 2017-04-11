@@ -8,8 +8,6 @@ internal object UrlBuilder {
         if (query.isEmpty()) {
             return url
         }
-        // TODO escape URL stuff
-
         return url + "?" + query
                 .map { (k, v) -> "${k.urlEencode()}=${v.urlEencode()}" }
                 .joinToString("&")

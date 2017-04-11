@@ -58,7 +58,6 @@ internal class ApacheHttpClientRestClient : RestClient {
     private fun CloseableHttpResponse.toResponse4k() =
             Response4k(
                     statusCode = statusLine.statusCode,
-                    // MINOR lazily store bodyAsString
                     bodyAsString = readBodyAsString(),
                     headers = allHeaders.map { it.name to it.value }.toMap()
             )

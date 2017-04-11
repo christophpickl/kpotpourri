@@ -14,7 +14,7 @@ data class UrlConfig(
 )
 
 
-// MINOR see com.github.tomakehurst.wiremock.http.RequestMethod
+// see com.github.tomakehurst.wiremock.http.RequestMethod
 // GET("GET"),
 // POST("POST"),
 // PUT("PUT"),

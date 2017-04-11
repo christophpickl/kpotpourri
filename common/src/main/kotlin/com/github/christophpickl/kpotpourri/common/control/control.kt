@@ -9,3 +9,9 @@ inline fun <reified X> takeFirstIfIs(first: Any, second: Any): X? {
         else -> null
     }
 }
+
+fun throwIf(condition: Boolean, buildException: () -> Exception) {
+    if (condition) {
+        throw buildException()
+    }
+}

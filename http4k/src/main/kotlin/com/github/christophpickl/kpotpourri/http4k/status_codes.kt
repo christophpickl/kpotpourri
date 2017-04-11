@@ -4,51 +4,77 @@ package com.github.christophpickl.kpotpourri.http4k
 
 
 interface StatusCheckConfig {
+
     var statusCheck: StatusCheckMode
-    fun disableStatusCheck() {
-        statusCheck = StatusCheckDisabled
+
+    fun unsetStatusCheck() {
+        statusCheck = StatusCheckMode.NotSetAtAll
     }
-    fun enforceStatusCode(expectedStatusCode: StatusCode) {
-        statusCheck = StatusCheckEnfored(expectedStatusCode)
+    fun anyStatusCheck() {
+        statusCheck = StatusCheckMode.Anything
+    }
+    fun enforceStatusCheck(expectedStatusCode: StatusCode) {
+        statusCheck = StatusCheckMode.Enfore(expectedStatusCode)
     }
     fun customStatusCheck(checker: StatusCheckFunction) {
-        statusCheck = StatusCheckCustom(checker)
+        statusCheck = StatusCheckMode.Custom(checker)
     }
     fun enforceStatusFamily(family: StatusFamily) {
-        statusCheck = StatusCheckCustom { _, response ->
-            if (response.statusCode / 100 == family.group) {
-                StatusCheckOk
-            } else {
-                StatusCheckFail("Status code ${response.statusCode} expected to be of group ${family.group}!")
-            }
-        }
+        statusCheck = StatusCheckMode.EnforceFamily(family)
     }
 }
 
 
-sealed class StatusCheckMode
+sealed class StatusCheckMode {
 
-object StatusCheckDisabled : StatusCheckMode()
+    /**
+     * Default behaviour if not set at all.
+     * Used to indicate the request scope, when global scoped config is set and can take precedence.
+     */
+    object NotSetAtAll: StatusCheckMode()
 
-class StatusCheckEnfored(val expectedStatusCode: StatusCode) : StatusCheckMode()
+    /**
+     * All goes through.
+     */
+    object Anything : StatusCheckMode()
 
-sealed class StatusCheckResult
+    /**
+     * Enforce a specific HTTP status code Int.
+     */
+    class Enfore(val expectedStatusCode: StatusCode) : StatusCheckMode()
 
-object StatusCheckOk : StatusCheckResult()
+    /**
+     * Take the request+response and return Ok or Fail (exception will be thrown).
+     */
+    open class Custom(val checker: StatusCheckFunction) : StatusCheckMode()
 
-data class StatusCheckFail(val message: String) : StatusCheckResult()
+    class EnforceFamily(family: StatusFamily) : Custom({ _, response ->
+        if (response.statusCode / 100 == family.group) {
+            StatusCheckResult.Ok
+        } else {
+            StatusCheckResult.Fail("Status code ${response.statusCode} expected to be of group ${family.group}!")
+        }
+    })
+
+}
 
 typealias StatusCheckFunction = (Request4k, Response4k) -> StatusCheckResult
 
-class StatusCheckCustom(val checker: StatusCheckFunction) : StatusCheckMode()
+sealed class StatusCheckResult {
+
+    object Ok : StatusCheckResult()
+
+    data class Fail(val message: String) : StatusCheckResult()
+
+}
 
 
 @Suppress("CanBeParameter")
 class Http4kStatusCodeException(
         val expected: StatusCode,
         val actual: StatusCode,
-        cause: Exception? = null) :
-        Http4kStatusException(buildMessage(expected, actual), cause) {
+        cause: Exception? = null
+) : Http4kStatusException(buildMessage(expected, actual), cause) {
 
     companion object {
         private fun buildMessage(expected: StatusCode, actual: StatusCode) =
@@ -56,7 +82,6 @@ class Http4kStatusCodeException(
     }
 }
 
-// MINOR could introduce NotFoundException, BadRequestException, ... for most important status codes
 open class Http4kStatusException(
         message: String,
         cause: Exception? = null
@@ -89,7 +114,7 @@ const val SC_308_Redirect = 308
 const val SC_400_BadRequest = 400
 const val SC_401_Unauthorized = 401
 const val SC_403_Forbidden = 403
-const val SC_405_NotFound = 405
+const val SC_404_NotFound = 404
 const val SC_413_Payload = 413
 const val SC_415_UnsupportedMime = 415
 const val SC_418_Teapot = 418

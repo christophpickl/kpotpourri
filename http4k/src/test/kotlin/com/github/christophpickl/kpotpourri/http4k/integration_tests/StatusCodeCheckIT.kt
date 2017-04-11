@@ -3,9 +3,10 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 import com.github.christophpickl.kpotpourri.http4k.Http4kStatusCodeException
 import com.github.christophpickl.kpotpourri.http4k.Http4kStatusException
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
+import com.github.christophpickl.kpotpourri.http4k.SC_201_Created
+import com.github.christophpickl.kpotpourri.http4k.SC_418_Teapot
 import com.github.christophpickl.kpotpourri.http4k.SC_500_InternalError
-import com.github.christophpickl.kpotpourri.http4k.StatusCheckFail
-import com.github.christophpickl.kpotpourri.http4k.StatusCheckOk
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckResult
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
@@ -13,15 +14,30 @@ import com.github.christophpickl.kpotpourri.test4k.assertThrown
 
 class StatusCodeCheckIT : Http4kWiremockTest() {
 
-    fun `Given global status check, When request status check also, Then request takes precedence`() {
+    fun `Given status 500, When global and request status check, Then request check takes precedence and no exception thrown`() {
         givenGetMockEndpointUrl(statusCode = SC_500_InternalError)
         val http4k = buildHttp4k {
             baseUrlBy(mockBaseUrl)
-            enforceStatusCode(SC_200_Ok)
+            enforceStatusCheck(SC_200_Ok)
         }
 
         http4k.get(mockEndpointUrl) {
-            enforceStatusCode(SC_500_InternalError)
+            enforceStatusCheck(SC_500_InternalError)
+        }
+    }
+
+    fun `Given status 201, When global check wants 418 and no request check is set, Then throw exception`() {
+        givenGetMockEndpointUrl(statusCode = SC_201_Created)
+
+        val http4k = buildHttp4k {
+            baseUrlBy(mockBaseUrl)
+            enforceStatusCheck(SC_418_Teapot)
+        }
+
+        assertThrown<Http4kStatusCodeException> ({ e -> e.expected == SC_418_Teapot && e.actual == SC_201_Created }) {
+            http4k.get(mockEndpointUrl) {
+                // DEFAULT: unsetStatusCheck()
+            }
         }
     }
 
@@ -29,7 +45,7 @@ class StatusCodeCheckIT : Http4kWiremockTest() {
         givenGetMockEndpointUrl(statusCode = SC_500_InternalError)
 
         http4k.get(mockEndpointUrl) {
-            disableStatusCheck()
+            anyStatusCheck()
         }
     }
 
@@ -37,7 +53,7 @@ class StatusCodeCheckIT : Http4kWiremockTest() {
         givenGetMockEndpointUrl(statusCode = SC_200_Ok)
 
         http4k.get(mockEndpointUrl) {
-            enforceStatusCode(SC_200_Ok)
+            enforceStatusCheck(SC_200_Ok)
         }
     }
 
@@ -46,7 +62,7 @@ class StatusCodeCheckIT : Http4kWiremockTest() {
 
         assertThrown<Http4kStatusCodeException>({ e -> e.expected == SC_200_Ok && e.actual == SC_500_InternalError }) {
             http4k.get(mockEndpointUrl) {
-                enforceStatusCode(SC_200_Ok)
+                enforceStatusCheck(SC_200_Ok)
             }
         }
     }
@@ -56,7 +72,7 @@ class StatusCodeCheckIT : Http4kWiremockTest() {
 
         http4k.get(mockEndpointUrl) {
             customStatusCheck { _, _ ->
-                StatusCheckOk
+                StatusCheckResult.Ok
             }
         }
     }
@@ -68,7 +84,7 @@ class StatusCodeCheckIT : Http4kWiremockTest() {
         assertThrown<Http4kStatusException>({ e -> e.message == exceptionMessage }) {
             http4k.get(mockEndpointUrl) {
                 customStatusCheck { _, _ ->
-                    StatusCheckFail(exceptionMessage)
+                    StatusCheckResult.Fail(exceptionMessage)
                 }
             }
         }

@@ -1,10 +1,10 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode.Anything
 import com.github.christophpickl.kpotpourri.http4k.internal.Http4kImpl
 import com.github.christophpickl.kpotpourri.http4k.internal.RestClientFactory
 import kotlin.reflect.KClass
-
 
 
 fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit): Http4k {
@@ -13,11 +13,11 @@ fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit): Http4k {
     return builder.end()
 }
 
-class Http4kBuilder : GlobalHttp4kConfig, StatusCheckConfig {
+class Http4kBuilder : GlobalHttp4kConfig {
 
     override var baseUrl: BaseUrl = NoBaseUrl
     override var basicAuth: BasicAuthMode = BasicAuthDisabled
-    override var statusCheck: StatusCheckMode = StatusCheckDisabled
+    override var statusCheck: StatusCheckMode = Anything
 
     fun end(): Http4k {
         val restClient = RestClientFactory.lookupRestClientByImplementation()
@@ -26,7 +26,6 @@ class Http4kBuilder : GlobalHttp4kConfig, StatusCheckConfig {
 }
 
 interface Http4k {
-    // MINOR couldnt add "returnType: KClass<R> = Response4k::class" ... :(
 
     fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: GetRequestOpts.() -> Unit = {}): R
 
@@ -79,11 +78,13 @@ data class Request4k(
 data class Response4k(
         val statusCode: StatusCode,
         val bodyAsString: String,
-        val headers: Map<String, String>
+        val headers: Map<String, String> = emptyMap()
         // cookies
-)
+) {
+    companion object // test extensions
+}
 
 
 open class Http4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)
 
-interface GlobalHttp4kConfig : BaseUrlConfig, BasicAuthConfig
+interface GlobalHttp4kConfig : BaseUrlConfig, BasicAuthConfig, StatusCheckConfig
