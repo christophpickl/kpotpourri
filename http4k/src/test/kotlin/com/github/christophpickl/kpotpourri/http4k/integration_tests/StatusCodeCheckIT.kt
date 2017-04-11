@@ -12,7 +12,7 @@ import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 
 
-class StatusCodeCheckIT : Http4kWiremockTest() {
+abstract class StatusCodeCheckIT (restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
 
     fun `Given status 500, When global and request status check, Then request check takes precedence and no exception thrown`() {
         givenGetMockEndpointUrl(statusCode = SC_500_InternalError)

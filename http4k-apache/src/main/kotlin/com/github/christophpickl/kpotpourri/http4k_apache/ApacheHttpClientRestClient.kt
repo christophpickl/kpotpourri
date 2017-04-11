@@ -1,5 +1,6 @@
-package com.github.christophpickl.kpotpourri.http4k.internal.implementations
+package com.github.christophpickl.kpotpourri.http4k_apache
 
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
@@ -17,7 +18,13 @@ import java.io.ByteArrayOutputStream
 
 
 // https://hc.apache.org/httpcomponents-client-4.5.x/quickstart.html
-internal class ApacheHttpClientRestClient : RestClient {
+class ApacheHttpClientRestClient : RestClient {
+
+    private val log = LOG {}
+
+    init {
+        log.debug("new ApacheHttpClientRestClient()")
+    }
 
     override fun execute(request: Request4k): Response4k {
         val httpRequest = request.toHttpRequest()

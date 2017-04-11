@@ -5,12 +5,15 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.SC_418_Teapot
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.http4k.internal.RestClient
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import org.testng.annotations.BeforeMethod
 
-abstract class Http4kWiremockTest : WiremockTest() {
+typealias RestClientProducer = () -> RestClient
+
+abstract class Http4kWiremockTest(private val restClient: RestClientProducer) : WiremockTest() {
 
     companion object {
         val mockEndpointUrl = "/my"
@@ -34,6 +37,7 @@ abstract class Http4kWiremockTest : WiremockTest() {
     @BeforeMethod
     fun `http4k re-set`() {
         http4k = buildHttp4k {
+            overrideRestClient = restClient()
             baseUrlBy(mockBaseUrl)
         }
     }

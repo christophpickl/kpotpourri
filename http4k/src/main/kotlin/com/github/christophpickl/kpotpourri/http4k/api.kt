@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode.Anything
 import com.github.christophpickl.kpotpourri.http4k.internal.Http4kImpl
+import com.github.christophpickl.kpotpourri.http4k.internal.RestClient
 import com.github.christophpickl.kpotpourri.http4k.internal.RestClientFactory
 import kotlin.reflect.KClass
 
@@ -19,8 +20,11 @@ class Http4kBuilder : GlobalHttp4kConfig {
     override var basicAuth: BasicAuthMode = BasicAuthDisabled
     override var statusCheck: StatusCheckMode = Anything
 
+    internal var overrideRestClient: RestClient? = null
+
     fun end(): Http4k {
-        val restClient = RestClientFactory.lookupRestClientByImplementation()
+        val restClient = if(overrideRestClient != null) overrideRestClient!!
+                else RestClientFactory.lookupRestClientByImplementation()
         return Http4kImpl(restClient, this)
     }
 }

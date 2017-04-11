@@ -4,12 +4,12 @@ import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.test4k.mapContains
 import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 
 
-class GetRequestsIT : Http4kWiremockTest() {
-
+abstract class GetRequestsIT(restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
 
     fun `Given default Http4k and configured response, When GET, Then proper response object`() {
         givenGetMockEndpointUrl(
@@ -33,7 +33,7 @@ class GetRequestsIT : Http4kWiremockTest() {
             headers += headerName to headerValue
         }
 
-        WireMock.verify(WireMock.getRequestedFor(WireMock.urlEqualTo(mockEndpointUrl))
+        verify(getRequestedFor(urlEqualTo(mockEndpointUrl))
                 .withHeader(headerName, WireMock.equalTo(headerValue)))
     }
 
@@ -46,7 +46,7 @@ class GetRequestsIT : Http4kWiremockTest() {
 
         // mapContains at least custom header, but additionally others from wiremock
         assertThat(response.headers, mapContains(headerName to headerValue))
-        WireMock.verify(WireMock.getRequestedFor(WireMock.urlEqualTo(mockEndpointUrl)))
+        verify(getRequestedFor(urlEqualTo(mockEndpointUrl)))
     }
 
     fun `Given default Http4k and wiremocked JSON response, When GET, Then JSON DTO should be marshalled`() {

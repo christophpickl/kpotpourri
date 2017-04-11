@@ -8,7 +8,7 @@
 # TODOs Med
 
 * add opt to implicitly check for 2xx, and possibility to inject own behaviour/ (status code) validator
-* support 2nd implementation (fuel)
+* support 2nd implementation (fuel, spring rest template)
 * request/response cookies
 * could introduce NotFoundException, BadRequestException, ... for most important status codes
 

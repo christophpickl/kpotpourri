@@ -1,9 +1,12 @@
-// github build.gradle
+// http4k-fuel build.gradle
+
+// ./gradlew :http4k-fuel:test
 
 dependencies {
     compile project(':common')
     compile project(':http4k')
-    runtime project(':http4k-apache')
+
+    compile 'com.github.kittinunf.fuel:fuel:1.5.0'
 
     testCompile project(':wiremock4k')
 }

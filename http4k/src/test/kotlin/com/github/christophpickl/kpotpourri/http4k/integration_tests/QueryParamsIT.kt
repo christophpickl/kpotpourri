@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 
-class QueryParamsIT : Http4kWiremockTest() {
+abstract class QueryParamsIT (restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
 
     companion object {
         private val QUERY_KEY = "queryKey"
@@ -24,7 +24,7 @@ class QueryParamsIT : Http4kWiremockTest() {
             queryParams += QUERY
         }
 
-        verifyGetRequest("$mockEndpointUrl?${QUERY.first}=${QUERY.second}")
+        verifyGetRequest("${mockEndpointUrl}?${QUERY.first}=${QUERY.second}")
     }
 
 }

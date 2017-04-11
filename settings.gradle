@@ -2,7 +2,9 @@
 include 'common'
 include 'test4k'
 include 'http4k'
+include 'http4k-apache'
+include 'http4k-fuel'
+include 'http4k-tests'
 include 'wiremock4k'
 include 'github'
 include 'swing'
-

@@ -1,6 +1,7 @@
-package com.github.christophpickl.kpotpourri.http4k
+package com.github.christophpickl.kpotpourri.http4k_apache
 
-import com.github.christophpickl.kpotpourri.http4k.internal.implementations.ApacheHttpClientRestClient
+import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
+import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest

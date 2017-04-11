@@ -9,7 +9,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.natpryce.hamkrest.assertion.assertThat
 
 
-class PostAndCoIT : Http4kWiremockTest() {
+abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
 
     companion object {
         private val REQUEST_STRING_BODY = "test request body"
@@ -29,23 +29,23 @@ class PostAndCoIT : Http4kWiremockTest() {
     fun `Given default Http4k, When POST with JSON response, Then response DTO should be returned`() {
         stubFor(WireMock.post(WireMock.urlEqualTo(mockEndpointUrl))
                 .willReturn(WireMock.aResponse()
-                        .withBody(PersonDto.dummy.toJson())))
+                        .withBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy.toJson())))
 
         val dto = http4k.post(mockEndpointUrl, PersonDto::class)
 
-        dto shouldMatchValue PersonDto.dummy
+        dto shouldMatchValue com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy
     }
 
     fun `Given default Http4k, When POST with JSON body, Then body should be received and content type set`() {
         givenPostToMockEndpointUrl()
 
         http4k.post(mockEndpointUrl) {
-            requestBody(PersonDto.dummy)
+            requestBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy)
         }
 
         verifyPostRequest(mockEndpointUrl) {
-            withRequestBody(WireMock.equalTo(PersonDto.dummy.toJson()))
-            withHeader("content-type", WireMock.equalTo("application/json"))
+            withRequestBody(equalTo(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy.toJson()))
+            withHeader("content-type", equalTo("application/json"))
         }
     }
 
@@ -53,12 +53,12 @@ class PostAndCoIT : Http4kWiremockTest() {
         givenPostToMockEndpointUrl()
 
         http4k.post(mockEndpointUrl) {
-            requestBody(PersonDto.dummy)
+            requestBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy)
             headers += "content-type" to "application/foobar"
         }
 
         verifyPostRequest(mockEndpointUrl) {
-            withHeader("content-type", WireMock.equalTo("application/foobar"))
+            withHeader("content-type", equalTo("application/foobar"))
         }
 
     }
@@ -88,8 +88,8 @@ class PostAndCoIT : Http4kWiremockTest() {
     }
 
     fun `Given default Http4k, When POST with JSON request body and custom response body, Then both should be ok`() {
-        val requestDto = PersonDto.dummy1
-        val responseDto  = PersonDto.dummy2
+        val requestDto = com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy1
+        val responseDto  = com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy2
         givenPostToMockEndpointUrl() {
             withBody(responseDto.toJson())
         }

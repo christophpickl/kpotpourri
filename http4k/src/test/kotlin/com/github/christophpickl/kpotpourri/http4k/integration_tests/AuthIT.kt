@@ -7,7 +7,7 @@ import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.tomakehurst.wiremock.client.WireMock
 
 
-class AuthIT : Http4kWiremockTest() {
+abstract class AuthIT(restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
 
     companion object {
         private val USERNAME = "authUsername"
