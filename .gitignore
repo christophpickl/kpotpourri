@@ -1,8 +1,13 @@
 
 /build/
-/common/build/
-/swing/build/
+/common4k/build/
+/github4k/build/
 /http4k/build/
-
+/http4k-apache/build/
+/http4k-fuel/build/
+/http4k-tests/build/
+/swing4k/build/
+/test4k/build/
+/wiremock4k/build/
 /.gradle/**
 

@@ -3,7 +3,7 @@
 // ./gradlew :http4k:test
 
 dependencies {
-    compile project(':common')
+    compile project(':common4k')
 
     compile "com.fasterxml.jackson.core:jackson-databind:2.0.1"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"

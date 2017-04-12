@@ -1,9 +1,0 @@
-// github build.gradle
-
-dependencies {
-    compile project(':common')
-    compile project(':http4k')
-    runtime project(':http4k-apache')
-
-    testCompile project(':wiremock4k')
-}

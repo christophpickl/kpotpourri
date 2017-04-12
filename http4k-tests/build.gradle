@@ -3,7 +3,7 @@
 // ./gradlew :http4k-tests:test
 
 dependencies {
-    compile project(':common')
+    compile project(':common4k')
     compile project(':http4k')
     compile project(':http4k-apache')
     compile project(':http4k-fuel')

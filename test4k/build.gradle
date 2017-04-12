@@ -1,6 +1,7 @@
-// test4k build.gradle
+// test4k
 
 dependencies {
+    // no dependency to project :common, as this would lead to cyclic dependency
     compile 'org.testng:testng:6.11'
     compile 'com.natpryce:hamkrest:1.3.0.0'
     compile "com.nhaarman:mockito-kotlin:1.4.0"

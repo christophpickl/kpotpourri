@@ -3,7 +3,7 @@
 // ./gradlew :http4k-apache:test
 
 dependencies {
-    compile project(':common')
+    compile project(':common4k')
     compile project(':http4k')
 
     compile "org.apache.httpcomponents:httpclient:4.5.3"

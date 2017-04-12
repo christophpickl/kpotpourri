@@ -1,7 +1,7 @@
 // wiremock4k build.gradle
 
 dependencies {
-    compile project(':common')
+    compile project(':common4k')
     compile project(':test4k')
 
     compile "com.github.tomakehurst:wiremock:2.5.1"
