@@ -1,0 +1,6 @@
+// swing build.gradle
+
+dependencies {
+    compile project(':common4k')
+    testCompile project(':common4k').sourceSets.test.output
+}
