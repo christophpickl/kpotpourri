@@ -7,6 +7,7 @@ import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.internal.RestClient
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import org.testng.annotations.BeforeMethod
@@ -48,8 +49,9 @@ abstract class Http4kWiremockTest(private val restClient: RestClientProducer) : 
             withResponse: ResponseDefinitionBuilder.() -> Unit = {}
     ) {
         givenWiremock(
-                statusCode = statusCode,
+                method = WiremockMethod.GET,
                 path = mockEndpointUrl,
+                statusCode = statusCode,
                 body = body,
                 withResponse = withResponse
         )

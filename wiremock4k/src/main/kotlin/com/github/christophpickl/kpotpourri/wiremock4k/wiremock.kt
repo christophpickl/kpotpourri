@@ -26,6 +26,7 @@ abstract class WiremockTest(
         protected val DEFAULT_PATH = "/"
         protected val DEFAULT_METHOD = WiremockMethod.GET
     }
+
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer
 
@@ -46,13 +47,17 @@ abstract class WiremockTest(
         WireMock.reset()
     }
 
-    protected fun verifyGetRequest(url: String) {
-        verify(getRequestedFor(urlEqualTo(url)))
+    protected fun verifyWiremockGet(request: MockRequest) {
+        verifyAnyRequest(request.toInternal(WiremockMethod.GET))
     }
 
-    protected fun verifyPostRequest(url: String, func: RequestPatternBuilder.() -> Unit = {}) {
-        val builder = postRequestedFor(urlEqualTo(url))
-        func(builder)
+    protected fun verifyPostRequest(request: MockRequest) {
+        verifyAnyRequest(request.toInternal(WiremockMethod.POST))
+    }
+
+    internal fun verifyAnyRequest(request: InternalMockRequest) {
+        val builder = request.method.requestedFor(request.path)
+        request.func(builder)
         verify(builder)
     }
 
@@ -65,7 +70,7 @@ abstract class WiremockTest(
             statusCode: Int = DEFAULT_STATUS_CODE,
             body: String? = null,
             withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
-        stubFor(method.methodTranslation(path).willReturn(
+        stubFor(method.stubForPath(path).willReturn(
                 aResponse()
                         .withStatus(statusCode)
                         .withBody(body)
@@ -77,12 +82,36 @@ abstract class WiremockTest(
 
 enum class WiremockMethod() {
     GET() {
-        override fun methodTranslation(path: String) = get(urlEqualTo(path))!!
+        override fun stubForPath(path: String) = get(urlEqualTo(path))!!
+        override fun requestedFor(path: String) = getRequestedFor(urlEqualTo(path))!!
     },
     POST() {
-        override fun methodTranslation(path: String) = post(urlEqualTo(path))!!
+        override fun stubForPath(path: String) = post(urlEqualTo(path))!!
+        override fun requestedFor(path: String) = postRequestedFor(urlEqualTo(path))!!
     }
     ;
 
-    abstract fun methodTranslation(path: String): MappingBuilder
+    abstract fun stubForPath(path: String): MappingBuilder
+    abstract fun requestedFor(path: String): RequestPatternBuilder
 }
+
+
+data class MockRequest(
+        val path: String,
+        val func: RequestPatternBuilder.() -> Unit = {}
+) {
+    internal fun toInternal(method: WiremockMethod) = InternalMockRequest(
+            path = path,
+            func = func,
+            method = method
+    )
+}
+
+/**
+ * Adds a specific HTTP method to MockRequest.
+ */
+internal data class InternalMockRequest(
+        val path: String,
+        val func: RequestPatternBuilder.() -> Unit = {},
+        val method: WiremockMethod
+)

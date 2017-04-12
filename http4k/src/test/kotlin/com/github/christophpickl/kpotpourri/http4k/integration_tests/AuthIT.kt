@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
 import com.github.christophpickl.kpotpourri.http4k.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.tomakehurst.wiremock.client.WireMock
 
@@ -25,8 +26,9 @@ abstract class AuthIT(restClient: RestClientProducer) : Http4kWiremockTest(restC
             )
         }
 
-        WireMock.verify(WireMock.getRequestedFor(WireMock.urlEqualTo(mockEndpointUrl))
-                .withHeader("Authorization", WireMock.equalTo(HEADER_VALUE)))
+        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+            withHeader("Authorization", WireMock.equalTo(HEADER_VALUE))
+        }))
     }
 
     fun `Given basic auth configured Http4k, When GET, Then Authorization header is set`() {
@@ -37,8 +39,9 @@ abstract class AuthIT(restClient: RestClientProducer) : Http4kWiremockTest(restC
 
         http4k.get(concatUrlParts(WIREMOCK_DEFAULT_URL, mockEndpointUrl))
 
-        WireMock.verify(WireMock.getRequestedFor(WireMock.urlEqualTo(mockEndpointUrl))
-                .withHeader("Authorization", WireMock.equalTo(HEADER_VALUE)))
+        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+            withHeader("Authorization", WireMock.equalTo(HEADER_VALUE))
+        }))
     }
 
     fun `Given basic auth configured Http4k, When GET with basic auth, Then Authorization header is set by request auth`() {
@@ -54,8 +57,9 @@ abstract class AuthIT(restClient: RestClientProducer) : Http4kWiremockTest(restC
             )
         }
 
-        WireMock.verify(WireMock.getRequestedFor(WireMock.urlEqualTo(mockEndpointUrl))
-                .withHeader("Authorization", WireMock.equalTo(HEADER_VALUE)))
+        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+            withHeader("Authorization", WireMock.equalTo(HEADER_VALUE))
+        }))
     }
 
 }

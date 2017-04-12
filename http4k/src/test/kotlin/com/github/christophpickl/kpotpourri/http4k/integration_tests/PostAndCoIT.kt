@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
+import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -23,7 +24,7 @@ abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(
 
         http4k.post(mockEndpointUrl)
 
-        verifyPostRequest(mockEndpointUrl)
+        verifyPostRequest(MockRequest(mockEndpointUrl))
     }
 
     fun `Given default Http4k, When POST with JSON response, Then response DTO should be returned`() {
@@ -43,10 +44,10 @@ abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(
             requestBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy)
         }
 
-        verifyPostRequest(mockEndpointUrl) {
+        verifyPostRequest(MockRequest(mockEndpointUrl) {
             withRequestBody(equalTo(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy.toJson()))
             withHeader("content-type", equalTo("application/json"))
-        }
+        })
     }
 
     fun `Given default Http4k, When POST with JSON body and custom content type, Then default content type should have been overridden`() {
@@ -57,9 +58,9 @@ abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(
             headers += "content-type" to "application/foobar"
         }
 
-        verifyPostRequest(mockEndpointUrl) {
+        verifyPostRequest(MockRequest(mockEndpointUrl, {
             withHeader("content-type", equalTo("application/foobar"))
-        }
+        }))
 
     }
 
@@ -70,9 +71,9 @@ abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(
             requestBodyDisabled()
         }
 
-        verifyPostRequest(mockEndpointUrl) {
+        verifyPostRequest(MockRequest(mockEndpointUrl, {
             withRequestBody(equalTo(""))
-        }
+        }))
     }
 
     fun `Given default Http4k, When POST with string request body, Then string body should have been sent`() {
@@ -82,9 +83,9 @@ abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(
             requestBody(REQUEST_STRING_BODY)
         }
 
-        verifyPostRequest(mockEndpointUrl) {
+        verifyPostRequest(MockRequest(mockEndpointUrl, {
             withRequestBody(equalTo(REQUEST_STRING_BODY))
-        }
+        }))
     }
 
     fun `Given default Http4k, When POST with JSON request body and custom response body, Then both should be ok`() {
@@ -98,9 +99,9 @@ abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(
             requestBody(requestDto)
         }
 
-        verifyPostRequest(mockEndpointUrl) {
+        verifyPostRequest(MockRequest(mockEndpointUrl, {
             withRequestBody(equalTo(requestDto.toJson()))
-        }
+        }))
         assertThat(actualResponseDto, com.natpryce.hamkrest.equalTo(responseDto))
     }
 

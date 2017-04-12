@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
@@ -16,7 +17,7 @@ abstract class BaseUrlIT(restClient: RestClientProducer) : Http4kWiremockTest(re
         buildHttp4k { baseUrlDisabled() }
                 .get(mockWiremockUrlAndEndpointUrl)
 
-        verifyGetRequest(mockEndpointUrl)
+        verifyWiremockGet(MockRequest(mockEndpointUrl))
     }
 
     fun `Given Http4k with baseUrl as config, When request, Then URL was called`() {
@@ -31,7 +32,7 @@ abstract class BaseUrlIT(restClient: RestClientProducer) : Http4kWiremockTest(re
         }
                 .get(mockEndpointUrl)
 
-        verifyGetRequest(mockEndpointUrl)
+        verifyWiremockGet(MockRequest(mockEndpointUrl))
     }
 
     fun `Given Http4k with baseUrl as string, When request, Then URL was called`() {
@@ -40,6 +41,6 @@ abstract class BaseUrlIT(restClient: RestClientProducer) : Http4kWiremockTest(re
         buildHttp4k { baseUrlBy(WIREMOCK_DEFAULT_URL) }
                 .get(mockEndpointUrl)
 
-        verifyGetRequest(mockEndpointUrl)
+        verifyWiremockGet(MockRequest(mockEndpointUrl))
     }
 }

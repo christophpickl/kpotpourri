@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k_apache
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
+import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.*
@@ -27,7 +28,7 @@ class ApacheHttpClientRestClientTest : WiremockTest() {
 
         response.statusCode shouldMatchValue mockResponseStatus
         response.bodyAsString shouldMatchValue mockResponseBody
-        verifyGetRequest(mockUrl)
+        verifyWiremockGet(MockRequest(mockUrl))
     }
 
 }

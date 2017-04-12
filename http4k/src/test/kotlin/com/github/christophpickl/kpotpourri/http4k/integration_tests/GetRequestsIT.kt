@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.test4k.mapContains
 import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
+import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.natpryce.hamkrest.assertion.assertThat
@@ -33,8 +34,10 @@ abstract class GetRequestsIT(restClient: RestClientProducer) : Http4kWiremockTes
             headers += headerName to headerValue
         }
 
-        verify(getRequestedFor(urlEqualTo(mockEndpointUrl))
-                .withHeader(headerName, WireMock.equalTo(headerValue)))
+
+        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+            withHeader(headerName, WireMock.equalTo(headerValue))
+        }))
     }
 
     fun `Given default Http4k and wiremocked header, When GET, Then headers are set in response`() {

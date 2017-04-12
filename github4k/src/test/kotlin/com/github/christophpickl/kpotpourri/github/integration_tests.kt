@@ -9,9 +9,7 @@ import org.testng.annotations.Test
 
 private val testPort = 8082
 
-// FIXME enable me
-@Test(enabled = false)
-class Github4kIntegrationTestes : WiremockTest(testPort) {
+@Test class Github4kIntegrationTestes : WiremockTest(testPort) {
 
     private val repositoryOwner = "testOwner"
     private val repositoryName = "testName"

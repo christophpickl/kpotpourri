@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
+import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
+
 
 abstract class QueryParamsIT (restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
 
@@ -14,7 +16,7 @@ abstract class QueryParamsIT (restClient: RestClientProducer) : Http4kWiremockTe
 
         http4k.get(mockEndpointUrl)
 
-        verifyGetRequest(mockEndpointUrl)
+        verifyWiremockGet(MockRequest(mockEndpointUrl))
     }
 
     fun `When query param is set, Then url changed`() {
@@ -24,7 +26,7 @@ abstract class QueryParamsIT (restClient: RestClientProducer) : Http4kWiremockTe
             queryParams += QUERY
         }
 
-        verifyGetRequest("$mockEndpointUrl?${QUERY.first}=${QUERY.second}")
+        verifyWiremockGet(MockRequest("$mockEndpointUrl?${QUERY.first}=${QUERY.second}"))
     }
 
     // MINOR check for query param already set in baseUrl
