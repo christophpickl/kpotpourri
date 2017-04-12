@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.release4k
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.format
+import com.github.christophpickl.kpotpourri.common.numbers.format
 import com.github.christophpickl.kpotpourri.github.GithubConfig
 import com.github.christophpickl.kpotpourri.release4k.internal.Release4kImpl
 import com.github.christophpickl.kpotpourri.release4k.internal.kout
