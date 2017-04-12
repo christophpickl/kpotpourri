@@ -21,7 +21,7 @@ internal object RestClientFactory {
 
     private val log = LOG {}
 
-    fun lookupRestClientByImplementation(): RestClient {
+    fun lookupRestClientByImplementation(): HttpImpl {
         val availableImplementations = SupportedImplementation.values().map { reflectivelyClassExists(it.fqnToLookFor) }.filterNotNull()
         log.debug { "availableImplementations:\n${availableImplementations.toPrettyString()}" }
 
@@ -33,7 +33,7 @@ internal object RestClientFactory {
     }
 
     private fun instantiateRestClient(type: Class<*>) =
-            type.newInstance() as RestClient
+            type.newInstance() as HttpImpl
 
     private fun reflectivelyClassExists(fqn: String): Class<*>? {
         try {

@@ -7,10 +7,10 @@ import com.github.christophpickl.kpotpourri.http4k.integration_tests.HeadersIT
 import com.github.christophpickl.kpotpourri.http4k.integration_tests.PostAndCoIT
 import com.github.christophpickl.kpotpourri.http4k.integration_tests.QueryParamsIT
 import com.github.christophpickl.kpotpourri.http4k.integration_tests.StatusCodeCheckIT
-import com.github.christophpickl.kpotpourri.http4k_apache.ApacheHttpClientRestClient
+import com.github.christophpickl.kpotpourri.http4k_apache.ApacheHttpClientHttpImpl
 import org.testng.annotations.Test
 
-val apacheProducer = { ApacheHttpClientRestClient() }
+val apacheProducer = { ApacheHttpClientHttpImpl() }
 
 @Test class AuthApacheIT : AuthIT(apacheProducer)
 @Test class BaseUrlApacheIT : BaseUrlIT(apacheProducer)

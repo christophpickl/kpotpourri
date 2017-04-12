@@ -8,7 +8,8 @@ import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode.*
-import com.github.christophpickl.kpotpourri.http4k.StatusCheckResult
+import com.github.christophpickl.kpotpourri.http4k.StatusCheckResult.*
+import com.github.christophpickl.kpotpourri.http4k.StatusRange.StatusByCode
 
 internal fun requestScopeGoesBeforeGlobalScope(global: StatusCheckMode, request: StatusCheckMode): StatusCheckMode {
     if (global is NotSetAtAll && request is NotSetAtAll) {
@@ -27,7 +28,12 @@ internal fun requestScopeGoesBeforeGlobalScope(global: StatusCheckMode, request:
  * @throws Http4kStatusException if any check fails
  */
 @Suppress("UNUSED_VARIABLE")
-internal fun checkStatusCode(global: StatusCheckMode, request: StatusCheckMode, request4k: Request4k, response4k: Response4k) {
+internal fun checkStatusCode(
+        global: StatusCheckMode,
+        request: StatusCheckMode,
+        request4k: Request4k,
+        response4k: Response4k
+) {
     val check = requestScopeGoesBeforeGlobalScope(global, request)
 
     val checkForAllBranchesCovered = when (check) {
@@ -39,16 +45,22 @@ internal fun checkStatusCode(global: StatusCheckMode, request: StatusCheckMode, 
         }
         is Enfore -> {
             throwIf(response4k.statusCode != check.expectedStatusCode) {
-                Http4kStatusCodeException(check.expectedStatusCode, response4k.statusCode)
+                Http4kStatusCodeException(
+                        expected = StatusByCode(check.expectedStatusCode),
+                        actual = response4k.statusCode
+                )
             }
         }
         is Custom -> {
             val result = check.checker(request4k, response4k)
             val checkForAllBranchesCovered2 = when (result) {
-                StatusCheckResult.Ok -> {
+                Ok -> {
                     return // succeeded
                 }
-                is StatusCheckResult.Fail -> {
+                is FailWithException -> {
+                    throw result.exceptionFunc(response4k)
+                }
+                is Fail -> {
                     throw Http4kStatusException(result.message)
                 }
             }

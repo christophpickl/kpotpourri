@@ -3,9 +3,16 @@ package com.github.christophpickl.kpotpourri.github
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
+import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 
+
+fun buildGithub4k(config: GithubConfig): GithubApi {
+    return GithubApiImpl(config)
+}
+
+class Github4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)
 
 data class GithubConfig(
         val repositoryOwner: String,
@@ -24,10 +31,6 @@ interface GithubApi {
     fun close(milestone: Milestone)
     fun createNewRelease(createRequest: CreateReleaseRequest): CreateReleaseResponse
     fun uploadReleaseAsset(upload: AssetUpload)
-}
-
-fun buildGithub4k(config: GithubConfig): GithubApi {
-    return GithubApiImpl(config)
 }
 
 /**
@@ -60,6 +63,7 @@ class GithubApiImpl(
         baseUrlBy(baseUrlConfig)
         basicAuth(config.username, config.password)
         addHeader("Accept" to GITHUB_MIMETYPE)
+        enforceStatusFamily(StatusFamily.Success_2)
     }
 
     /**

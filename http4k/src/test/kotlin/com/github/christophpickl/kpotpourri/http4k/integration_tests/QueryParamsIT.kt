@@ -3,7 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 
 
-abstract class QueryParamsIT (restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
+abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
 
     companion object {
         private val QUERY_KEY = "queryKey"

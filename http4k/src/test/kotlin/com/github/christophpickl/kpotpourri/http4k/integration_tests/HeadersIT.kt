@@ -8,7 +8,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
 
 
-abstract class HeadersIT(private val restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
+abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
 
     companion object {
         private val KEY = "headerKey"
@@ -90,8 +90,8 @@ abstract class HeadersIT(private val restClient: RestClientProducer) : Http4kWir
 
     private fun buildHttp4kWithGlobalHeaders(func: (HeadersMap) -> Unit): Http4k {
         return buildHttp4k {
-            overrideRestClient = restClient()
-            baseUrlBy(mockBaseUrl)
+            overrideHttpImpl = restClient()
+            baseUrlBy(wiremockBaseUrl)
             func(headers)
         }
     }

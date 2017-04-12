@@ -10,7 +10,7 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 
 
-abstract class GetRequestsIT(restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
+abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
 
     fun `Given default Http4k and configured response, When GET, Then proper response object`() {
         givenGetMockEndpointUrl(

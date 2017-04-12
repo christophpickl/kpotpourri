@@ -1,8 +1,10 @@
 package com.github.christophpickl.kpotpourri.github
 
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
+import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
+import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
@@ -15,27 +17,19 @@ private val testPort = 8082
     private val repositoryName = "testName"
     private val endpointPrefix = "/repos/$repositoryOwner/$repositoryName"
 
-    fun `handle github error`() {
-        stubFor(get(Endpoint.Milestones).willReturn(
-                aResponse().withStatus(403)))
-
-//        TODO assertThrown<> { }
-        testee().listOpenMilestones() // just any call is sufficient
-
-    }
 
     fun `listOpenMilestones - request made`() {
-        stubFor(get(Endpoint.Milestones).willReturn(
-                aResponse()
-                        .withStatus(200)
-                        .withBody("[]")
-        ))
+        givenWiremock(
+                method = WiremockMethod.GET,
+                statusCode = SC_200_Ok,
+                body = "[]"
+        )
 
         testee().listOpenMilestones()
 
-        verify(WireMock.getRequestedFor(WireMock.urlEqualTo("$endpointPrefix/milestones"))
-                .withHeader("Authorization", equalTo("Basic dGVzdFVzZXI6dGVzdFBhc3M="))
-        )
+        verifyWiremockGet(MockRequest("$endpointPrefix/milestones", {
+            withHeader("Authorization", equalTo("Basic dGVzdFVzZXI6dGVzdFBhc3M="))
+        }))
     }
 
     fun `listOpenMilestones Response`() {

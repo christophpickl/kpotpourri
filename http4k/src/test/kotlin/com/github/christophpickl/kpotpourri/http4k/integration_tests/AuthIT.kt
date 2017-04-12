@@ -4,11 +4,10 @@ import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
 import com.github.christophpickl.kpotpourri.http4k.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.tomakehurst.wiremock.client.WireMock
 
 
-abstract class AuthIT(restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
+abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
 
     companion object {
         private val USERNAME = "authUsername"
@@ -37,7 +36,7 @@ abstract class AuthIT(restClient: RestClientProducer) : Http4kWiremockTest(restC
             basicAuth(USERNAME, PASSWORD)
         }
 
-        http4k.get(concatUrlParts(WIREMOCK_DEFAULT_URL, mockEndpointUrl))
+        http4k.get(concatUrlParts(wiremockBaseUrl, mockEndpointUrl))
 
         verifyWiremockGet(MockRequest(mockEndpointUrl, {
             withHeader("Authorization", WireMock.equalTo(HEADER_VALUE))
@@ -50,7 +49,7 @@ abstract class AuthIT(restClient: RestClientProducer) : Http4kWiremockTest(restC
             basicAuth("some other", "some password")
         }
 
-        http4k.get(concatUrlParts(WIREMOCK_DEFAULT_URL, mockEndpointUrl)) {
+        http4k.get(concatUrlParts(wiremockBaseUrl, mockEndpointUrl)) {
             basicAuth = BasicAuth(
                     username = USERNAME,
                     password = PASSWORD

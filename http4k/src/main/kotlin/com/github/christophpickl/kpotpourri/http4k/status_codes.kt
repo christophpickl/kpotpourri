@@ -10,15 +10,19 @@ interface StatusCheckConfig {
     fun unsetStatusCheck() {
         statusCheck = StatusCheckMode.NotSetAtAll
     }
+
     fun anyStatusCheck() {
         statusCheck = StatusCheckMode.Anything
     }
+
     fun enforceStatusCheck(expectedStatusCode: StatusCode) {
         statusCheck = StatusCheckMode.Enfore(expectedStatusCode)
     }
+
     fun customStatusCheck(checker: StatusCheckFunction) {
         statusCheck = StatusCheckMode.Custom(checker)
     }
+
     fun enforceStatusFamily(family: StatusFamily) {
         statusCheck = StatusCheckMode.EnforceFamily(family)
     }
@@ -31,7 +35,7 @@ sealed class StatusCheckMode {
      * Default behaviour if not set at all.
      * Used to indicate the request scope, when global scoped config is set and can take precedence.
      */
-    object NotSetAtAll: StatusCheckMode()
+    object NotSetAtAll : StatusCheckMode()
 
     /**
      * All goes through.
@@ -48,11 +52,15 @@ sealed class StatusCheckMode {
      */
     open class Custom(val checker: StatusCheckFunction) : StatusCheckMode()
 
-    class EnforceFamily(family: StatusFamily) : Custom({ _, response ->
-        if (response.statusCode / 100 == family.group) {
+    class EnforceFamily(family: StatusFamily) : Custom({ _, (statusCode) ->
+        if (statusCode / 100 == family.group) {
             StatusCheckResult.Ok
         } else {
-            StatusCheckResult.Fail("Status code ${response.statusCode} expected to be of group ${family.group}!")
+            StatusCheckResult.FailWithException { response ->
+                Http4kStatusCodeException(
+                        expected = StatusRange.StatusByFamily(family),
+                        actual = statusCode)
+            }
         }
     })
 
@@ -64,21 +72,38 @@ sealed class StatusCheckResult {
 
     object Ok : StatusCheckResult()
 
-    data class Fail(val message: String) : StatusCheckResult()
+    data class Fail(
+            val message: String
+    ) : StatusCheckResult()
+
+    data class FailWithException(
+            val exceptionFunc: (response4k: Response4k) -> Exception
+    ) : StatusCheckResult()
 
 }
 
+sealed class StatusRange {
+    data class StatusByCode(val code: StatusCode) : StatusRange() {
+        override fun toPrettyString() = code.toString()
+    }
+    data class StatusByFamily(val family: StatusFamily) : StatusRange() {
+        override fun toPrettyString() = family.prettyString
+    }
+    abstract fun toPrettyString(): String
+}
 
 @Suppress("CanBeParameter")
 class Http4kStatusCodeException(
-        val expected: StatusCode,
+        val expected: StatusRange,
         val actual: StatusCode,
+        additionalMessage: String? = null,
         cause: Exception? = null
-) : Http4kStatusException(buildMessage(expected, actual), cause) {
+) : Http4kStatusException(buildMessage(expected, actual, additionalMessage), cause) {
 
     companion object {
-        private fun buildMessage(expected: StatusCode, actual: StatusCode) =
-                "Got a $actual status code but expected $expected!"
+        private fun buildMessage(expected: StatusRange, actual: StatusCode, additionalMessage: String? = null) =
+                "Got a $actual status code but expected ${expected.toPrettyString()}!" +
+                        if (additionalMessage != null) " $additionalMessage" else ""
     }
 }
 
@@ -88,21 +113,19 @@ open class Http4kStatusException(
 ) : Http4kException(message, cause)
 
 
-enum class StatusFamily(val group: Int) {
-    Info_1(1),
-    Success_2(2),
-    Redirection_3(3),
-    ClientError_4(4),
-    ServerError_5(5),
-    Unofficial_6(6),
-    See_7(7),
-    Notes_8(8),
-    References_9(9),
-    External_10(10)
+enum class StatusFamily(val group: Int, val label: String) {
+    Info_1(1, "Info"),
+    Success_2(2, "Success"),
+    Redirection_3(3, "Redirection"),
+    ClientError_4(4, "Client Error"),
+    ServerError_5(5, "ServerError");
+
+    val prettyString  get() = "${group}xx $label" // "2xx Success"
 }
 
 typealias StatusCode = Int
 
+const val SC_100_Continue = 100
 const val SC_200_Ok = 200
 const val SC_201_Created = 201
 const val SC_202_Accepted = 202
@@ -119,3 +142,16 @@ const val SC_413_Payload = 413
 const val SC_415_UnsupportedMime = 415
 const val SC_418_Teapot = 418
 const val SC_500_InternalError = 500
+const val SC_501_NotImplemented = 501
+const val SC_503_ServiceUnavailable = 503
+const val SC_504_GatewayTimeout = 504
+
+val SCR_100_Continue = StatusRange.StatusByCode(SC_100_Continue)
+val SCR_200_Ok = StatusRange.StatusByCode(SC_200_Ok)
+val SCR_418_Teapot = StatusRange.StatusByCode(SC_418_Teapot)
+
+val SR_1xx_Info = StatusRange.StatusByFamily(StatusFamily.Info_1)
+val SR_2xx_Success = StatusRange.StatusByFamily(StatusFamily.Success_2)
+val SR_3xx_Redirect = StatusRange.StatusByFamily(StatusFamily.Redirection_3)
+val SR_4xx_ClientError = StatusRange.StatusByFamily(StatusFamily.ClientError_4)
+val SR_5xx_ServerError = StatusRange.StatusByFamily(StatusFamily.ServerError_5)

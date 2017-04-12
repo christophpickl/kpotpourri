@@ -5,7 +5,7 @@ import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
-import com.github.christophpickl.kpotpourri.http4k.internal.RestClient
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase
 import org.apache.http.client.methods.HttpGet
@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream
 
 
 // https://hc.apache.org/httpcomponents-client-4.5.x/quickstart.html
-class ApacheHttpClientRestClient : RestClient {
+class ApacheHttpClientHttpImpl : HttpImpl {
 
     private val log = LOG {}
 

@@ -8,9 +8,9 @@ import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_DEFAULT_URL
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.*
 
-class ApacheHttpClientRestClientTest : WiremockTest() {
+class ApacheHttpClientHttpImplTest : WiremockTest() {
 
-    private val testee get() = ApacheHttpClientRestClient()
+    private val testee get() = ApacheHttpClientHttpImpl()
     private val mockUrl = "/foo"
     private val mockResponseBody = "bar"
     private val mockResponseStatus = 200

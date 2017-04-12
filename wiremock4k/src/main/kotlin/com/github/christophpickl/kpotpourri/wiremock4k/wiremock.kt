@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.wiremock4k
 
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.MappingBuilder
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
@@ -12,9 +13,9 @@ import org.testng.annotations.BeforeClass
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-const val WIREMOCK_HOSTNAME = "localhost"
-const val WIREMOCK_PORT = 8042
-const val WIREMOCK_DEFAULT_URL = "http://$WIREMOCK_HOSTNAME:$WIREMOCK_PORT"
+val WIREMOCK_HOSTNAME = "localhost"
+val WIREMOCK_PORT = 8042
+//const val WIREMOCK_DEFAULT_URL = "http://$WIREMOCK_HOSTNAME:$WIREMOCK_PORT"
 
 @Test(groups = arrayOf("wiremock"))
 abstract class WiremockTest(
@@ -27,11 +28,15 @@ abstract class WiremockTest(
         protected val DEFAULT_METHOD = WiremockMethod.GET
     }
 
+    private val log = LOG {}
+
+    protected val wiremockBaseUrl = "http://$WIREMOCK_HOSTNAME:$port"
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer
 
     @BeforeClass
     fun `wiremock startup`() {
+        log.debug { "Starting up Wiremock on $wiremockBaseUrl" }
         WireMock.configureFor(WIREMOCK_HOSTNAME, port)
         server = WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
         server.start()
@@ -55,7 +60,7 @@ abstract class WiremockTest(
         verifyAnyRequest(request.toInternal(WiremockMethod.POST))
     }
 
-    internal fun verifyAnyRequest(request: InternalMockRequest) {
+    protected fun verifyAnyRequest(request: InternalMockRequest) {
         val builder = request.method.requestedFor(request.path)
         request.func(builder)
         verify(builder)
@@ -70,6 +75,7 @@ abstract class WiremockTest(
             statusCode: Int = DEFAULT_STATUS_CODE,
             body: String? = null,
             withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
+        log.debug { "given wirmock for  ${method.name} $path (status=$statusCode, body=...)" }
         stubFor(method.stubForPath(path).willReturn(
                 aResponse()
                         .withStatus(statusCode)
@@ -110,7 +116,7 @@ data class MockRequest(
 /**
  * Adds a specific HTTP method to MockRequest.
  */
-internal data class InternalMockRequest(
+data class InternalMockRequest(
         val path: String,
         val func: RequestPatternBuilder.() -> Unit = {},
         val method: WiremockMethod

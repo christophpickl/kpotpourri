@@ -1,6 +1,8 @@
 package com.github.christophpickl.kpotpourri.test4k
 
 import org.testng.Assert
+import java.io.PrintWriter
+import java.io.StringWriter
 
 
 /**
@@ -40,10 +42,16 @@ inline fun <reified E : Throwable> assertThrown(matcher: (E) -> Boolean, code: (
         fail("Expected an exception to be thrown of type ${E::class.java.simpleName}")
     } catch (e: Exception) {
         if (e !is E) {
-            fail("Unexpected exception type (${e.javaClass.simpleName}) was thrown: $e")
+            fail("Unexpected exception type (${e.javaClass.simpleName}) was thrown!\n${e.toStackTrace()}")
         } else if (!matcher(e)) {
             fail("Unexpected exception was thrown: $e")
         }
         // thrown exception matched, everything is OK
     }
+}
+
+fun Exception.toStackTrace(): String {
+    val writer = StringWriter()
+    printStackTrace(PrintWriter(writer))
+    return writer.toString()
 }

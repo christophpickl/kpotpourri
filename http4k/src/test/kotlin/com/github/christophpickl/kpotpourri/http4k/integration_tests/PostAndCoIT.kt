@@ -10,7 +10,7 @@ import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.natpryce.hamkrest.assertion.assertThat
 
 
-abstract class PostAndCoIT(restClient: RestClientProducer) : Http4kWiremockTest(restClient) {
+abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
 
     companion object {
         private val REQUEST_STRING_BODY = "test request body"
