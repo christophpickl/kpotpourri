@@ -10,6 +10,7 @@ import com.github.christophpickl.kpotpourri.http4k.StatusCheckResult
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.testDummy
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
+import com.github.christophpickl.kpotpourri.test4k.messageContains
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.DataProvider
@@ -41,8 +42,8 @@ import org.testng.annotations.Test
                 equalTo(expected as Any))
     }
 
-    fun `checkStatusCode - global not set, request enforce family 4, when 200, Then throw exception`() {
-        assertThrown<Http4kStatusCodeException>({ e -> e.message == "Got a 200 status code but expected 4xx Client Error!"}) {
+    fun `checkStatusCode - global not set, request enforce family 4, when 200, Then throw exception with proper message`() {
+        assertThrown<Http4kStatusCodeException>({ e -> e.messageContains("200", "4xx") }) {
             checkStatusCode(
                     global = StatusCheckMode.NotSetAtAll,
                     request = StatusCheckMode.EnforceFamily(StatusFamily.ClientError_4),
