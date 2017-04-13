@@ -5,7 +5,7 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
 
@@ -18,36 +18,26 @@ private val testPort = 8082
     private val endpointPrefix = "/repos/$repositoryOwner/$repositoryName"
 
 
-    fun `listOpenMilestones - request made`() {
+    fun `listOpenMilestones - request made and response parsed`() {
         givenWiremock(
                 method = WiremockMethod.GET,
+                path = "$endpointPrefix/milestones",
                 statusCode = SC_200_Ok,
-                body = "[]"
+                body = """[{
+                        "title": "jsonTitle",
+                        "number": 1,
+                        "state": "open",
+                        "url": "jsonUrl"
+                        }]"""
         )
 
-        testee().listOpenMilestones()
+        val milestones = testee().listOpenMilestones()
 
         verifyWiremockGet(MockRequest("$endpointPrefix/milestones", {
             withHeader("Authorization", equalTo("Basic dGVzdFVzZXI6dGVzdFBhc3M="))
         }))
-    }
-
-    fun `listOpenMilestones Response`() {
-        stubFor(get(Endpoint.Milestones).willReturn(
-                aResponse()
-                        .withStatus(200)
-                        .withBody("""{
-                        "title": "jsonTitle",
-                        "number": 1,
-                        "state": "open",
-                        "url": "jsonUrl",
-                        }""")
-        ))
-
-        val milestones = testee().listOpenMilestones()
-
         assertThat(milestones[0], com.natpryce.hamkrest.equalTo(
-                Milestone("jsonTItle", 1, State.Open, "jsonUrl")))
+                Milestone("jsonTitle", 1, State.Open, "jsonUrl")))
     }
 
 
@@ -62,13 +52,5 @@ private val testPort = 8082
             hostName = "localhost",
             port = testPort
     )
-
-
-    private enum class Endpoint(val path: String) {
-        Milestones("/milestones")
-    }
-
-    private fun get(endpoint: Endpoint) =
-            get(urlEqualTo(endpointPrefix + endpoint.path))
 
 }
