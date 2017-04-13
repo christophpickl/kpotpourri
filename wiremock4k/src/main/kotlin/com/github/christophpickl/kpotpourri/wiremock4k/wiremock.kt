@@ -23,6 +23,7 @@ abstract class WiremockTest(
 ) {
 
     companion object {
+        // to access SC_200_Ok instead, it needs to be outsourced to sub-module first (to avoid cyclic deps)
         protected val DEFAULT_STATUS_CODE = 200
         protected val DEFAULT_PATH = "/"
         protected val DEFAULT_METHOD = WiremockMethod.GET
@@ -53,14 +54,26 @@ abstract class WiremockTest(
     }
 
     protected fun verifyWiremockGet(request: MockRequest) {
-        verifyAnyRequest(request.toInternal(WiremockMethod.GET))
+        verifyRequest(request.toInternal(WiremockMethod.GET))
     }
 
     protected fun verifyPostRequest(request: MockRequest) {
-        verifyAnyRequest(request.toInternal(WiremockMethod.POST))
+        verifyRequest(request.toInternal(WiremockMethod.POST))
     }
 
-    protected fun verifyAnyRequest(request: InternalMockRequest) {
+    protected fun verifyPatchRequest(request: MockRequest) {
+        verifyRequest(request.toInternal(WiremockMethod.PATCH))
+    }
+
+    protected fun verifyRequest(
+            method: WiremockMethod,
+            path: String,
+            func: RequestPatternBuilder.() -> Unit = {}
+    ) {
+        verifyRequest(InternalMockRequest(path, func, method))
+    }
+
+    protected fun verifyRequest(request: InternalMockRequest) {
         val builder = request.method.requestedFor(request.path)
         request.func(builder)
         verify(builder)
@@ -70,10 +83,10 @@ abstract class WiremockTest(
      * @param path relative URL, like "/my"
      */
     protected fun givenWiremock(
-            method: WiremockMethod = DEFAULT_METHOD,
-            path: String = DEFAULT_PATH,
-            statusCode: Int = DEFAULT_STATUS_CODE,
-            body: String? = null,
+            method: WiremockMethod = /*GET*/DEFAULT_METHOD,
+            path: String = /* "/" */DEFAULT_PATH,
+            statusCode: Int = /*200*/DEFAULT_STATUS_CODE,
+            /*response*/ body: String? = null,
             withResponse: ResponseDefinitionBuilder.() -> Unit = {}) {
         log.debug { "given wirmock for  ${method.name} $path (status=$statusCode, body=...)" }
         stubFor(method.stubForPath(path).willReturn(
@@ -94,6 +107,10 @@ enum class WiremockMethod() {
     POST() {
         override fun stubForPath(path: String) = post(urlEqualTo(path))!!
         override fun requestedFor(path: String) = postRequestedFor(urlEqualTo(path))!!
+    },
+    PATCH() {
+        override fun stubForPath(path: String) = patch(urlEqualTo(path))!!
+        override fun requestedFor(path: String) = patchRequestedFor(urlEqualTo(path))!!
     }
     ;
 

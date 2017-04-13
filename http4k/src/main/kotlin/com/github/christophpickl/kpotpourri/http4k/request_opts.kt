@@ -47,6 +47,18 @@ data class PostRequestOpts(
 ) : AnyRequestOpts, RequestWithEntityOpts
 
 
+/**
+ * PATCH.
+ */
+data class PatchRequestOpts(
+        override val headers: HeadersMap = HeadersMap(),
+        override val queryParams: MutableMap<String, String> = HashMap(),
+        override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
+        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
+        override var requestBody: RequestBody = None
+) : AnyRequestOpts, RequestWithEntityOpts
+
+
 // PUT
 // DELETE
 // ...

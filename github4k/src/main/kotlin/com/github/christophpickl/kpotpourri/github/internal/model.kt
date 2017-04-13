@@ -37,7 +37,7 @@ internal @JsonData data class IssueJson(
     )
 }
 
-internal @JsonData data class UpdateMilestone(
+internal @JsonData data class UpdateMilestoneRequestJson(
         val state: String
 )
 

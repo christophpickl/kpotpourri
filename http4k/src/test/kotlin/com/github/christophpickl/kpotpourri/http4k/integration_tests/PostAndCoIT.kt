@@ -109,14 +109,31 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
             body: String? = null,
             withResponse: ResponseDefinitionBuilder.() -> Unit = {}
     ) {
+        givenToMockEndpointUrl(WiremockMethod.POST, body, withResponse)
+    }
+    private fun givenToMockEndpointUrl(
+            method: WiremockMethod,
+            body: String? = null,
+            withResponse: ResponseDefinitionBuilder.() -> Unit = {}
+    ) {
         givenWiremock(
-                method = WiremockMethod.POST,
+                method = method,
                 path = mockEndpointUrl,
                 body = body,
                 withResponse = withResponse
         )
     }
 
+    // PATCH
+    // =================================================================================================================
+
+    fun `Given default Http4k, When PATCH, Then should be received`() {
+        givenToMockEndpointUrl(WiremockMethod.PATCH)
+
+        http4k.patch(mockEndpointUrl)
+
+        verifyPostRequest(MockRequest(mockEndpointUrl))
+    }
     // PUT
     // =================================================================================================================
 

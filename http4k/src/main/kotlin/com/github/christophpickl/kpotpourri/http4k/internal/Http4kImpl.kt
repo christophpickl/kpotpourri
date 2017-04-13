@@ -6,6 +6,7 @@ import com.github.christophpickl.kpotpourri.http4k.GetRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfig
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
+import com.github.christophpickl.kpotpourri.http4k.PatchRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.PostRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
@@ -24,6 +25,9 @@ internal class Http4kImpl(
 
     override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: PostRequestOpts.() -> Unit) =
             any(HttpMethod4k.POST, PostRequestOpts(), url, returnType, withOpts)
+
+    override fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit) =
+            any(HttpMethod4k.PATCH, PatchRequestOpts(), url, returnType, withOpts)
 
     /**
      * GET, POST, ... or any other.

@@ -1,44 +1,33 @@
 package com.github.christophpickl.kpotpourri.github
 
-import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
 import com.github.christophpickl.kpotpourri.github.internal.IssueJson
 import com.github.christophpickl.kpotpourri.github.internal.MilestoneJson
+import com.github.christophpickl.kpotpourri.github.internal.UpdateMilestoneRequestJson
+import com.github.christophpickl.kpotpourri.github.internal.UpdateMilestoneResponseJson
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+
+// https://developer.github.com/v3/
 
 
 fun buildGithub4k(config: GithubConfig): GithubApi {
     return GithubApiImpl(config)
 }
 
-class Github4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)
-
-data class GithubConfig(
-        val repositoryOwner: String,
-        val repositoryName: String,
-        val username: String,
-        val password: String
-) {
-    companion object // for test extensions
-}
-
 interface GithubApi {
     fun listOpenMilestones(): List<Milestone>
     fun listIssues(milestone: Milestone): List<Issue>
-    fun listTags(): List<TagResponse>
+    fun listTags(): List<Tag>
 
     fun close(milestone: Milestone)
     fun createNewRelease(createRequest: CreateReleaseRequest): CreateReleaseResponse
     fun uploadReleaseAsset(upload: AssetUpload)
 }
 
-/**
- * https://developer.github.com/v3/
- */
 class GithubApiImpl(
         private val config: GithubConfig,
         private val protocol: HttpProtocol = HttpProtocol.Https,
@@ -69,6 +58,55 @@ class GithubApiImpl(
         enforceStatusFamily(StatusFamily.Success_2)
     }
 
+
+    override fun listOpenMilestones(): List<Milestone> {
+        log.debug("listOpenMilestones()")
+        // state defaults to "open"
+        return http4k.get("/milestones", Array<MilestoneJson>::class)
+                .map { it.toMilestone() }
+                .sortedBy { it.version }
+    }
+
+    override fun listIssues(milestone: Milestone): List<Issue> {
+        log.debug("listIssues(milestone={})", milestone)
+        return http4k.get("/issues", Array<IssueJson>::class) {
+            addQueryParam("state" to "all")
+            addQueryParam("milestone" to milestone.number)
+        }
+                .map { it.toIssue() }
+                .sortedBy { it.number }
+    }
+
+    /**
+     * GET /repos/:owner/:repo/tags
+     *
+     * https://developer.github.com/v3/repos/#list-tags
+     */
+    override fun listTags() =
+            http4k.get("/tags", Array<Tag>::class)
+                    .toList()
+                    .sortedBy { it.name }
+
+    /**
+     * PATCH /repos/:owner/:repo/milestones/:number
+     *
+     * https://developer.github.com/v3/issues/milestones/#update-a-milestone
+     */
+    override fun close(milestone: Milestone) {
+        if (milestone.state == State.Closed) {
+            throw Github4kException("Milestone already closed: $milestone")
+        }
+        val response = http4k.patch(
+                url = "/milestones/${milestone.number}",
+                jacksonObject = UpdateMilestoneRequestJson(state = State.Closed.jsonValue),
+                returnType = UpdateMilestoneResponseJson::class) {
+//                TODO headers = listOf("X-HTTP-Method-Override" to "PATCH"), // HttpURLConnection hack which does not support PATCH method
+        }
+        if (response.state != State.Closed.jsonValue) {
+            throw Github4kException("Failed to close milestone: $milestone")
+        }
+    }
+
     /**
      * POST /repos/:owner/:repo/releases
      *
@@ -78,19 +116,9 @@ class GithubApiImpl(
             http4k.post("/releases", createRequest, CreateReleaseResponse::class)
 
     /**
-     * GET /repos/:owner/:repo/tags
-     *
-     * https://developer.github.com/v3/repos/#list-tags
-     */
-    override fun listTags() =
-            http4k.get("/tags", Array<TagResponse>::class).toList().sortedBy { it.name }
-
-    /**
      * POST https://<upload_url>/repos/:owner/:repo/releases/:id/assets?name=foo.zip
      *
      * https://developer.github.com/v3/repos/releases/#upload-a-release-asset
-     *
-     * @param contentType see: https://www.iana.org/assignments/media-types/media-types.xhtml
      */
     override fun uploadReleaseAsset(upload: AssetUpload) {
         val response = http4k.post("/releases/${upload.releaseId}/assets", AssetUploadResponse::class) {
@@ -104,44 +132,6 @@ class GithubApiImpl(
             System.err.println("Upload failed for ${upload.fileName}!!! ($upload, $response)")
         }
     }
-
-    /**
-     * PATCH /repos/:owner/:repo/milestones/:number
-     *
-     * https://developer.github.com/v3/issues/milestones/#update-a-milestone
-     */
-    override fun close(milestone: Milestone) {
-        if (milestone.state == State.Closed) {
-            throw KPotpourriException("Milestone already closed: $milestone")
-        }
-        // FIXME implement PATCH
-//        val response = http4k.patch("/milestones/${milestone.number}", UpdateMilestoneResponseJson::class) {
-//            TODO bodyJson(UpdateMilestone(state = State.Closed.jsonValue))
-////                TODO headers = listOf("X-HTTP-Method-Override" to "PATCH"), // HttpURLConnection hack which does not support PATCH method
-//        }
-//        assert(response.state == State.Closed.jsonValue)
-    }
-
-    /**
-     * state defaults to "open"
-     */
-    override fun listOpenMilestones(): List<Milestone> {
-        log.debug("listOpenMilestones()")
-        return http4k.get("/milestones", Array<MilestoneJson>::class)
-                .map{ it.toMilestone() }
-                .sortedBy { it.version }
-    }
-
-    override fun listIssues(milestone: Milestone): List<Issue> {
-                    log.debug("listIssues(milestone={})", milestone)
-            return http4k.get("/issues", Array<IssueJson>::class) {
-                addQueryParam("state" to "all")
-                addQueryParam("milestone" to milestone.number)
-            }
-                    .map { it.toIssue() }
-                    .sortedBy { it.number }
-    }
-
     //    private fun <T> request(
 //            method: HttpMethod4k,
 //            url: String,

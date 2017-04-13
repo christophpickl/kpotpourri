@@ -33,10 +33,10 @@ data class UrlConfig(
 // HEAD("HEAD")
 enum class HttpMethod4k(val isRequestBodySupported: Boolean = false) {
     GET(),
-    POST(isRequestBodySupported = true)
+    POST(isRequestBodySupported = true),
+     PATCH(isRequestBodySupported = true)
     // PUT(isRequestBodySupported = true)
     // DELETE(),
-    // PATCH(isRequestBodySupported = true)
     // OPTIONS(),
     // HEAD(),
     // TRACE(),

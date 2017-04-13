@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.github.christophpickl.kpotpourri.common.collection.toPrettyString
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 
@@ -23,7 +22,13 @@ internal object RestClientFactory {
 
     fun lookupRestClientByImplementation(): HttpImplFactory {
         val availableImplementations = SupportedImplementation.values().map { reflectivelyClassExists(it.fqnToLookFor) }.filterNotNull()
-        log.debug { "availableImplementations:\n${availableImplementations.toPrettyString()}" }
+        if (log.isDebugEnabled) {
+            log.debug("Available HTTP4k implementations:")
+            availableImplementations.forEach {
+                log.debug("* $it")
+            }
+        }
+
 
         return when (availableImplementations.size) {
             0 -> throw Http4kException("Http4k could not find any available implementation! Add a new (runtime) dependency for http4k-apache, http4k-fuel, etc.")

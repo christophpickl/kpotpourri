@@ -1,7 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k_apache
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
-import com.github.christophpickl.kpotpourri.http4k.Http4kBuilder
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
@@ -9,11 +8,11 @@ import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpImplFactory
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
-import com.github.christophpickl.kpotpourri.http4k.internal.MutableMetaMap
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase
 import org.apache.http.client.methods.HttpGet
+import org.apache.http.client.methods.HttpPatch
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.methods.HttpRequestBase
 import org.apache.http.entity.ByteArrayEntity
@@ -44,11 +43,13 @@ class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
         httpRequest.setHeaders(request.headers.entries.map { BasicHeader(it.key, it.value) }.toTypedArray())
         httpRequest.addBodyIfNecessary(request)
 
-        println("httpRequest.config=${httpRequest.config}")
         httpRequest.config = RequestConfig.custom()
                 .apply {
                     // TODO test this
-                    connectTimeout?.let { setConnectTimeout(connectTimeout) }
+                    connectTimeout?.let {
+                        log.trace { "Setting connect timeout to: ${connectTimeout}ms" }
+                        setConnectTimeout(connectTimeout)
+                    }
                 }
 //                .setConnectionRequestTimeout()
 //                .setSocketTimeout()
@@ -65,6 +66,7 @@ class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
     private fun Request4k.toHttpRequest() = when (method) {
         HttpMethod4k.GET -> HttpGet(url)
         HttpMethod4k.POST -> HttpPost(url)
+        HttpMethod4k.PATCH -> HttpPatch(url)
     }
 
     private fun HttpRequestBase.addBodyIfNecessary(request: Request4k) {
@@ -98,13 +100,3 @@ class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
     }
 
 }
-
-fun Http4kBuilder.apacheConnectTimeout(timeoutInMs: Int) {
-    _implMetaMap.connectTimeout(timeoutInMs)
-}
-
-private val META_KEY_CONNECT_TIMEOUT = "apache_connect_timeout"
-private fun MutableMetaMap.connectTimeout(timeoutInMs: Int) {
-    this += META_KEY_CONNECT_TIMEOUT to timeoutInMs
-}
-private val MetaMap.connectTimeout: Int? get() = this[META_KEY_CONNECT_TIMEOUT]?.let { it as Int }
