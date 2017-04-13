@@ -18,6 +18,21 @@ private val testPort = 8082
     private val endpointPrefix = "/repos/$repositoryOwner/$repositoryName"
 
 
+    fun `common headers are set`() {
+        givenWiremock(
+                method = WiremockMethod.GET,
+                path = "$endpointPrefix/milestones",
+                statusCode = SC_200_Ok,
+                body = "[]"
+        )
+
+        testee().listOpenMilestones()
+
+        verifyWiremockGet(MockRequest("$endpointPrefix/milestones", {
+            withHeader("Authorization", equalTo("Basic dGVzdFVzZXI6dGVzdFBhc3M="))
+        }))
+    }
+
     fun `listOpenMilestones - request made and response parsed`() {
         givenWiremock(
                 method = WiremockMethod.GET,
@@ -33,14 +48,22 @@ private val testPort = 8082
 
         val milestones = testee().listOpenMilestones()
 
-        verifyWiremockGet(MockRequest("$endpointPrefix/milestones", {
-            withHeader("Authorization", equalTo("Basic dGVzdFVzZXI6dGVzdFBhc3M="))
-        }))
+        verifyWiremockGet(MockRequest("$endpointPrefix/milestones"))
         assertThat(milestones[0], com.natpryce.hamkrest.equalTo(
                 Milestone("jsonTitle", 1, State.Open, "jsonUrl")))
     }
 
 
+    /*
+
+    fun listOpenMilestones(): List<Milestone>
+    fun listIssues(milestone: Milestone): List<Issue>
+    fun listTags(): List<TagResponse>
+
+    fun close(milestone: Milestone)
+    fun createNewRelease(createRequest: CreateReleaseRequest): CreateReleaseResponse
+    fun uploadReleaseAsset(upload: AssetUpload)
+     */
     private fun testee() = GithubApiImpl(
             config = GithubConfig(
                     repositoryOwner = repositoryOwner,

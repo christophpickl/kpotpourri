@@ -2,6 +2,9 @@ package com.github.christophpickl.kpotpourri.github
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
+import com.github.christophpickl.kpotpourri.github.internal.IssueJson
+import com.github.christophpickl.kpotpourri.github.internal.MilestoneJson
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.UrlConfig

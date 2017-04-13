@@ -53,6 +53,7 @@ internal fun checkStatusCode(
         }
         is Custom -> {
             val result = check.checker(request4k, response4k)
+            @Suppress("UNREACHABLE_CODE")
             val checkForAllBranchesCovered2 = when (result) {
                 Ok -> {
                     return // succeeded
