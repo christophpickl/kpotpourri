@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.github
 
+import com.github.christophpickl.kpotpourri.common.string.combineUrlParts
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
 import com.github.christophpickl.kpotpourri.github.non_test.testInstance
 import com.github.christophpickl.kpotpourri.github.non_test.toEqualJson
@@ -134,20 +135,6 @@ private val testPort = 8082
         assertThat(response, com.natpryce.hamkrest.equalTo(releaseResponse))
     }
 
-    fun `uploadReleaseAsset - sunshine`() {
-        val uploadRequest = AssetUpload.testInstance
-        val uploadResponse = AssetUploadResponse.testInstance.copy(state = "uploaded")
-
-        val requestPath = "$endpointPrefix/releases/${uploadRequest.releaseId}/assets?name=${uploadRequest.fileName}"
-        givenWiremock(POST, requestPath, body = uploadResponse.toJson())
-
-        testee().uploadReleaseAsset(uploadRequest)
-
-        verifyPostRequest(MockRequest(requestPath, {
-            withHeader("Content-Type", equalTo(uploadRequest.contentType))
-        }))
-    }
-
     fun `listReleases - request made and response parsed`() {
         val release = CreateReleaseResponse.testInstance
 
@@ -161,15 +148,42 @@ private val testPort = 8082
         assertThat(actualReleases[0], com.natpryce.hamkrest.equalTo(release))
     }
 
+    fun `uploadReleaseAsset - sunshine`() {
+        val uploadRequest = AssetUpload.testInstance
+        val uploadResponse = AssetUploadResponse.testInstance.copy(state = "uploaded")
+        val (requestPath1, requestPath2) = givenWiremockUpload(uploadRequest, uploadResponse)
+
+        testee().uploadReleaseAsset(uploadRequest)
+
+        verifyWiremockGet(MockRequest(requestPath1))
+        verifyPostRequest(MockRequest(requestPath2, {
+            withHeader("Content-Type", equalTo(uploadRequest.contentType))
+            // TODO assert payload: uploadRequest.bytes.read()
+        }))
+    }
+
     fun `uploadReleaseAsset - state is not uploaded should throw`() {
         val uploadRequest = AssetUpload.testInstance
         val uploadResponse = AssetUploadResponse.testInstance.copy(state = "not_uploaded")
-        val requestPath = "$endpointPrefix/releases/${uploadRequest.releaseId}/assets?name=${uploadRequest.fileName}"
-        givenWiremock(POST, requestPath, body = uploadResponse.toJson())
+        givenWiremockUpload(uploadRequest, uploadResponse)
 
         assertThrown<Github4kException> {
             testee().uploadReleaseAsset(uploadRequest)
         }
+    }
+
+    data class UploadPaths(val path1Get: String, val path2Post: String)
+    private fun givenWiremockUpload(uploadRequest: AssetUpload, uploadResponse: AssetUploadResponse): UploadPaths {
+        val responseUploadRelativeUrl = combineUrlParts(endpointPrefix, "/uploadUrl")
+        val responseUploadFullUrl = combineUrlParts(wiremockBaseUrl, responseUploadRelativeUrl)
+
+        val requestPath1 = "$endpointPrefix/releases/${uploadRequest.releaseId}"
+        val requestPath2 = "$responseUploadRelativeUrl?name=${uploadRequest.fileName}"
+
+        givenWiremock(GET, requestPath1, body = """{"upload_url":"$responseUploadFullUrl"}""")
+        givenWiremock(POST, requestPath2, body = uploadResponse.toJson())
+
+        return UploadPaths(requestPath1, requestPath2)
     }
 
     private fun testee() = GithubApiImpl(

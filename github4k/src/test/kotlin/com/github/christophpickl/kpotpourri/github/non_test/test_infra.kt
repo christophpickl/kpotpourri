@@ -107,7 +107,7 @@ fun CreateReleaseResponse.toJson() = """{"id":$id,"url":"$url","tag_name":"$tag_
 
 val AssetUpload.Companion.testInstance get() = AssetUpload(
         releaseId = 1,
-        fileName = "testFileName",
+        fileName = "testFileName.txt",
         contentType = "content/type",
         bytes = ByteSource.wrap(byteArrayOf(0, 1, 1, 0))
 )

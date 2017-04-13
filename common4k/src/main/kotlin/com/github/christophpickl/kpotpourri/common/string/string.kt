@@ -54,6 +54,7 @@ fun String.saveToFile(target: File) {
 /**
  * Synonym for concatUrlParts().
  */
+// TODO support varargs
 fun combineUrlParts(part1: String, part2: String) = concatUrlParts(part1, part2)
 
 
