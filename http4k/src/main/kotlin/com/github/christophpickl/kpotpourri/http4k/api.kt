@@ -58,7 +58,7 @@ data class Request4k(
         val url: String,
         val headers: Map<String, String> = emptyMap(),
         // cookies
-        val requestBody: String? = null
+        val requestBody: DefiniteRequestBody? = null
 ) {
     companion object {
         private fun filterAuthorizationHeader(headers: Map<String, String>): Map<String, String> {

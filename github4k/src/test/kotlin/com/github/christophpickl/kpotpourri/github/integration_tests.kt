@@ -148,6 +148,18 @@ private val testPort = 8082
         }))
     }
 
+    fun `listReleases - request made and response parsed`() {
+        val release = CreateReleaseResponse.testInstance
+
+        val requestPath = "$endpointPrefix/releases"
+        givenWiremock(GET, requestPath, body = release.toJson().wrapJsonArrayBrackets())
+
+        val actualReleases = testee().listReleases()
+
+        verifyWiremockGet(MockRequest(requestPath))
+        assertThat(actualReleases.size, com.natpryce.hamkrest.equalTo(1))
+        assertThat(actualReleases[0], com.natpryce.hamkrest.equalTo(release))
+    }
 
     fun `uploadReleaseAsset - state is not uploaded should throw`() {
         val uploadRequest = AssetUpload.testInstance

@@ -53,10 +53,10 @@ sealed class StatusCheckMode {
     open class Custom(val checker: StatusCheckFunction) : StatusCheckMode()
 
     class EnforceFamily(family: StatusFamily) : Custom({ _, (statusCode) ->
-        if (statusCode / 100 == family.group) {
+        if (family.matches(statusCode)) {
             StatusCheckResult.Ok
         } else {
-            StatusCheckResult.FailWithException { response ->
+            StatusCheckResult.FailWithException { _ ->
                 Http4kStatusCodeException(
                         expected = StatusRange.StatusByFamily(family),
                         actual = statusCode)
@@ -102,7 +102,7 @@ class Http4kStatusCodeException(
 
     companion object {
         private fun buildMessage(expected: StatusRange, actual: StatusCode, additionalMessage: String? = null) =
-                "Got a $actual status code but expected ${expected.toPrettyString()}!" +
+                "Got ${statusCode2Label(actual)} but expected ${expected.toPrettyString()}!" +
                         if (additionalMessage != null) " $additionalMessage" else ""
     }
 }
@@ -121,9 +121,19 @@ enum class StatusFamily(val group: Int, val label: String) {
     ServerError_5(5, "ServerError");
 
     val prettyString  get() = "${group}xx $label" // "2xx Success"
+    fun matches(statusCode: StatusCode) =
+            statusCode / 100 == group
 }
 
 typealias StatusCode = Int
+
+fun statusCode2Label(search: StatusCode) =
+    when (search) {
+        200 -> "200 Ok"
+        401 -> "401 Unauthorized"
+        403 -> "403 Forbidden"
+        else -> search.toString()
+    }
 
 const val SC_100_Continue = 100
 const val SC_200_Ok = 200

@@ -9,12 +9,24 @@ private val log = KotlinLogging.logger {}
 
 /**
  * Throws an exception if that file does not exist.
+ *
+ * formerly ensureExists()
  */
-fun File.verifyExists(): File { // formerly ensureExists()
+fun File.verifyExists() = this.apply {
     if (!exists()) {
         throw KPotpourriException("Expected a file existing at: $absolutePath")
     }
-    return this
+}
+
+fun File.verifyIsFile() = this.apply {
+    if (!isFile) {
+        throw KPotpourriException("Expected to be a file: $absolutePath")
+    }
+}
+
+fun File.verifyExistsAndIsFile() = this.apply {
+    verifyExists()
+    verifyIsFile()
 }
 
 /**

@@ -29,6 +29,7 @@ internal class Http4kImpl(
     override fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit) =
             any(HttpMethod4k.PATCH, PatchRequestOpts(), url, returnType, withOpts)
 
+
     /**
      * GET, POST, ... or any other.
      */
@@ -46,26 +47,33 @@ internal class Http4kImpl(
         if (requestTypeAndBody != null) {
             headers += "Content-Type" to requestTypeAndBody.contentType
         }
-        val fullUrl = UrlBuilder.build(globals.baseUrl.combine(url), requestOpts.queryParams)
-
         prepareAuthHeader(requestOpts.basicAuth, globals.basicAuth)?.let {
             headers += it
         }
-
         headers.addAll(globals.headers)
         headers.addAll(requestOpts.headers)
 
         val request4k = Request4k(
                 method = method,
-                url = fullUrl,
+                url = buildUrl(requestOpts, url),
                 headers = headers.map,
                 requestBody = requestTypeAndBody?.requestBody
         )
 
         log.debug { "Executing: $request4k" }
         val response4k = httpImpl.execute(request4k)
+        log.trace { "response body: ${response4k.bodyAsString}" }
         checkStatusCode(globals.statusCheck, requestOpts.statusCheck, request4k, response4k)
         return castReturnType(response4k, returnType)
+    }
+
+    private fun buildUrl(requestOpts: AnyRequestOpts, url: String): String {
+        val urlWithoutQuery = if (requestOpts.disableBaseUrl) {
+            url
+        } else {
+            globals.baseUrl.combine(url)
+        }
+        return UrlBuilder.build(urlWithoutQuery, requestOpts.queryParams)
     }
 
     @Suppress("UNCHECKED_CAST")

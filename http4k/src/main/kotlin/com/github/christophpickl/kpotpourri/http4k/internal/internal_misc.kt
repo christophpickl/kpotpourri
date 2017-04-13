@@ -30,6 +30,6 @@ open class MetaMap {
 
 class MutableMetaMap : MetaMap() {
     operator fun plusAssign(pair: Pair<String, Any>) {
-
+        map += pair
     }
 }

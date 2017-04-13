@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.github.non_test
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.github.AssetUpload
 import com.github.christophpickl.kpotpourri.github.CreateReleaseRequest
 import com.github.christophpickl.kpotpourri.github.CreateReleaseResponse
@@ -13,6 +14,9 @@ import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import com.google.common.io.ByteSource
+import java.io.File
+
+private val log = LOG {}
 
 fun String.wrapJsonArrayBrackets() = "[ $this ]"
 
@@ -20,8 +24,23 @@ val GithubConfig.Companion.testRepository get() = GithubConfig(
         repositoryName = "gadsu_release_playground",
         repositoryOwner = "christophpickl",
         username = "christoph.pickl@gmail.com",
-        password = System.getProperty("github.pass", null) ?: throw KPotpourriException("Expected system variable -Dgithub.pass")
+        password = detectGithubPass()
 )
+
+val githubPassSysprop = "github.pass"
+private fun detectGithubPass(): String {
+    val sysprop = System.getProperty(githubPassSysprop, null)
+    if (sysprop != null) {
+        log.debug { "Detected github credentials via system property -D$githubPassSysprop" }
+        return sysprop
+    }
+    val file = File(File(System.getProperty("user.home")), ".mygithub")
+    if (!file.exists()) {
+        throw KPotpourriException("Expected one of A) system variable -D$githubPassSysprop or B) file at ~/.mygithub")
+    }
+    log.debug { "Detected github credentials from ${file.absolutePath}" }
+    return file.readText().trim()
+}
 
 val Milestone.Companion.testInstance get() = Milestone(
         version = "1.0",
@@ -53,11 +72,12 @@ fun Issue.toJson() = """{
 
 fun List<Issue>.toIssuesJson() = map(Issue::toJson).joinToString().wrapJsonArrayBrackets()
 
-val Tag.Companion.testInstance get() =  Tag("testName")
+val Tag.Companion.testInstance get() = Tag("testName")
 
 fun Tag.toJson() = """{
     "name": "$name"
 }"""
+
 fun List<Tag>.toTagsJson() = map(Tag::toJson).joinToString().wrapJsonArrayBrackets()
 
 
@@ -68,14 +88,22 @@ val CreateReleaseRequest.Companion.testInstance get() = CreateReleaseRequest(
         draft = true,
         prerelease = true
 )
+
 fun CreateReleaseRequest.toEqualJson(): StringValuePattern = equalTo("""{"tag_name":"$tag_name","name":"$name","body":"$body","draft":$draft,"prerelease":$prerelease}""")
 
 
 val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
         id = 1,
-        url = "testUrl"
+        url = "testUrl",
+
+        tag_name = "testTagName",
+        name = "testName",
+        body = "testBody",
+        draft = true,
+        prerelease = true
 )
-fun CreateReleaseResponse.toJson() = """ { "id": $id, "url": "$url" } """
+
+fun CreateReleaseResponse.toJson() = """{"id":$id,"url":"$url","tag_name":"$tag_name","name":"$name","body":"$body","draft":$draft,"prerelease":$prerelease}"""
 
 val AssetUpload.Companion.testInstance get() = AssetUpload(
         releaseId = 1,
@@ -88,4 +116,5 @@ internal val AssetUploadResponse.Companion.testInstance get() = AssetUploadRespo
         state = "testeState",
         size = 42
 )
+
 internal fun AssetUploadResponse.toJson() = """{"name":"$name","state":"$state","size":$size}"""

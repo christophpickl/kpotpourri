@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k_apache
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
@@ -80,7 +81,12 @@ class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
             }
 
             request.requestBody?.let { body ->
-                this.entity = ByteArrayEntity(body.toByteArray())
+                val requestByteArray = when(body) {
+                    // MINOR or use StringEntity (better charset and content type support)
+                    is DefiniteRequestBody.DefiniteStringBody -> body.string.toByteArray()
+                    is DefiniteRequestBody.DefiniteBytesBody -> body.bytes.read()
+                }
+                this.entity = ByteArrayEntity(requestByteArray)
             }
         }
     }

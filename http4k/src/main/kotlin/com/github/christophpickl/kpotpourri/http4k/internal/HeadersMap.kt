@@ -1,7 +1,11 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
+import com.github.christophpickl.kpotpourri.common.logging.LOG
+
 
 class HeadersMap {
+
+    private val log = LOG {}
 
     private val _map = HashMap<String, String>()
     val map: Map<String, String> = _map
@@ -20,9 +24,9 @@ class HeadersMap {
 
     private fun addEntry(key: String, value: String) {
         map.keys.firstOrNull { it.toLowerCase() == key.toLowerCase() }?.let {
-            println("removing key: $it")
             _map -= it
         }
+        // dont print header value as it could contain Authorization secret
         _map += key to value
     }
 

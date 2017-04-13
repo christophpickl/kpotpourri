@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.None
 import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 
 val DEFAULT_STATUS_CHECK_MODE = StatusCheckMode.NotSetAtAll
@@ -22,6 +23,8 @@ interface AnyRequestOpts : StatusCheckConfig, HeadersConfig, QueryParamConfig {
     // queryParams
     // cookies
     var basicAuth: BasicAuthMode
+    var disableBaseUrl: Boolean
+    fun disableBaseUrl() { disableBaseUrl = true }
 }
 
 
@@ -32,7 +35,8 @@ data class GetRequestOpts(
         override val headers: HeadersMap = HeadersMap(),
         override val queryParams: MutableMap<String, String> = HashMap(),
         override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
-        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE
+        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
+        override var disableBaseUrl: Boolean = false
 ) : AnyRequestOpts
 
 /**
@@ -43,6 +47,8 @@ data class PostRequestOpts(
         override val queryParams: MutableMap<String, String> = HashMap(),
         override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
         override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
+        override var disableBaseUrl: Boolean = false,
+
         override var requestBody: RequestBody = None
 ) : AnyRequestOpts, RequestWithEntityOpts
 
@@ -55,6 +61,8 @@ data class PatchRequestOpts(
         override val queryParams: MutableMap<String, String> = HashMap(),
         override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
         override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
+        override var disableBaseUrl: Boolean = false,
+
         override var requestBody: RequestBody = None
 ) : AnyRequestOpts, RequestWithEntityOpts
 

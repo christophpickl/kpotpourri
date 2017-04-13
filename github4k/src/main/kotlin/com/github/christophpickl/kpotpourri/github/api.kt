@@ -24,6 +24,7 @@ interface GithubApi {
     fun listTags(): List<Tag>
 
     fun close(milestone: Milestone)
+    fun listReleases(): List<CreateReleaseResponse>
     fun createNewRelease(createRequest: CreateReleaseRequest): CreateReleaseResponse
     fun uploadReleaseAsset(upload: AssetUpload)
 }
@@ -116,15 +117,32 @@ class GithubApiImpl(
             http4k.post("/releases", createRequest, CreateReleaseResponse::class)
 
     /**
+     * GET /repos/:owner/:repo/releases
+     *
+     * https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
+     */
+    override fun listReleases(): List<CreateReleaseResponse> =
+            http4k.get("/releases", Array<CreateReleaseResponse>::class)
+                    .toList()
+                    .sortedBy { it.name }
+
+    /**
      * POST https://<upload_url>/repos/:owner/:repo/releases/:id/assets?name=foo.zip
      *
      * https://developer.github.com/v3/repos/releases/#upload-a-release-asset
      */
     override fun uploadReleaseAsset(upload: AssetUpload) {
-        val response = http4k.post("/releases/${upload.releaseId}/assets", AssetUploadResponse::class) {
+        // "upload_url": "https://uploads.github.com/repos/christophpickl/gadsu_release_playground/releases/5934443/assets{?name,label}",
+
+        val uploadUrl = http4k.get("/releases/${upload.releaseId}", SingleReleaseJson::class).upload_url.removeSuffix("{?name,label}")
+        log.debug { "Upload URL for github assets: $uploadUrl" }
+        // "https://uploads.github.com/repos/christophpickl/gadsu_release_playground/releases/5934443/assets{?name,label}"
+
+        val response = http4k.post(uploadUrl, AssetUploadResponse::class) {
             addHeader("Content-Type" to upload.contentType)
             addQueryParam("name" to upload.fileName)
-//                FIXME requestBytes = upload.file.readBytes()
+            requestBytesBody(upload.contentType, upload.bytes)
+            disableBaseUrl()
         }
 
         log.debug { "Uploaded asset: $response" }
@@ -132,35 +150,8 @@ class GithubApiImpl(
             throw Github4kException("Upload failed for ${upload.fileName}! ($upload, $response)")
         }
     }
-    //    private fun <T> request(
-//            method: HttpMethod4k,
-//            url: String,
-//            returnType: Class<T>,
-//            queryParameters: List<Pair<String, Any?>>? = null,
-//            headers: List<Pair<String, String>>? = null,
-//            requestEntity: Any? = null,
-//            requestBytes: ByteArray? = null
-//    ): T {
-//        val (_, response, result) = FuelManager.instance.request(method = method, path = url, param = queryParameters).apply {
-//            if (requestEntity != null) {
-//                body(mapper.writeValueAsString(requestEntity))
-//            }
-//            if (requestBytes != null) {
-//                body(requestBytes)
-//            }
-//        }
-//                .authenticate(config.username, config.password)
-//                .header("Accept" to GITHUB_MIMETYPE)
-//                .apply { if (headers !=null ) { httpHeaders.putAll(headers)} }
-//                .responseString()
-//
-////        log.trace("Status code: {}", response.httpStatusCode)
-//
-//        result.fold({ success: String ->
-//            return mapper.readValue(success, returnType)
-//        }, { fail: FuelError ->
-//            throw GadsuException("GitHub call failed for URL: $url with parameters: $queryParameters! (fuel says: $fail)", fail.exception)
-//        })
-//    }
+    data class SingleReleaseJson(
+            val upload_url: String
+    )
 
 }
