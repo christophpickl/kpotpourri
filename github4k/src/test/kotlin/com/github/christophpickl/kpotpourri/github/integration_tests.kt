@@ -1,5 +1,12 @@
 package com.github.christophpickl.kpotpourri.github
 
+import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
+import com.github.christophpickl.kpotpourri.github.non_test.testInstance
+import com.github.christophpickl.kpotpourri.github.non_test.toEqualJson
+import com.github.christophpickl.kpotpourri.github.non_test.toIssuesJson
+import com.github.christophpickl.kpotpourri.github.non_test.toJson
+import com.github.christophpickl.kpotpourri.github.non_test.toTagsJson
+import com.github.christophpickl.kpotpourri.github.non_test.wrapJsonArrayBrackets
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
@@ -127,9 +134,32 @@ private val testPort = 8082
         assertThat(response, com.natpryce.hamkrest.equalTo(releaseResponse))
     }
 
-    /*
-    fun uploadReleaseAsset(upload: AssetUpload)
-     */
+    fun `uploadReleaseAsset - sunshine`() {
+        val uploadRequest = AssetUpload.testInstance
+        val uploadResponse = AssetUploadResponse.testInstance.copy(state = "uploaded")
+
+        val requestPath = "$endpointPrefix/releases/${uploadRequest.releaseId}/assets?name=${uploadRequest.fileName}"
+        givenWiremock(POST, requestPath, body = uploadResponse.toJson())
+
+        testee().uploadReleaseAsset(uploadRequest)
+
+        verifyPostRequest(MockRequest(requestPath, {
+            withHeader("Content-Type", equalTo(uploadRequest.contentType))
+        }))
+    }
+
+
+    fun `uploadReleaseAsset - state is not uploaded should throw`() {
+        val uploadRequest = AssetUpload.testInstance
+        val uploadResponse = AssetUploadResponse.testInstance.copy(state = "not_uploaded")
+        val requestPath = "$endpointPrefix/releases/${uploadRequest.releaseId}/assets?name=${uploadRequest.fileName}"
+        givenWiremock(POST, requestPath, body = uploadResponse.toJson())
+
+        assertThrown<Github4kException> {
+            testee().uploadReleaseAsset(uploadRequest)
+        }
+    }
+
     private fun testee() = GithubApiImpl(
             config = GithubConfig(
                     repositoryOwner = repositoryOwner,

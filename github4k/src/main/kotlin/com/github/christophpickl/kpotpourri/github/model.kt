@@ -1,8 +1,7 @@
 package com.github.christophpickl.kpotpourri.github
 
 import com.github.christophpickl.kpotpourri.github.internal.JsonData
-import java.io.File
-
+import com.google.common.io.ByteSource
 
 
 data class Issue(
@@ -64,5 +63,7 @@ data class AssetUpload(
         val fileName: String,
         /** See: https://www.iana.org/assignments/media-types/media-types.xhtml */
         val contentType: String,
-        val file: File
-)
+        val bytes: ByteSource
+) {
+    companion object // for test extensions
+}

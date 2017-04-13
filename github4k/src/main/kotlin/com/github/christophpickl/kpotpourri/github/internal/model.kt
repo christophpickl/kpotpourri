@@ -50,4 +50,6 @@ internal @JsonData data class AssetUploadResponse(
         val name: String,
         val state: String,
         val size: Int
-)
+) {
+    companion object // for test extensions
+}

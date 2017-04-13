@@ -129,7 +129,7 @@ class GithubApiImpl(
 
         log.debug { "Uploaded asset: $response" }
         if (response.state != "uploaded") {
-            System.err.println("Upload failed for ${upload.fileName}!!! ($upload, $response)")
+            throw Github4kException("Upload failed for ${upload.fileName}! ($upload, $response)")
         }
     }
     //    private fun <T> request(

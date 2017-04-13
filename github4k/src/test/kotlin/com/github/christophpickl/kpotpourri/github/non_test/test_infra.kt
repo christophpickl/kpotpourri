@@ -1,8 +1,18 @@
-package com.github.christophpickl.kpotpourri.github
+package com.github.christophpickl.kpotpourri.github.non_test
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.github.AssetUpload
+import com.github.christophpickl.kpotpourri.github.CreateReleaseRequest
+import com.github.christophpickl.kpotpourri.github.CreateReleaseResponse
+import com.github.christophpickl.kpotpourri.github.GithubConfig
+import com.github.christophpickl.kpotpourri.github.Issue
+import com.github.christophpickl.kpotpourri.github.Milestone
+import com.github.christophpickl.kpotpourri.github.State
+import com.github.christophpickl.kpotpourri.github.Tag
+import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
+import com.google.common.io.ByteSource
 
 fun String.wrapJsonArrayBrackets() = "[ $this ]"
 
@@ -66,3 +76,16 @@ val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
         url = "testUrl"
 )
 fun CreateReleaseResponse.toJson() = """ { "id": $id, "url": "$url" } """
+
+val AssetUpload.Companion.testInstance get() = AssetUpload(
+        releaseId = 1,
+        fileName = "testFileName",
+        contentType = "content/type",
+        bytes = ByteSource.wrap(byteArrayOf(0, 1, 1, 0))
+)
+internal val AssetUploadResponse.Companion.testInstance get() = AssetUploadResponse(
+        name = "testName",
+        state = "testeState",
+        size = 42
+)
+internal fun AssetUploadResponse.toJson() = """{"name":"$name","state":"$state","size":$size}"""
