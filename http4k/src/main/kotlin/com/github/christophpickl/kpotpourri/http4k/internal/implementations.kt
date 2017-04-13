@@ -8,7 +8,7 @@ import com.github.christophpickl.kpotpourri.http4k.Http4kException
 internal enum class SupportedImplementation(
         val fqnToLookFor: String
 ) {
-    APACHE_HTTP("com.github.christophpickl.kpotpourri.http4k_apache.ApacheHttpClientRestClient")
+    APACHE_HTTP("com.github.christophpickl.kpotpourri.http4k_apache.ApacheHttpClientHttpImplFactory")
     // when adding new implementation
     // 1) add new enum here
     // 2) create new module and add RestClient impl
@@ -21,7 +21,7 @@ internal object RestClientFactory {
 
     private val log = LOG {}
 
-    fun lookupRestClientByImplementation(): HttpImpl {
+    fun lookupRestClientByImplementation(): HttpImplFactory {
         val availableImplementations = SupportedImplementation.values().map { reflectivelyClassExists(it.fqnToLookFor) }.filterNotNull()
         log.debug { "availableImplementations:\n${availableImplementations.toPrettyString()}" }
 
@@ -33,7 +33,7 @@ internal object RestClientFactory {
     }
 
     private fun instantiateRestClient(type: Class<*>) =
-            type.newInstance() as HttpImpl
+            type.newInstance() as HttpImplFactory
 
     private fun reflectivelyClassExists(fqn: String): Class<*>? {
         try {
