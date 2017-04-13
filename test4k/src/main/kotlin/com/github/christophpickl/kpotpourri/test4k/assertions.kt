@@ -37,14 +37,15 @@ inline fun <reified E : Throwable> assertThrown(expectedMessage: String, code: (
  * Expect an exception to be thrown which can be individually checked for correctness.
  */
 inline fun <reified E : Throwable> assertThrown(matcher: (E) -> Boolean, code: () -> Unit) {
+    val expectedExceptionType = E::class.java.simpleName
     try {
         code()
-        fail("Expected an exception to be thrown of type ${E::class.java.simpleName}")
+        fail("Expected an exception to be thrown of type $expectedExceptionType")
     } catch (e: Exception) {
         if (e !is E) {
             fail("Unexpected exception type (${e.javaClass.simpleName}) was thrown!\n${e.toStackTrace()}")
         } else if (!matcher(e)) {
-            fail("Unexpected exception was thrown: $e")
+            fail("Unexpected exception was thrown! Expected a $expectedExceptionType but was thrown:\n${e.toStackTrace()}")
         }
         // thrown exception matched, everything is OK
     }

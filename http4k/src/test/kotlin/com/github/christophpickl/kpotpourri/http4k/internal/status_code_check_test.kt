@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.github.christophpickl.kpotpourri.http4k.Http4kStatusException
+import com.github.christophpickl.kpotpourri.http4k.Http4kStatusCodeException
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
@@ -41,9 +41,8 @@ import org.testng.annotations.Test
                 equalTo(expected as Any))
     }
 
-
     fun `checkStatusCode - global not set, request enforce family 4, when 200, Then throw exception`() {
-        assertThrown<Http4kStatusException>({ e -> e.message == "Status code 200 expected to be of group 4!"}) {
+        assertThrown<Http4kStatusCodeException>({ e -> e.message == "Got a 200 status code but expected 4xx Client Error!"}) {
             checkStatusCode(
                     global = StatusCheckMode.NotSetAtAll,
                     request = StatusCheckMode.EnforceFamily(StatusFamily.ClientError_4),
