@@ -132,7 +132,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
 
         http4k.patch(mockEndpointUrl)
 
-        verifyPostRequest(MockRequest(mockEndpointUrl))
+        verifyPatchRequest(MockRequest(mockEndpointUrl))
     }
     // PUT
     // =================================================================================================================
