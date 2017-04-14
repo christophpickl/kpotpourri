@@ -24,7 +24,6 @@ inline fun <reified E : Throwable> assertThrown(code: () -> Unit) {
     assertThrown<E>({ true }, code)
 }
 
-
 /**
  * Tests for correct exception type and message.
  */
@@ -41,17 +40,17 @@ inline fun <reified E : Throwable> assertThrown(matcher: (E) -> Boolean, code: (
     try {
         code()
         fail("Expected an exception to be thrown of type $expectedExceptionType")
-    } catch (e: Exception) {
-        if (e !is E) {
-            fail("Unexpected exception type (${e.javaClass.simpleName}) was thrown!\n${e.toStackTrace()}")
-        } else if (!matcher(e)) {
-            fail("Unexpected exception was thrown! Expected a $expectedExceptionType but was thrown:\n${e.toStackTrace()}")
+    } catch (t: Throwable) {
+        if (t !is E) {
+            fail("Unexpected exception type (${t.javaClass.simpleName}) was thrown!\n${t.toStackTrace()}")
+        } else if (!matcher(t)) {
+            fail("Unexpected exception was thrown! Expected a $expectedExceptionType but was thrown:\n${t.toStackTrace()}")
         }
         // thrown exception matched, everything is OK
     }
 }
 
-fun Exception.toStackTrace(): String {
+fun Throwable.toStackTrace(): String {
     val writer = StringWriter()
     printStackTrace(PrintWriter(writer))
     return writer.toString()

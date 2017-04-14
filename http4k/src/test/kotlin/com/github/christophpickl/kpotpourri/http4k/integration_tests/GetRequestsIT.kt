@@ -1,8 +1,8 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.http4k.Response4k
-import com.github.christophpickl.kpotpourri.test4k.mapContains
-import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContains
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
