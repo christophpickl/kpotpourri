@@ -8,7 +8,7 @@ import com.github.christophpickl.kpotpourri.http4k.SC_404_NotFound
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckResult
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
-import com.github.christophpickl.kpotpourri.http4k.testDummy
+import com.github.christophpickl.kpotpourri.http4k.non_test.testDummy
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.messageContains
 import com.natpryce.hamkrest.assertion.assertThat

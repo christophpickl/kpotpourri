@@ -1,4 +1,16 @@
 
+
+* ad release4k: dryRun() option
+* ad BUILD: running http4k-tests should have impact on coverage of http4k module itself :-/
+* overrideHttp4kImpl can be used to inject custom Adapter
+* interceptor for beforeExec/afterExec, change A) in http4k or B) specific adapter
+* get rid of guava Bytes stuff (create abstraction layer)
+* get rid of: MockRequest
+* simple release script for kpot
+
+-------
+
+
 * module ideas:
     * release scripting infrastructure (use github api module)
     * logback (programmatic appenders)
