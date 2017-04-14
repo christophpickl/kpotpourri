@@ -9,15 +9,17 @@ import com.github.christophpickl.kpotpourri.http4k.SC_418_Teapot
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import org.testng.annotations.BeforeMethod
 
 typealias HttpImplProducer = () -> HttpImpl
-private val MOCK_PORT = 8043
 
-abstract class Http4kWiremockTest(private val httpImpl: HttpImplProducer) : WiremockTest(port = MOCK_PORT) {
+abstract class Http4kWiremockTest(
+        private val httpImpl: HttpImplProducer,
+        port: Int = WIREMOCK_PORT) : WiremockTest(port) {
 
     companion object {
         val mockEndpointUrl = "/mock"

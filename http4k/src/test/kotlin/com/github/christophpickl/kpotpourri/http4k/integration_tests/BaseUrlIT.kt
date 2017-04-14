@@ -8,12 +8,14 @@ import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
 
 
-abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
+abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient, WIREMOCK_PORT) {
 
     fun `Given Http4k without baseUrl, When request, Then URL was called`() {
         givenGetMockEndpointUrl()
 
-        buildHttp4k { baseUrlDisabled() }
+        buildHttp4k {
+            baseUrlDisabled()
+        }
                 .get(mockWiremockUrlAndEndpointUrl)
 
         verifyWiremockGet(MockRequest(mockEndpointUrl))
