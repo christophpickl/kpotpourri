@@ -9,37 +9,35 @@ import com.github.tomakehurst.wiremock.client.WireMock
 
 abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
 
-    companion object {
-        private val USERNAME = "authUsername"
-        private val PASSWORD = "authPassword"
-        private val HEADER_VALUE = "Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA=="
-    }
+    private val username = "authUsername"
+    private val password = "authPassword"
+    private val authHeaderValue = "Basic YXV0aFVzZXJuYW1lOmF1dGhQYXNzd29yZA=="
 
     fun `Given default Http4k, When GET with basic auth, Then Authorization header is set`() {
         givenGetMockEndpointUrl()
 
         http4k.get(mockEndpointUrl) {
             basicAuth = BasicAuth(
-                    username = USERNAME,
-                    password = PASSWORD
+                    username = username,
+                    password = password
             )
         }
 
         verifyWiremockGet(MockRequest(mockEndpointUrl, {
-            withHeader("Authorization", WireMock.equalTo(HEADER_VALUE))
+            withHeader("Authorization", WireMock.equalTo(authHeaderValue))
         }))
     }
 
     fun `Given basic auth configured Http4k, When GET, Then Authorization header is set`() {
         givenGetMockEndpointUrl()
         val http4k = buildHttp4k {
-            basicAuth(USERNAME, PASSWORD)
+            basicAuth(username, password)
         }
 
         http4k.get(concatUrlParts(wiremockBaseUrl, mockEndpointUrl))
 
         verifyWiremockGet(MockRequest(mockEndpointUrl, {
-            withHeader("Authorization", WireMock.equalTo(HEADER_VALUE))
+            withHeader("Authorization", WireMock.equalTo(authHeaderValue))
         }))
     }
 
@@ -51,13 +49,13 @@ abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restCli
 
         http4k.get(concatUrlParts(wiremockBaseUrl, mockEndpointUrl)) {
             basicAuth = BasicAuth(
-                    username = USERNAME,
-                    password = PASSWORD
+                    username = username,
+                    password = password
             )
         }
 
         verifyWiremockGet(MockRequest(mockEndpointUrl, {
-            withHeader("Authorization", WireMock.equalTo(HEADER_VALUE))
+            withHeader("Authorization", WireMock.equalTo(authHeaderValue))
         }))
     }
 

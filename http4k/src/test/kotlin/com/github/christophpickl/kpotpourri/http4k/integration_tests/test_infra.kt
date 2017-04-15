@@ -21,15 +21,11 @@ abstract class Http4kWiremockTest(
         private val httpImpl: HttpImplProducer,
         port: Int = WIREMOCK_PORT) : WiremockTest(port) {
 
-    companion object {
-        val mockEndpointUrl = "/mock"
-
-        val ANY_STATUS_CODE = SC_418_Teapot
-        val ANY_RESPONSE_BODY = "wiremock response body"
-
-        val headerName = "X-http4k-test"
-        val headerValue = "testHeaderValue"
-    }
+    protected val mockEndpointUrl = "/mock"
+    protected val anyStatusCode = SC_418_Teapot
+    protected val anyResponseBody = "wiremock response body"
+    protected val headerName = "X-http4k-test"
+    protected val headerValue = "testHeaderValue"
 
     private val log = LOG {}
     /** "http://localhost:8042/my" */
