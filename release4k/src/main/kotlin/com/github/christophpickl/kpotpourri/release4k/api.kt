@@ -19,8 +19,11 @@ fun release4k(func: Release4k.() -> Unit) {
 }
 
 interface Release4k {
-    var baseDirectory: File?
 
+    val release4kDirectory: File
+    val gitCheckoutDirectory: File
+
+    fun checkoutGitProject(gitUrl: String)
     fun initGithub(config: GithubConfig)
     fun readVersionFromTxt(relativeFilePath: String): Version
     fun git(command: String)

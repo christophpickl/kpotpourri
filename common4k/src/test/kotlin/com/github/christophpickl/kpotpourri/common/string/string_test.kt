@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.common.string
 
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.DataProvider
@@ -67,5 +68,26 @@ import org.testng.annotations.Test
         // aliase
         assertThat(joinUrlParts(part1, part2), equalTo(expected))
         assertThat(combineUrlParts(part1, part2), equalTo(expected))
+    }
+
+    @DataProvider
+    fun provideSplitAsArguments(): Array<Array<out Any>> = arrayOf(
+            arrayOf("a", listOf("a")),
+            arrayOf(" a ", listOf("a")),
+            arrayOf(" a   b ", listOf("a", "b")),
+            arrayOf("a b", listOf("a", "b")),
+            arrayOf("a b \"c d\"", listOf("a", "b", "c d"))
+
+    )
+
+    @Test(dataProvider = "provideSplitAsArguments")
+    fun `splitAsArguments sunshine`(given: String, expected: List<String>) {
+        given.splitAsArguments() shouldMatchValue expected
+    }
+
+    fun `StringBuilder plusAssign`() {
+        val sb = StringBuilder()
+        sb += 'c'
+        sb.toString() shouldMatchValue "c"
     }
 }
