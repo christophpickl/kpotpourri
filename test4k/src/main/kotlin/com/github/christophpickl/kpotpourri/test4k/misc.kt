@@ -6,7 +6,6 @@ package com.github.christophpickl.kpotpourri.test4k
  *    ==> BECOMES ==>
  * e.messageContains("200", "4xx")
  */
-// TODO TEST this
 fun Exception.messageContains(vararg substring: String): Boolean {
     val msg = message ?: return false
 

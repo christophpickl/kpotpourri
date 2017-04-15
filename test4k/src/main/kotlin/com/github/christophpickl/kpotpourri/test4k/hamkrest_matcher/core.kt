@@ -26,6 +26,14 @@ fun <T> not(negated: Matcher<T?>): Matcher<T?> = Matcher.Negation(negated)
 fun <T> notEqualTo(expected: T) =
         not(equalTo(expected))
 
+fun Boolean.shouldBeTrue() {
+    this shouldMatchValue true
+}
+
+fun Boolean.shouldBeFalse() {
+    this shouldMatchValue false
+}
+
 infix fun <T> T.shouldMatchValue(expectedValue: T) {
     assertThat(this, equalTo(expectedValue))
 }
