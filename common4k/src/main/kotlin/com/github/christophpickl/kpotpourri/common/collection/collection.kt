@@ -61,6 +61,13 @@ fun <K, V> Map<K, V>.verifyNoIntersection(that: Map<K, V>) {
     }
 }
 
+/**
+ * Same as original put() but with Kotlin's Pair instance to allow the "to" syntax.
+ *
+ * Sample: put(1, "1") => put(1 to "1")
+ */
+//fun <K, V> MutableMap<K, V>.put(pair: Pair<K, V>) =
+//        put(pair.first, pair.second)
 
 // ITERABLE
 // =====================================================================================================================
@@ -68,7 +75,7 @@ fun <K, V> Map<K, V>.verifyNoIntersection(that: Map<K, V>) {
 /**
  * listOf(1 to "einz").toMutableMap() == mapOf(1 to "einz")
  */
-fun <K, V> Iterable<Pair<K, V>>.toMutableMap(): Map<K, V> {
+fun <K, V> Iterable<Pair<K, V>>.toMutableMap(): MutableMap<K, V> {
     val immutableMap = toMap()
     val map = HashMap<K, V>(immutableMap.size)
     map.putAll(immutableMap)
