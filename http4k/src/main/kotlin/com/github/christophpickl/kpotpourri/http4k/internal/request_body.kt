@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteBytesBody
@@ -7,12 +8,14 @@ import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteS
 import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
 import com.github.christophpickl.kpotpourri.http4k.RequestWithEntityOpts
 
+private val log = LOG {}
 
 /**
  * @return Pair of the content type and the actual response body content
  */
 internal fun prepareBodyAndContentType(requestOpts: AnyRequestOpts): TypeAndBody? {
     if (requestOpts !is RequestWithEntityOpts) {
+        log.trace("Not preparing body as request is not of type RequestWithEntityOpts.")
         return null
     }
 

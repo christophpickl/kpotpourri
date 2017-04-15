@@ -5,7 +5,7 @@
 * overrideHttp4kImpl can be used to inject custom Adapter
 * interceptor for beforeExec/afterExec, change A) in http4k or B) specific adapter
 * get rid of guava Bytes stuff (create abstraction layer)
-* get rid of: MockRequest
+* get rid of: MockRequest instance
 * simple release script for kpot
 
 -------
