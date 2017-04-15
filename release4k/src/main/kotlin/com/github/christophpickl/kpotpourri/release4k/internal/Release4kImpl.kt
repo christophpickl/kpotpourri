@@ -39,7 +39,7 @@ internal class Release4kImpl : Release4k {
             log.debug { "readVersionFromTxt(path=$absolutePath)" }
             verifyExists()
         }.readText()
-        val version = VersionReader.read(fileContent)
+        val version = VersionParser.parse(fileContent)
         kout("Read from [$relativeFilePath] version: ${version.niceString}")
         return version
     }

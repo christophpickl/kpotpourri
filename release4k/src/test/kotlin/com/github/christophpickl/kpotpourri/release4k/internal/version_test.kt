@@ -7,7 +7,7 @@ import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
-@Test class VersionReaderTest {
+@Test class VersionParserTest {
 
     @DataProvider
     fun provideValidVersions(): Array<Array<out Any>> = arrayOf(
@@ -22,7 +22,7 @@ import org.testng.annotations.Test
 
     @Test(dataProvider = "provideValidVersions")
     fun `valid versions read`(toBeRead: String, numbers: List<Int>) {
-        assertRead(toBeRead, VersionReader.buildVersion(numbers)!!)
+        assertRead(toBeRead, VersionParser.buildVersion(numbers)!!)
     }
 
     @DataProvider
@@ -41,12 +41,12 @@ import org.testng.annotations.Test
     @Test(dataProvider = "provideInvalidVersions")
     fun `invalid versions throw`(toBeRead: String) {
         assertThrown<VersionParseException> {
-            VersionReader.read(toBeRead)
+            VersionParser.parse(toBeRead)
         }
     }
 
     private fun assertRead(toBeRead: String, expected: Version) {
-        assertThat(VersionReader.read(toBeRead),
+        assertThat(VersionParser.parse(toBeRead),
                 equalTo(expected))
     }
 
