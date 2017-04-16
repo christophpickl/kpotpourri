@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.control.throwIf
+import com.github.christophpickl.kpotpourri.common.enforceAllBranchesCovered
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.Http4kStatusCodeException
 import com.github.christophpickl.kpotpourri.http4k.Http4kStatusException
@@ -53,10 +54,9 @@ internal fun checkStatusCode(
         }
         is Custom -> {
             val result = check.checker(request4k, response4k)
-            @Suppress("UNREACHABLE_CODE")
-            val checkForAllBranchesCovered2 = when (result) {
+            when (result) {
                 Ok -> {
-                    return // succeeded
+                    // succeeded
                 }
                 is FailWithException -> {
                     throw result.exceptionFunc(response4k)
@@ -64,7 +64,7 @@ internal fun checkStatusCode(
                 is Fail -> {
                     throw Http4kStatusException(result.message)
                 }
-            }
+            }.enforceAllBranchesCovered
         }
     }
 }
