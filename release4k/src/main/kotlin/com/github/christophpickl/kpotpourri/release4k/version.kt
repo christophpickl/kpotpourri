@@ -19,6 +19,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
         fun increment1() = VersionParts1(type, version + 1)
     }
 
+    // major, mi-nor
     data class VersionParts2(override val type: VersionType, val version1: Int, val version2: Int) :
             Version(type, listOf(version1, version2)) {
         override fun toVersion2() = this
@@ -27,6 +28,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
         fun increment2() = VersionParts2(type, version1, version2 + 1)
     }
 
+    // major, mi-nor, patch
     data class VersionParts3(override val type: VersionType, val version1: Int, val version2: Int, val version3: Int) :
             Version(type, listOf(version1, version2, version3)) {
         override fun toVersion3() = this

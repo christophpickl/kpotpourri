@@ -37,7 +37,7 @@ fun foo() {
     "".enforceAllBranchesCovered
     Unit.enforceAllBranchesCovered
 //    Nothing.enforceAllBranchesCovered // ... nope
-    val two = Two.A
+//    val two = Two.A
 //    val x: Nothing = when(two) {
 //        Two.A -> return
 //    }
@@ -48,3 +48,5 @@ fun foo() {
 // Nothing is final, therefor cant add as <A : Nothing>
 val Nothing.enforceAllBranchesCovered2: Unit get() = Unit
 val <A> A.enforceAllBranchesCovered: Unit get() = Unit
+
+fun sleepRand() = Thread.sleep((Math.random() * 500.0).toLong() + 500)

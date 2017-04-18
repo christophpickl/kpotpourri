@@ -1,7 +1,6 @@
 package com.github.christophpickl.kpotpourri.common.collection
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import java.util.HashMap
 
 /** Default pretty print item prefix. */
 val KPOT_DEFAULT_PREFIX = "- "
@@ -75,12 +74,7 @@ fun <K, V> Map<K, V>.verifyNoIntersection(that: Map<K, V>) {
 /**
  * listOf(1 to "einz").toMutableMap() == mapOf(1 to "einz")
  */
-fun <K, V> Iterable<Pair<K, V>>.toMutableMap(): MutableMap<K, V> {
-    val immutableMap = toMap()
-    val map = HashMap<K, V>(immutableMap.size)
-    map.putAll(immutableMap)
-    return map
-}
+fun <K, V> Iterable<Pair<K, V>>.toMutableMap() = toMap().toMutableMap()
 
 // ENUM
 // =====================================================================================================================

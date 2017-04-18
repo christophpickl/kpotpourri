@@ -4,6 +4,7 @@ import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.isA
 import org.testng.annotations.Test
 
 
@@ -93,6 +94,7 @@ import org.testng.annotations.Test
     fun `toMutableMap`() {
         assertThat(listOf(1 to "einz").toMutableMap(),
                 equalTo(mapOf(1 to "einz")))
+        assertThat(listOf(1 to "einz").toMutableMap(), isA<MutableMap<Int, String>>())
     }
 
 }
