@@ -29,6 +29,7 @@ fun main(args: Array<String>) = release4k {
     val currentVersion = readVersionFromTxt(versionTxt).toVersion2()
     val nextVersion = readVersion2FromStdin(prompt = "Enter next release version", defaultVersion = currentVersion.incrementMinor())
     val nextVersionString = nextVersion.niceString
+    val syspropNextVersion = "-Dkpotpourri.version=$nextVersionString"
 
     // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
@@ -55,8 +56,8 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("GRADLE BUILD")
-    gradlew("clean check test buildJar -Dversion=$nextVersionString")
-//    gradlew("clean check !checkTodo !test buildJar -Dversion=$nextVersionString")
+    // TODO enable: checkTodo!
+    gradlew("clean check test build $syspropNextVersion")
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")
@@ -69,10 +70,9 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("BINTRAY UPLOAD")
-    gradlew("bintrayUpload -Dversion=$nextVersionString")
-    // git push ??? needed ???
+    gradlew("bintrayUpload $syspropNextVersion")
+    git("push")
     git("push origin --tags")
-
 
 
     execute("/usr/bin/git", "pull", File("./"))

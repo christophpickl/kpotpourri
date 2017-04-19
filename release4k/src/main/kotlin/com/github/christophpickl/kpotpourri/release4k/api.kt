@@ -16,6 +16,7 @@ inline fun release4k(func: Release4k.() -> Unit) {
         func(impl)
         impl.onFinish()
     }
+    // TODO format minutes as well
     kout("Total release time: ${(msNeeded / 1000.0).format(3)} secs")
 }
 

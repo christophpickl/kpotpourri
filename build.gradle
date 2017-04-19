@@ -1,9 +1,12 @@
 
-// $ ./gradlew bintrayUpload
-
+//_                _                               _
+//| | ___ __   ___ | |_ _ __   ___  _   _ _ __ _ __(_)
+//| |/ / '_ \ / _ \| __| '_ \ / _ \| | | | '__| '__| |
+//|   <| |_) | (_) | |_| |_) | (_) | |_| | |  | |  | |
+//|_|\_\ .__/ \___/ \__| .__/ \___/ \__,_|_|  |_|  |_|
+//|_|             |_|
 
 buildscript {
-    // version()
     ext.myVersion = System.getProperty("kpotpourri.version", "SNAPSHOT")
     ext.kotlin_version = '1.1.1'
     ext.dokka_version = '0.9.13'
@@ -18,10 +21,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$kotlin_version"
-
-        // https://github.com/Kotlin/dokka/blob/master/README.md
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
-
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.autoscout24.gradle:gradle-todo-plugin:1.0'
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1" // as i dont know how to apply via plugins {} to submodules
@@ -51,17 +51,17 @@ subprojects { subproject ->
     println("[KPOT] Configuring subproject '${subproject.name}' with version '${version}'")
 
     apply plugin: "kotlin"
+    apply plugin: "kotlin-noarg"
     apply plugin: 'org.jetbrains.dokka'
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
     apply plugin: 'com.autoscout24.gradle.todo'
     apply plugin: "jacoco"
     apply plugin: "com.github.kt3k.coveralls"
-//    apply plugin: 'maven'
+    apply plugin: 'com.jfrog.bintray'
 //    apply plugin: 'signing'
-    apply plugin: "kotlin-noarg"
+
     noArg {
         annotation("com.github.christophpickl.kpotpourri.common.KotlinNoArg")
     }
@@ -82,8 +82,6 @@ subprojects { subproject ->
             testCompile project(':test4k')
         }
         testRuntime "ch.qos.logback:logback-classic:1.2.3"
-//    testRuntime "org.slf4j:jul-to-slf4j:1.7.25"
-//    testCompile "ch.qos.logback:logback-core:1.2.3"
     }
 
     test {
@@ -124,7 +122,7 @@ subprojects { subproject ->
 
     jacocoTestReport {
         reports {
-            xml.enabled = true // coveralls plugin depends on xml format report
+            xml.enabled = true
             html.enabled = true
         }
     }
@@ -163,21 +161,6 @@ subprojects { subproject ->
         from javadoc.destinationDir
     }
 
-    // FIXME automatically execute dokka task on package
-    dokka {
-//        moduleName = 'data'
-        outputFormat = 'javadoc'
-//        outputDirectory = "$buildDir/javadoc"
-//        processConfigurations = ['compile', 'extra']
-//        includes = ['packages.md', 'extra.md']
-//        samples = ['samples/basic.kt', 'samples/advanced.kt']
-//        linkMapping {
-//            dir = "src/main/kotlin"
-//            url = "https://github.com/cy6erGn0m/vertx3-lang-kotlin/blob/master/src/main/kotlin"
-//            suffix = "#L"
-//        }
-//        sourceDirs = files('src/main/kotlin')
-    }
 
     artifacts {
         archives sourcesJar
@@ -185,27 +168,10 @@ subprojects { subproject ->
         archives testJar
     }
 
-//    signing {
-//        required { hasProperty("sign") || gradle.taskGraph.hasTask("uploadArchives") }
-//        sign configurations.archives
-//    }
-
-//    task ossrhAuthentication << {
-//        if (!(project.hasProperty('ossrh.username') && project.hasProperty('ossrh.password'))) {
-//            throw new InvalidUserDataException("no OSSRH username and/or password!")
-//        }
-//    }
-
-//    uploadArchives {
-//        dependsOn ossrhAuthentication
-//    https://github.com/npryce/hamkrest/blob/master/build.gradle
 
 
-// plugin howto:
-//   https://github.com/bintray/gradle-bintray-plugin
-// how to ReSTful upload:
-//   https://bintray.com/docs/api/#_upload_content
-
+// plugin howto: https://github.com/bintray/gradle-bintray-plugin
+// how to ReSTful upload: https://bintray.com/docs/api/#_upload_content
     def pomConfig = {
 //    licenses {
 //        license {
@@ -288,9 +254,37 @@ subprojects { subproject ->
     }
 
     bintrayUpload.dependsOn verifyNotSnapshotVersion
+
+
+    // TODO automatically execute dokka task on package
+    dokka {
+//        moduleName = 'data'
+        outputFormat = 'javadoc'
+//        outputDirectory = "$buildDir/javadoc"
+//        processConfigurations = ['compile', 'extra']
+//        includes = ['packages.md', 'extra.md']
+//        samples = ['samples/basic.kt', 'samples/advanced.kt']
+//        linkMapping {
+//            dir = "src/main/kotlin"
+//            url = "https://github.com/cy6erGn0m/vertx3-lang-kotlin/blob/master/src/main/kotlin"
+//            suffix = "#L"
+//        }
+//        sourceDirs = files('src/main/kotlin')
+    }
+
+//    signing {
+//        required { hasProperty("sign") || gradle.taskGraph.hasTask("uploadArchives") }
+//        sign configurations.archives
+//    }
+
+//    task ossrhAuthentication << {
+//        if (!(project.hasProperty('ossrh.username') && project.hasProperty('ossrh.password'))) {
+//            throw new InvalidUserDataException("no OSSRH username and/or password!")
+//        }
+//    }
+
+//    uploadArchives {
+//        dependsOn ossrhAuthentication
+//    https://github.com/npryce/hamkrest/blob/master/build.gradle
 }
 
-
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '3.1'
-//}
