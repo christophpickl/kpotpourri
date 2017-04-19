@@ -5,8 +5,8 @@ import com.github.christophpickl.kpotpourri.release4k.Version.VersionParts2.Comp
 import java.io.File
 
 fun main(args: Array<String>) = release4k {
-    if (release4kDirectory.canonicalPath.endsWith("release4k")) {
-        throw RuntimeException("Execute this main class from 'kpotpourri' root directory, instead of submodule 'release4k' ;)")
+    if (File("").canonicalPath.endsWith("release4k")) {
+        throw RuntimeException("Invalid CWD! Execute this main class from 'kpotpourri' root directory, instead of submodule 'release4k' ;)")
     }
 
     val versionTxt = "version.txt"
@@ -14,11 +14,11 @@ fun main(args: Array<String>) = release4k {
     // initGithub(GithubConfig.testRepository)
 
     val currentVersion = readVersionFromTxt(versionTxt).toVersion2()
-    val nextVersion = readVersion2FromStdin(defaultVersion = currentVersion.incrementMinor())
+    val nextVersion = readVersion2FromStdin(prompt = "Enter next release version", defaultVersion = currentVersion.incrementMinor())
     val nextVersionString = nextVersion.niceString
 
     printHeader("VERIFY NO CHANGES")
-    execute("git", "status", File(""))
+    execute("/usr/bin/git", "status", File("./"))
     if (!readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
     }

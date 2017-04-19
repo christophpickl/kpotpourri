@@ -42,15 +42,16 @@ fun parseVersion4(input: String): Version.VersionParts4? {
             match.groupValues[4].toInt())
 }
 
+private val DEFAULT_PROMPT = "Enter version"
 sealed class Version(open val type: VersionType, private val numbers: List<Int>) {
 
     companion object {
 
-        private fun <T : Version> _readFromStdin(parser: (String) -> T?, defaultVersion: T? = null): T {
+        private fun <T : Version> _readFromStdin(parser: (String) -> T?, prompt: String, defaultVersion: T? = null): T {
             val defaultPrompt = if (defaultVersion != null) " [${defaultVersion.niceString}]"
             else ""
             while (true) {
-                print("Enter version$defaultPrompt: ")
+                print("$prompt$defaultPrompt: ")
                 val input = readLine()!!.trim()
                 if (input.isEmpty()) {
                     if (defaultVersion != null) {
@@ -76,8 +77,8 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version)) {
 
         companion object {
-            fun readVersion1FromStdin(defaultVersion: VersionParts1? = null): VersionParts1 {
-                return _readFromStdin(::parseVersion1, defaultVersion)
+            fun readVersion1FromStdin(prompt: String = DEFAULT_PROMPT, defaultVersion: VersionParts1? = null): VersionParts1 {
+                return _readFromStdin(::parseVersion1, prompt, defaultVersion)
             }
         }
 
@@ -90,8 +91,8 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version1, version2)) {
 
         companion object {
-            fun readVersion2FromStdin(defaultVersion: VersionParts2? = null): VersionParts2 {
-                return _readFromStdin(::parseVersion2, defaultVersion)
+            fun readVersion2FromStdin(prompt: String = DEFAULT_PROMPT, defaultVersion: VersionParts2? = null): VersionParts2 {
+                return _readFromStdin(::parseVersion2, prompt, defaultVersion)
             }
         }
 
@@ -106,8 +107,8 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version1, version2, version3)) {
 
         companion object {
-            fun readVersion3FromStdin(defaultVersion: VersionParts3? = null): VersionParts3 {
-                return _readFromStdin(::parseVersion3, defaultVersion)
+            fun readVersion3FromStdin(prompt: String = DEFAULT_PROMPT, defaultVersion: VersionParts3? = null): VersionParts3 {
+                return _readFromStdin(::parseVersion3, prompt, defaultVersion)
             }
         }
 
@@ -125,8 +126,8 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version1, version2, version3, version4)) {
 
         companion object {
-            fun readVersion4FromStdin(defaultVersion: VersionParts4? = null): VersionParts4 {
-                return _readFromStdin(::parseVersion4, defaultVersion)
+            fun readVersion4FromStdin(prompt: String = DEFAULT_PROMPT, defaultVersion: VersionParts4? = null): VersionParts4 {
+                return _readFromStdin(::parseVersion4, prompt, defaultVersion)
             }
         }
 

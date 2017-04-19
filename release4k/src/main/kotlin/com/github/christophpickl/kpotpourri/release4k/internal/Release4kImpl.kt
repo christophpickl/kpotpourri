@@ -30,7 +30,7 @@ class Release4kImpl : Release4k {
     }
 
     override fun checkoutGitProject(gitUrl: String) {
-        execute("git", "clone $gitUrl ${gitCheckoutDirectory.name}", release4kDirectory)
+        execute("/usr/bin/git", "clone $gitUrl ${gitCheckoutDirectory.name}", release4kDirectory)
     }
 
 

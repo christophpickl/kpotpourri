@@ -11,7 +11,7 @@ import kotlin.system.measureTimeMillis
 
 inline fun release4k(func: Release4k.() -> Unit) {
     val msNeeded = measureTimeMillis {
-        kout("Current working directory: ${File("").absolutePath}")
+        kout("Current working directory: ${File("./").canonicalPath}")
         val impl = Release4kImpl()
         func(impl)
         impl.onFinish()
