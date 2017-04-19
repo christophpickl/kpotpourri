@@ -19,6 +19,12 @@ fun Closeable.closeSilently() {
     }
 }
 
+fun type(enter: String, action: () -> Unit): String =
+        readAndWriteStdOutIn(enter, action)
+
+fun hitEnter(action: () -> Unit): String {
+    return readAndWriteStdOutIn("\n", action)
+}
 
 fun readAndWriteStdOutIn(enter: String, action: () -> Unit): String =
         readFromStdOut {

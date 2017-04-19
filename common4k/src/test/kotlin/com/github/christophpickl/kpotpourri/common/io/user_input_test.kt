@@ -116,15 +116,4 @@ import org.testng.annotations.Test
         override fun toPrintString() = name
     }
 
-    // MISC
-    // =================================================================================================================
-
-    private fun type(enter: String, action: () -> Unit): String =
-        readAndWriteStdOutIn(enter, action)
-
-    private fun hitEnter(action: () -> Unit): String {
-        return readAndWriteStdOutIn("\n", action)
-    }
-
-
 }
