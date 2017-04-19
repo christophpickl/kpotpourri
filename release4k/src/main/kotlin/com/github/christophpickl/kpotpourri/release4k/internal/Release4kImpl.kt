@@ -13,7 +13,8 @@ import com.github.christophpickl.kpotpourri.release4k.Version
 import java.io.File
 
 
-internal class Release4kImpl : Release4k {
+class Release4kImpl : Release4k {
+
     private val log = LOG {}
 
     override val release4kDirectory = File("build/release4k")
@@ -49,8 +50,11 @@ internal class Release4kImpl : Release4k {
         kout("Read from [$relativeFilePath] version: ${version.niceString}")
         return version
     }
+    override fun writeVersionToTxt(relativeFilePath: String, version: Version) {
+        File(relativeFilePath).writeText(version.niceString)
+    }
 
-    private fun execute(cmd: String, args: String, cwd: File, suppressKout: Boolean = false) {
+    override fun execute(cmd: String, args: String, cwd: File, suppressKout: Boolean) {
         if (!suppressKout) {
             koutCmd(cwd, "$cmd $args")
         }
@@ -81,10 +85,12 @@ internal class Release4kImpl : Release4k {
         execute("git", command, gitCheckoutDirectory)
     }
 
-    fun execute() {
-        // TODO actually just create a descriptive task and add it to queue
-        log.debug("execute()")
+    override fun printHeader(message: String) {
+        println("===> $message <===")
+    }
 
+    fun onFinish() {
+        // actually just create a descriptive task and add it to queue ... and execute here
         execute("say", "\"Release build finished.\"", release4kDirectory, suppressKout = true)
     }
 

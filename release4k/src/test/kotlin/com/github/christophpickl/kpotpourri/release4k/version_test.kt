@@ -46,10 +46,10 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
 
     @DataProvider
     fun provideVersionSampleAndReadExecution(): Array<Array<out Any>> = arrayOf(
-            arrayOf(Version.testVersion_1, { VersionParts1.readFromStdin() } as Any, { defaultVersion: Any -> VersionParts1.readFromStdin(defaultVersion as VersionParts1) }),
-            arrayOf(Version.testVersion_1_2, { VersionParts2.readFromStdin() } as Any, { defaultVersion: Any -> VersionParts2.readFromStdin(defaultVersion as VersionParts2) }),
-            arrayOf(Version.testVersion_1_2_3, { VersionParts3.readFromStdin() } as Any, { defaultVersion: Any -> VersionParts3.readFromStdin(defaultVersion as VersionParts3) }),
-            arrayOf(Version.testVersion_1_2_3_4, { VersionParts4.readFromStdin() } as Any, { defaultVersion: Any -> VersionParts4.readFromStdin(defaultVersion as VersionParts4) })
+            arrayOf(Version.testVersion_1, { VersionParts1.readVersion1FromStdin() } as Any, { defaultVersion: Any -> VersionParts1.readVersion1FromStdin(defaultVersion as VersionParts1) }),
+            arrayOf(Version.testVersion_1_2, { VersionParts2.readVersion2FromStdin() } as Any, { defaultVersion: Any -> VersionParts2.readVersion2FromStdin(defaultVersion as VersionParts2) }),
+            arrayOf(Version.testVersion_1_2_3, { VersionParts3.readVersion3FromStdin() } as Any, { defaultVersion: Any -> VersionParts3.readVersion3FromStdin(defaultVersion as VersionParts3) }),
+            arrayOf(Version.testVersion_1_2_3_4, { VersionParts4.readVersion4FromStdin() } as Any, { defaultVersion: Any -> VersionParts4.readVersion4FromStdin(defaultVersion as VersionParts4) })
     )
 
     @Test(dataProvider = "provideVersionSampleAndReadExecution")

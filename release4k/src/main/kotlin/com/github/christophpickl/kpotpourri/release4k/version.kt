@@ -2,7 +2,7 @@ package com.github.christophpickl.kpotpourri.release4k
 
 
 fun main(args: Array<String>) {
-    println("\nRead version: ${Version.VersionParts1.readFromStdin(
+    println("\nRead version: ${Version.VersionParts1.readVersion1FromStdin(
             defaultVersion = Version.VersionParts1(VersionType.Release, 42)
     )}")
 }
@@ -76,7 +76,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version)) {
 
         companion object {
-            fun readFromStdin(defaultVersion: VersionParts1? = null): VersionParts1 {
+            fun readVersion1FromStdin(defaultVersion: VersionParts1? = null): VersionParts1 {
                 return _readFromStdin(::parseVersion1, defaultVersion)
             }
         }
@@ -90,7 +90,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version1, version2)) {
 
         companion object {
-            fun readFromStdin(defaultVersion: VersionParts2? = null): VersionParts2 {
+            fun readVersion2FromStdin(defaultVersion: VersionParts2? = null): VersionParts2 {
                 return _readFromStdin(::parseVersion2, defaultVersion)
             }
         }
@@ -106,7 +106,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version1, version2, version3)) {
 
         companion object {
-            fun readFromStdin(defaultVersion: VersionParts3? = null): VersionParts3 {
+            fun readVersion3FromStdin(defaultVersion: VersionParts3? = null): VersionParts3 {
                 return _readFromStdin(::parseVersion3, defaultVersion)
             }
         }
@@ -125,7 +125,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             Version(type, listOf(version1, version2, version3, version4)) {
 
         companion object {
-            fun readFromStdin(defaultVersion: VersionParts4? = null): VersionParts4 {
+            fun readVersion4FromStdin(defaultVersion: VersionParts4? = null): VersionParts4 {
                 return _readFromStdin(::parseVersion4, defaultVersion)
             }
         }
