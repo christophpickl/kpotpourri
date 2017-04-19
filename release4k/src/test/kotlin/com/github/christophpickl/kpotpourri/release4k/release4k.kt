@@ -72,4 +72,9 @@ fun main(args: Array<String>) = release4k {
     gradlew("bintrayUpload -Dversion=$nextVersionString")
     // git push ??? needed ???
     git("push origin --tags")
+
+
+
+    execute("/usr/bin/git", "pull", File("./"))
+    execute("/usr/bin/git", "fetch -p", File("./"))
 }
