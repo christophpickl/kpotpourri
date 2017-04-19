@@ -31,7 +31,6 @@ interface Release4k {
     fun checkoutGitProject(gitUrl: String)
     fun initGithub(config: GithubConfig)
     fun readVersionFromTxt(relativeFilePath: String): Version
-    fun writeVersionToTxt(relativeFilePath: String, version: Version)
     fun git(command: String)
     fun gradlew(command: String)
     fun printHeader(message: String)

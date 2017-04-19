@@ -10,6 +10,9 @@ fun main(args: Array<String>) = release4k {
     }
 
     val versionTxt = "version.txt"
+    val gitUrl = "https://github.com/christophpickl/kpotpourri.git"
+
+    // =================================================================================================================
 
     // initGithub(GithubConfig.testRepository)
 
@@ -17,37 +20,44 @@ fun main(args: Array<String>) = release4k {
     val nextVersion = readVersion2FromStdin(prompt = "Enter next release version", defaultVersion = currentVersion.incrementMinor())
     val nextVersionString = nextVersion.niceString
 
+    // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
     execute("/usr/bin/git", "status", File("./"))
+    println()
     if (!readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
     }
 
+    // =================================================================================================================
     printHeader("RELEASE NOTES")
-
     println("Base release directory: ${release4kDirectory.canonicalPath}")
     println("Version file: ${File(versionTxt).canonicalPath}")
     println("Versions: ${currentVersion.niceString} => $nextVersionString")
 
+    // =================================================================================================================
     if (!readConfirmation(prompt = "Do you wanna release this?")) {
         return
     }
 
+    // =================================================================================================================
     printHeader("CHECKOUT GIT")
-    checkoutGitProject("https://github.com/christophpickl/kpotpourri.git")
+    checkoutGitProject(gitUrl)
 
+    // =================================================================================================================
     printHeader("GRADLE BUILD")
     // gradlew clean check buildJar -Dversion=NEXT_VERSION
-    gradlew("clean check buildJar -Dversion=$nextVersionString")
+    gradlew("./gradlew clean check checkTodo test -Dversion=$nextVersionString")
 
+    // =================================================================================================================
     printHeader("CHANGE VERSION")
-    writeVersionToTxt(versionTxt, nextVersion)
+    File(gitCheckoutDirectory, versionTxt).writeText(nextVersionString)
 
     git("status")
     git("add .")
-    git("commit -m \"[Auto-Release] Changing version to $nextVersionString\"")
+    git("commit -m \"[Auto-Release] Preparing release $nextVersionString\"")
     git("tag $nextVersionString")
 
+    // =================================================================================================================
     printHeader("BINTRAY UPLOAD")
     gradlew("bintrayUpload -Dversion=$nextVersionString")
     // git push ??? needed ???

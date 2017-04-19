@@ -49,9 +49,6 @@ class Release4kImpl : Release4k {
         kout("Read from [$relativeFilePath] version: ${version.niceString}")
         return version
     }
-    override fun writeVersionToTxt(relativeFilePath: String, version: Version) {
-        File(relativeFilePath).writeText(version.niceString)
-    }
 
     override fun execute(cmd: String, args: String, cwd: File, suppressKout: Boolean) {
         if (!suppressKout) {
