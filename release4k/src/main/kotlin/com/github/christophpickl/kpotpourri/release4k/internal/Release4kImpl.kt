@@ -74,7 +74,7 @@ class Release4kImpl : Release4k {
 
     override fun gradlew(command: String) {
 //        execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
-        execute("gradlew", command, gitCheckoutDirectory)
+        execute("./gradlew", command, gitCheckoutDirectory)
     }
 
     override fun git(command: String) {

@@ -70,6 +70,13 @@ import org.testng.annotations.Test
         assertThat(combineUrlParts(part1, part2), equalTo(expected))
     }
 
+    fun `concat many urls`() {
+        assertThat(concatUrlParts("a", "b", "c", "d"), equalTo("a/b/c/d"))
+        assertThat(concatUrlParts("/with", "leading"), equalTo("/with/leading"))
+        assertThat(concatUrlParts("with", "trailing/"), equalTo("with/trailing/"))
+        assertThat(concatUrlParts("/with", "leading", "and", "trailing/"), equalTo("/with/leading/and/trailing/"))
+    }
+
     @DataProvider
     fun provideSplitAsArguments(): Array<Array<out Any>> = arrayOf(
             arrayOf("a", listOf("a")),
