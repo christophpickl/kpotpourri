@@ -17,7 +17,7 @@ class Release4kImpl : Release4k {
 
     private val log = LOG {}
 
-    override val release4kDirectory = File("build/release4k")
+    override val release4kDirectory = File("build/release4k").apply { resetDirectory() }
     override val gitCheckoutDirectory = File(release4kDirectory, "git_checkout")
 
     private var github: GithubApi? = null
@@ -30,7 +30,6 @@ class Release4kImpl : Release4k {
     }
 
     override fun checkoutGitProject(gitUrl: String) {
-        gitCheckoutDirectory.resetDirectory()
         execute("git", "clone $gitUrl ${gitCheckoutDirectory.name}", release4kDirectory)
     }
 

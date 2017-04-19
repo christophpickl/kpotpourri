@@ -38,7 +38,7 @@ fun File.move(target: File) {
 }
 
 fun File.resetDirectory(): File {
-    log.trace { "Reset directory: $canonicalPath" }
+    log.debug { "Delete and recreate directory: $canonicalPath" }
     if (!deleteRecursively()) {
         throw KPotpourriException("Could not delete directory: $canonicalPath")
     }
