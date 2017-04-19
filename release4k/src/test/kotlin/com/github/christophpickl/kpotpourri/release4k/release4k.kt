@@ -5,6 +5,16 @@ import com.github.christophpickl.kpotpourri.release4k.Version.VersionParts2.Comp
 import java.io.File
 
 fun main(args: Array<String>) = release4k {
+    println()
+    println("""
+ _                _                               _
+| | ___ __   ___ | |_ _ __   ___  _   _ _ __ _ __(_)
+| |/ / '_ \ / _ \| __| '_ \ / _ \| | | | '__| '__| |
+|   <| |_) | (_) | |_| |_) | (_) | |_| | |  | |  | |
+|_|\_\ .__/ \___/ \__| .__/ \___/ \__,_|_|  |_|  |_|
+     |_|             |_|
+""")
+    println()
     if (File("").canonicalPath.endsWith("release4k")) {
         throw RuntimeException("Invalid CWD! Execute this main class from 'kpotpourri' root directory, instead of submodule 'release4k' ;)")
     }

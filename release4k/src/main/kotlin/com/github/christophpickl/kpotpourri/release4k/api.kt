@@ -33,7 +33,10 @@ interface Release4k {
     fun readVersionFromTxt(relativeFilePath: String): Version
     fun git(command: String)
     fun gradlew(command: String)
-    fun printHeader(message: String)
+    fun printHeader(message: String) {
+        println()
+        println("===> $message <===")
+    }
     fun promptUser(prompt: String): String
 
     fun execute(cmd: String, args: String, cwd: File, suppressKout: Boolean = false)

@@ -81,10 +81,6 @@ class Release4kImpl : Release4k {
         execute("git", command, gitCheckoutDirectory)
     }
 
-    override fun printHeader(message: String) {
-        println("===> $message <===")
-    }
-
     fun onFinish() {
         // actually just create a descriptive task and add it to queue ... and execute here
         execute("say", "\"Release build finished.\"", release4kDirectory, suppressKout = true)
