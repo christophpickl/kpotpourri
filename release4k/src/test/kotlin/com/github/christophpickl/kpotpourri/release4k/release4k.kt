@@ -55,8 +55,8 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("GRADLE BUILD")
-    // gradlew clean check buildJar -Dversion=NEXT_VERSION
-    gradlew("clean check checkTodo test -Dversion=$nextVersionString")
+    gradlew("clean check test buildJar -Dversion=$nextVersionString")
+//    gradlew("clean check !checkTodo !test buildJar -Dversion=$nextVersionString")
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")
