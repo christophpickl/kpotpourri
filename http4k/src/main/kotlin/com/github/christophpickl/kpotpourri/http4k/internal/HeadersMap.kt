@@ -1,13 +1,10 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
-
 
 class HeadersMap {
 
-    private val log = LOG {}
-
     private val _map = HashMap<String, String>()
+
     val map: Map<String, String> = _map
 
     operator fun plusAssign(pair: Pair<String, String>) {

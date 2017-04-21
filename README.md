@@ -10,8 +10,8 @@
 Some common extensions for Kotlin:
 
 * **Common**: Extensions for the standard library
-* **Swing**: Extensions for the good old GUI framework (or use TornadoFX)
 * **HTTP4K**: HTTP/ReST client abstraction, inspired by Slf4J
+* **Swing**: Extensions for the good old GUI framework (or use TornadoFX)
 
 ## Usage
 
@@ -27,9 +27,11 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.christophpickl.kpotpourri:common:1.x'
-  compile 'com.github.christophpickl.kpotpourri:swing:1.x'
+  compile 'com.github.christophpickl.kpotpourri:common4k:1.x'
   compile 'com.github.christophpickl.kpotpourri:http4k:1.x'
+  compile 'com.github.christophpickl.kpotpourri:swing4k:1.x'
+  compile 'com.github.christophpickl.kpotpourri:github4k:1.x'
+  compile 'com.github.christophpickl.kpotpourri:release4k:1.x'
 }
 ```
 

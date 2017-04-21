@@ -12,6 +12,7 @@
 
 
 * module ideas:
+    * jetty
     * release scripting infrastructure (use github api module)
     * logback (programmatic appenders)
     * testng (custom listeners)
