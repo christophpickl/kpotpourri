@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.github.christophpickl.kpotpourri.test4k.mapContainsExactly
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContainsExactly
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
 

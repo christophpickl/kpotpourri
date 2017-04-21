@@ -6,9 +6,13 @@ import com.github.christophpickl.kpotpourri.release4k.VersionType
 import com.google.common.annotations.VisibleForTesting
 
 
-internal object VersionReader {
+internal object VersionParser {
 
-    fun read(inputString: String): Version {
+//    fun read() {
+//        try to parse = readLine()
+//    }
+
+    fun parse(inputString: String): Version {
         val maybeInts = inputString.split(".").map { it.trim().toIntOrNull() }
         val onlyInts = maybeInts.filterNotNull()
         if (maybeInts.size != onlyInts.size) {

@@ -31,15 +31,18 @@ sealed class RequestBody {
 
     object None : RequestBody()
 
-    class StringBody(val stringEntity: String) : RequestBody()
+    data class StringBody(val stringEntity: String) : RequestBody()
 
-    class JsonBody(val jacksonEntity: Any) : RequestBody()
+    data class JsonBody(val jacksonEntity: Any) : RequestBody()
 
-    class BytesBody(val contentType: String, val bytes: ByteSource) : RequestBody()
+    data class BytesBody(val contentType: String, val bytes: ByteSource) : RequestBody()
 }
 
 
 sealed class DefiniteRequestBody {
-    class DefiniteStringBody(val string: String) : DefiniteRequestBody()
-    class DefiniteBytesBody(val bytes: ByteSource) : DefiniteRequestBody()
+
+    data class DefiniteStringBody(val string: String) : DefiniteRequestBody()
+
+    data class DefiniteBytesBody(val bytes: ByteSource) : DefiniteRequestBody()
+
 }

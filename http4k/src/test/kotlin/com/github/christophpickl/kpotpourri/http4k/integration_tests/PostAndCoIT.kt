@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
-import com.github.christophpickl.kpotpourri.test4k.shouldMatchValue
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder

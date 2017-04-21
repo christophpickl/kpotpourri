@@ -1,11 +1,11 @@
 package com.github.christophpickl.kpotpourri.common.file
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import mu.KotlinLogging
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import java.io.File
 import java.nio.file.Files
 
-private val log = KotlinLogging.logger {}
+private val log = LOG {}
 
 /**
  * Throws an exception if that file does not exist.
@@ -35,4 +35,28 @@ fun File.verifyExistsAndIsFile() = this.apply {
 fun File.move(target: File) {
     log.debug { "move() ... from ${this.absolutePath} to ${target.absolutePath}" }
     Files.move(this.toPath(), target.toPath())
+}
+
+fun File.resetDirectory(): File {
+    log.debug { "Delete and recreate directory: $canonicalPath" }
+    if (!deleteRecursively()) {
+        throw KPotpourriException("Could not delete directory: $canonicalPath")
+    }
+    mkdirsIfNecessary()
+    return this
+}
+
+fun File.mkdirsIfNecessary(): File {
+    if (!exists()) {
+        if (mkdirs()) {
+            log.debug { "Created directory: $canonicalPath" }
+        } else {
+            throw KPotpourriException("Failed to created directory at: $canonicalPath")
+        }
+    } else if (!isDirectory) {
+        throw KPotpourriException("Directory must be a directory at: $canonicalPath")
+    } else {
+        log.debug { "Directory already exists at: $canonicalPath" }
+    }
+    return this
 }

@@ -9,11 +9,43 @@
 
 Some common extensions for Kotlin:
 
-* **Common**: Extensions for the standard library
-* **HTTP4K**: HTTP/ReST client abstraction, inspired by Slf4J
-* **Swing**: Extensions for the good old GUI framework (or use TornadoFX)
+* **common4k**: Extensions for the standard library
+* **http4k**: HTTP/ReST client abstraction, inspired by Slf4J
+* **test4k**: Test extensions, using TestNG, hamkrest and mockito-kotlin
+* **github4k**: GitHub API abstraction
+* **swing4k**: Extensions for the good old GUI framework (or use [TornadoFX](https://github.com/edvin/tornadofx) instead)
+* **release4k**: Simple replacement for common release shellscripts
 
-## Usage
+## Http4k
+
+The http4k API is an abstraction for writing HTTP clients in a Kotlin-ish fashion.
+It currently only supports Apache's HTTP client and will in future support the major http client 
+implementations like: Spring's ReST template, Kotlin's Fuel, you name it.
+
+### Sample Code
+
+```kotlin
+// setup the http4k instance with some global settings
+val http4k = buildHttp4k { 
+    baseUrlBy("http://some.server/rest")
+    addHeader("someConstant" to "headerValue")
+}
+
+// execute a GET /resource request
+val response = http4k.get("/resource") {
+    addHeader("Accept" to "my/content")
+    addQueryParam("sort" to "asc")
+}
+// process response object
+if (response.statusCode != SC_200_Ok) {
+    // do something with response.bodyAsString, response.headers, ...
+}
+
+// or transform JSON with jackson
+val dto = http4k.get("/dto", Dto::class)
+```
+
+## Setup
 
 ### Gradle
 

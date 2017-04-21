@@ -54,21 +54,68 @@ fun String.saveToFile(target: File) {
 /**
  * Synonym for concatUrlParts().
  */
-// TODO support varargs
-fun combineUrlParts(part1: String, part2: String) = concatUrlParts(part1, part2)
+fun combineUrlParts(vararg parts: String) = concatUrlParts(*parts)
 
 
 /**
  * Synonym for concatUrlParts().
  */
-fun joinUrlParts(part1: String, part2: String) = concatUrlParts(part1, part2)
+fun joinUrlParts(vararg parts: String) = concatUrlParts(*parts)
 
 
 /**
  * Get sure of leading/trailing slashes.
  */
 // or: infix joinUrlParts => url1 joinUrlParts url2
-fun concatUrlParts(part1: String, part2: String /* vararg String */): String {
-    return if (part1.isEmpty() && part2.isEmpty()) ""
-    else part1.removeSuffix("/") + "/" + part2.removePrefix("/")
+fun concatUrlParts(vararg parts: String): String {
+    if (parts.all(String::isEmpty)) {
+        return ""
+    }
+    return (if(parts.first().startsWith("/")) "/" else "") +
+    parts.toList().map { it.removePreAndSuffix("/") }.joinToString("/") +
+            (if(parts.last().endsWith("/")) "/" else "")
+}
+
+/**
+ * Splits by whitespace but respects the double quite (") symbol to combine big argument.
+ *
+ * Example: a b "c d" => { "a", "b", "c d" }
+ */
+fun String.splitAsArguments(): List<String> {
+    if (isBlank()) {
+        return emptyList()
+    }
+    val result = mutableListOf<String>()
+    var stringCollect = StringBuilder()
+    var quoteOpen = false
+    for (index in 0..length - 1) {
+        val char = this[index]
+        if (char == '\"') {
+            if (quoteOpen) {
+                result += stringCollect.toString()
+                stringCollect = StringBuilder()
+                quoteOpen = false
+            } else {
+                quoteOpen = true
+            }
+        } else if (char == ' ') {
+            if (quoteOpen) {
+                stringCollect += char
+            } else {
+                result += stringCollect.toString()
+                stringCollect = StringBuilder()
+            }
+        } else {
+            stringCollect += char
+        }
+    }
+    result += stringCollect.toString() // append last
+    return result.filter(String::isNotEmpty)
+}
+
+/**
+ * Kotlin integration for: StringBuilder() += 'k'
+ */
+operator fun StringBuilder.plusAssign(char: Char) {
+    append(char)
 }

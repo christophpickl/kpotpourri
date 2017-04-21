@@ -1,10 +1,14 @@
-package com.github.christophpickl.kpotpourri.http4k_tests
+package com.github.christophpickl.kpotpourri.http4k_apache
 
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
-import com.github.christophpickl.kpotpourri.http4k.integration_tests.*
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.AuthIT
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.BaseUrlIT
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.GetRequestsIT
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.HeadersIT
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.PostAndCoIT
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.QueryParamsIT
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.StatusCodeCheckIT
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
-import com.github.christophpickl.kpotpourri.http4k_apache.ApacheHttpClientHttpImpl
-import com.github.christophpickl.kpotpourri.http4k_apache.apacheConnectTimeout
 import org.testng.annotations.Test
 
 val apacheProducer = { ApacheHttpClientHttpImpl(MetaMap()) }

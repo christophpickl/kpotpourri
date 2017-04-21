@@ -34,6 +34,8 @@ class Http4kBuilder : GlobalHttp4kConfig {
 
 interface Http4k {
 
+    // TODO fun <R: Any> any(method: ...)
+
     fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: GetRequestOpts.() -> Unit = {}): R
     fun get(url: String, withOpts: GetRequestOpts.() -> Unit = {}) =
             get(url, Response4k::class, withOpts)
@@ -51,7 +53,6 @@ interface Http4k {
             patch(url, returnType, { requestBody(jacksonObject); withOpts(this) })
 
 }
-
 
 data class Request4k(
         val method: HttpMethod4k,
@@ -77,9 +78,9 @@ data class Request4k(
     override fun toString() = "Request4k(" +
             "method=$method, " +
             "url=$url, " +
-            "headers=${filterAuthorizationHeader(headers)}" +
+            "headers=${filterAuthorizationHeader(headers)}, " +
 //            "cookies=$cookies, " +
-            "requestBody=<<$requestBody>>, " +
+            "requestBody=<<$requestBody>>" +
             ")"
 }
 

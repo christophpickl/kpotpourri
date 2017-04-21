@@ -21,6 +21,16 @@ abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(rest
         verifyWiremockGet(MockRequest(mockEndpointUrl))
     }
 
+    fun `Given Http4k with baseUrl as string, When request, Then URL was called`() {
+        givenGetMockEndpointUrl()
+
+        buildHttp4k {
+            baseUrlBy(wiremockBaseUrl)
+        }.get(mockEndpointUrl)
+
+        verifyWiremockGet(MockRequest(mockEndpointUrl))
+    }
+
     fun `Given Http4k with baseUrl as config, When request, Then URL was called`() {
         givenGetMockEndpointUrl()
 
@@ -36,13 +46,4 @@ abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(rest
         verifyWiremockGet(MockRequest(mockEndpointUrl))
     }
 
-    fun `Given Http4k with baseUrl as string, When request, Then URL was called`() {
-        givenGetMockEndpointUrl()
-
-        buildHttp4k {
-            baseUrlBy(wiremockBaseUrl)
-        }.get(mockEndpointUrl)
-
-        verifyWiremockGet(MockRequest(mockEndpointUrl))
-    }
 }

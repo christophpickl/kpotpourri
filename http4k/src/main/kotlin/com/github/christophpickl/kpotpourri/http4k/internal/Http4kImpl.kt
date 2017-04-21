@@ -62,7 +62,7 @@ internal class Http4kImpl(
 
         log.debug { "Executing: $request4k" }
         val response4k = httpImpl.execute(request4k)
-        log.trace { "response body: ${response4k.bodyAsString}" }
+        log.trace { "response body: <<${response4k.bodyAsString}>>" }
         checkStatusCode(globals.statusCheck, requestOpts.statusCheck, request4k, response4k)
         return castReturnType(response4k, returnType)
     }
