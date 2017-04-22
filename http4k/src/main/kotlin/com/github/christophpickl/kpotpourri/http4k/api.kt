@@ -85,6 +85,13 @@ data class Request4k(
         }
     }
 
+    init {
+        // for simplicity sake no perfectly clean design but lazy check for data integrity
+        if (!method.isRequestBodySupported && requestBody != null) {
+            throw Http4kException("Invalid request! HTTP method [$method] does not support request body: $requestBody")
+        }
+    }
+
     override fun toString() = "Request4k(" +
             "method=$method, " +
             "url=$url, " +

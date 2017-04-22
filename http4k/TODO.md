@@ -17,6 +17,7 @@
 
 ## TODOs Low
 
+* @apache impl: when wiremock response with 100 -> .setRetryHandler()
 * http4k verwenden um manch andere APIs aufzurufen, und schauen wie die sich verhalten und supporten
 * multi form upload
 * lazily store response bodyAsString

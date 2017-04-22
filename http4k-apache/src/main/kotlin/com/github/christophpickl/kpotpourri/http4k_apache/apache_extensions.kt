@@ -6,11 +6,11 @@ import com.github.christophpickl.kpotpourri.http4k.internal.MutableMetaMap
 
 
 fun Http4kBuilder.apacheConnectTimeout(timeoutInMs: Int) {
-    _implMetaMap.connectTimeout(timeoutInMs)
+    _implMetaMap.requestTimeout(timeoutInMs)
 }
 
-internal val META_KEY_CONNECT_TIMEOUT = "apache_connect_timeout"
-internal fun MutableMetaMap.connectTimeout(timeoutInMs: Int) {
-    this += META_KEY_CONNECT_TIMEOUT to timeoutInMs
+internal val META_KEY_REQUEST_TIMEOUT = "apache_timeout_request"
+internal fun MutableMetaMap.requestTimeout(timeoutInMs: Int) = apply {
+    this += META_KEY_REQUEST_TIMEOUT to timeoutInMs
 }
-internal val MetaMap.connectTimeout: Int? get() = this[META_KEY_CONNECT_TIMEOUT]?.let { it as Int }
+internal val MetaMap.requestTimeout: Int? get() = this[META_KEY_REQUEST_TIMEOUT]?.let { it as Int }

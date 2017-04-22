@@ -9,6 +9,7 @@ import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpImplFactory
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
+import com.github.christophpickl.kpotpourri.http4k.internal.TimeoutException
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpDelete
@@ -22,6 +23,7 @@ import org.apache.http.entity.ByteArrayEntity
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicHeader
 import java.io.ByteArrayOutputStream
+import java.net.SocketTimeoutException
 
 
 class ApacheHttpClientHttpImplFactory : HttpImplFactory {
@@ -31,14 +33,13 @@ class ApacheHttpClientHttpImplFactory : HttpImplFactory {
 }
 
 // https://hc.apache.org/httpcomponents-client-4.5.x/quickstart.html
-class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
+class ApacheHttpClientHttpImpl(private val metaMap: MetaMap) : HttpImpl {
 
     private val log = LOG {}
 
-    private val connectTimeout: Int? = metaMap.connectTimeout
 
     init {
-        log.debug { "new ApacheHttpClientRestClient() .. connectTimeout=$connectTimeout" }
+        log.debug { "new ApacheHttpClientRestClient(metaMap=$metaMap)" }
     }
 
     override fun execute(request: Request4k): Response4k {
@@ -48,20 +49,23 @@ class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
 
         httpRequest.config = RequestConfig.custom()
                 .apply {
-                    // TODO test this
-                    connectTimeout?.let {
-                        log.trace { "Setting connect timeout to: ${connectTimeout}ms" }
-                        setConnectTimeout(connectTimeout)
+                    metaMap.requestTimeout?.let {
+                        log.trace { "Setting request/socket timeout to: ${it}ms" }
+                        setSocketTimeout(it)
+//                        setConnectTimeout(it)
+//                        setConnectionRequestTimeout(it)
                     }
                 }
-//                .setConnectionRequestTimeout()
-//                .setSocketTimeout()
                 .build()
         val client = HttpClientBuilder.create()
-//                MINOR wiremock response with 100 -> .setRetryHandler()
                 .build()
 
-        val response = client.execute(httpRequest)
+        val response: CloseableHttpResponse?
+        try {
+            response = client.execute(httpRequest)
+        } catch(e: SocketTimeoutException) {
+            throw TimeoutException("Executing request failed because of a timeout! ($httpRequest)", e)
+        }
 
         return response.toResponse4k()
     }
@@ -75,23 +79,20 @@ class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
     }
 
     private fun HttpRequestBase.addBodyIfNecessary(request: Request4k) {
-        if (!request.method.isRequestBodySupported && request.requestBody != null) {
-            throw Http4kException("Invalid request! HTTP method [${request.method}] does not support request body: ${request.requestBody}")
+        if (!request.method.isRequestBodySupported) {
+            return
+        }
+        if (this !is HttpEntityEnclosingRequestBase) {
+            throw Http4kException("Expected HTTP request to be of type HttpEntityEnclosingRequestBase, but was: $this")
         }
 
-        if (request.method.isRequestBodySupported) {
-            if (this !is HttpEntityEnclosingRequestBase) {
-                throw Http4kException("Expected HTTP request to be of type HttpEntityEnclosingRequestBase, but was: $this")
+        request.requestBody?.let { body ->
+            val requestByteArray = when (body) {
+            // MINOR or use StringEntity (better charset and content type support)
+                is DefiniteRequestBody.DefiniteStringBody -> body.string.toByteArray()
+                is DefiniteRequestBody.DefiniteBytesBody -> body.bytes.read()
             }
-
-            request.requestBody?.let { body ->
-                val requestByteArray = when(body) {
-                    // MINOR or use StringEntity (better charset and content type support)
-                    is DefiniteRequestBody.DefiniteStringBody -> body.string.toByteArray()
-                    is DefiniteRequestBody.DefiniteBytesBody -> body.bytes.read()
-                }
-                this.entity = ByteArrayEntity(requestByteArray)
-            }
+            this.entity = ByteArrayEntity(requestByteArray)
         }
     }
 
