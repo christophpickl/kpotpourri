@@ -55,11 +55,15 @@ import org.testng.annotations.Test
     @DataProvider
     fun provideConcatUrls(): Array<Array<out Any>> = arrayOf(
             arrayOf("", "", ""),
+            arrayOf("http://host.at", "", "http://host.at"),
+            arrayOf("", "http://host.at", "http://host.at"),
+            arrayOf("http://host.at/", "", "http://host.at"),
+            arrayOf("http://host.at/", "/", "http://host.at"),
             arrayOf("http://host.at", "endpoint", "http://host.at/endpoint"),
             arrayOf("http://host.at/", "endpoint", "http://host.at/endpoint"),
             arrayOf("http://host.at", "/endpoint", "http://host.at/endpoint"),
             arrayOf("http://host.at/", "/endpoint", "http://host.at/endpoint"),
-            arrayOf("http://host.at/", "/endpoint/", "http://host.at/endpoint/")
+            arrayOf("http://host.at/", "/endpoint/", "http://host.at/endpoint")
     )
 
     @Test(dataProvider = "provideConcatUrls")
@@ -70,11 +74,11 @@ import org.testng.annotations.Test
         assertThat(combineUrlParts(part1, part2), equalTo(expected))
     }
 
-    fun `concat many urls`() {
+    fun `concat some misc urls`() {
         assertThat(concatUrlParts("a", "b", "c", "d"), equalTo("a/b/c/d"))
         assertThat(concatUrlParts("/with", "leading"), equalTo("/with/leading"))
-        assertThat(concatUrlParts("with", "trailing/"), equalTo("with/trailing/"))
-        assertThat(concatUrlParts("/with", "leading", "and", "trailing/"), equalTo("/with/leading/and/trailing/"))
+        assertThat(concatUrlParts("with", "trailing/"), equalTo("with/trailing"))
+        assertThat(concatUrlParts("/with", "leading", "and", "trailing/"), equalTo("/with/leading/and/trailing"))
     }
 
     @DataProvider

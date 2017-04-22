@@ -47,12 +47,13 @@ abstract class Http4kWiremockTest(
     protected fun givenGetMockEndpointUrl(
             statusCode: StatusCode = SC_200_Ok,
             body: String? = null,
+            path: String = mockEndpointUrl,
             withResponse: ResponseDefinitionBuilder.() -> Unit = {}
     ) {
         givenWiremock(
                 method = WiremockMethod.GET,
                 statusCode = statusCode,
-                path = mockEndpointUrl,
+                path = path,
                 body = body,
                 withResponse = withResponse
         )

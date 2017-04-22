@@ -71,9 +71,10 @@ fun concatUrlParts(vararg parts: String): String {
     if (parts.all(String::isEmpty)) {
         return ""
     }
-    return (if(parts.first().startsWith("/")) "/" else "") +
-    parts.toList().map { it.removePreAndSuffix("/") }.joinToString("/") +
-            (if(parts.last().endsWith("/")) "/" else "")
+    val parts2 = parts.filter({ it.isNotEmpty() && it != "/" })
+    return (if (parts2.first().startsWith("/")) "/" else "") +
+            parts2.toList().map { it.removePreAndSuffix("/") }.joinToString("/")
+    // +(if(parts2.last().endsWith("/")) "/" else "")
 }
 
 /**

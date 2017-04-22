@@ -119,13 +119,12 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
 
     @DataProvider
     fun provideInvalidStatusCodes(): Array<Array<out Any>> = arrayOf(
+            // SC_100_Continue ... will let apache run into timeouts...
             arrayOf(SC_302_Found),
             arrayOf(SC_400_BadRequest),
             arrayOf(SC_500_InternalError)
     )
 
-//    TODO test for SC_100_Continue/SC_301_Moved, as each http impl could behave differently
-    // SC_100_Continue ... will let apache run into timeouts...
     @Test(dataProvider = "provideInvalidStatusCodes")
     fun `Given a status code of not family 2, Then exception is thrown`(someInvalidStatus: StatusCode) {
         givenGetMockEndpointUrl(statusCode = someInvalidStatus)

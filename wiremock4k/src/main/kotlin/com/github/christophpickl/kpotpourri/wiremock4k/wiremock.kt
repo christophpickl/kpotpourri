@@ -31,7 +31,11 @@ abstract class WiremockTest(
 
     private val log = LOG {}
 
+    /**
+     * Default value: "http://localhost:8042"
+     */
     protected val wiremockBaseUrl = "http://$WIREMOCK_HOSTNAME:$port"
+
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer
 

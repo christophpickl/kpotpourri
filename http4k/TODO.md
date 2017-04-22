@@ -17,6 +17,7 @@
 
 ## TODOs Low
 
+* TEST @StatusCodeCheckIT for SC_100_Continue/SC_301_Moved, as each http impl could behave differently
 * @apache impl: when wiremock response with 100 -> .setRetryHandler()
 * http4k verwenden um manch andere APIs aufzurufen, und schauen wie die sich verhalten und supporten
 * multi form upload

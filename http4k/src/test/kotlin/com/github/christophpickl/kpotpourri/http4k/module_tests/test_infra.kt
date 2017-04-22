@@ -17,6 +17,7 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 @Test abstract class ComponentTest {
+
     protected val testUrl = "testUrl"
 
     protected lateinit var httpMock: HttpImpl
@@ -33,12 +34,15 @@ import org.testng.annotations.Test
     }
 
     protected fun http4kGet(withGlobals: Http4kBuilder.() -> Unit = {}, withRequest: GetRequestOpts.() -> Unit = {}) {
-        val http4k = buildHttp4k {
+        val http4k = buildMockHttp4k(withGlobals)
+        http4k.get(testUrl, withRequest)
+    }
+
+    protected fun buildMockHttp4k(withGlobals: Http4kBuilder.() -> Unit = {}) =
+        buildHttp4k {
             overrideHttpImpl = httpMock
             withGlobals(this)
         }
-        http4k.get(testUrl, withRequest)
-    }
 
     protected fun verifyHttpMockExecutedWithRequest(
             method: HttpMethod4k = HttpMethod4k.GET,

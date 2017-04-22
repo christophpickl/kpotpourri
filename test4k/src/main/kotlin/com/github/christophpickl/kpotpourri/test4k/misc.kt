@@ -11,3 +11,4 @@ fun Exception.messageContains(vararg substring: String): Boolean {
 
     return substring.all { sub -> msg.contains(sub) }
 }
+

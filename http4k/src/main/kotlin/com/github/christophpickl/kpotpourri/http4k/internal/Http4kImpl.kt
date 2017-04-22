@@ -76,12 +76,12 @@ internal class Http4kImpl(
     }
 
     private fun buildUrl(requestOpts: AnyRequestOpts, url: String): String {
-        val urlWithoutQuery = if (requestOpts.disableBaseUrl) {
+        val maybeOverriddenBaseUrl = if (requestOpts.disableBaseUrl) {
             url
         } else {
             globals.baseUrl.combine(url)
         }
-        return UrlBuilder.build(urlWithoutQuery, requestOpts.queryParams)
+        return UrlBuilder.build(maybeOverriddenBaseUrl, requestOpts.queryParams)
     }
 
     @Suppress("UNCHECKED_CAST")
