@@ -7,7 +7,7 @@
 [![Issues](https://img.shields.io/github/issues/christophpickl/kpotpourri.svg)](https://github.com/christophpickl/kpotpourri/issues?q=is%3Aopen)
 [![Dependency Versions](https://www.versioneye.com/user/projects/58e51229d6c98d0041747763/badge.svg?style=flat)](https://www.versioneye.com/user/projects/58e51229d6c98d0041747763)
 
-Some common extensions for Kotlin:
+KPotpourri is a "Sammelserium" of common stuff I've come up with for common usage, or something like that...
 
 * **common4k**: Extensions for the standard library
 * **http4k**: HTTP/ReST client abstraction, inspired by Slf4J

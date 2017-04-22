@@ -1,4 +1,6 @@
 
+HTTP4K
+
 # TODOs High
 
 * fix GitHub API issues
@@ -13,9 +15,13 @@
 * custom configs, e.g. for apache: httpRequest.config for timeouts
 * make headers (request/response) a multi valued map
 * could provide a system property which enforces a specific implementation (useful if there are more than 1)
+* versioneye does not work for multi module gradle builds
+* pagination (support multiple flavours, or even semi-customize)
+* add error response listener, which (tries to) transforms the response body to a predefined DTO (and throws a custom exception)
 
 # TODOs Low
 
+* http4k verwenden um manch andere APIs aufzurufen, und schauen wie die sich verhalten und supporten
 * multi form upload
 * lazily store response bodyAsString
 * NotFoundException, BadRequestException, ... for most important status codes
