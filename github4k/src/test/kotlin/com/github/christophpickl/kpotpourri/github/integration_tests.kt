@@ -158,7 +158,7 @@ private val testPort = 8082
         verifyWiremockGet(MockRequest(requestPath1))
         verifyPostRequest(MockRequest(requestPath2, {
             withHeader("Content-Type", equalTo(uploadRequest.contentType))
-            // TODO assert payload: uploadRequest.bytes.read()
+            withRequestBody(equalTo(String(uploadRequest.bytes.read())))
         }))
     }
 
@@ -173,6 +173,7 @@ private val testPort = 8082
     }
 
     data class UploadPaths(val path1Get: String, val path2Post: String)
+
     private fun givenWiremockUpload(uploadRequest: AssetUpload, uploadResponse: AssetUploadResponse): UploadPaths {
         val responseUploadRelativeUrl = combineUrlParts(endpointPrefix, "/uploadUrl")
         val responseUploadFullUrl = combineUrlParts(wiremockBaseUrl, responseUploadRelativeUrl)

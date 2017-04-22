@@ -10,3 +10,5 @@ package com.github.christophpickl.kpotpourri.http4k_fuel
 //        return Response(1, "")
 //    }
 //}
+
+// headers = listOf("X-HTTP-Method-Override" to "PATCH"), // HttpURLConnection hack which does not support PATCH method

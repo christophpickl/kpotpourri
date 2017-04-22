@@ -84,7 +84,7 @@ abstract class WiremockTest(
     protected fun verifyRequest(request: InternalMockRequest) {
         val builder = request.method.requestedFor(request.path)
         request.func(builder)
-        verify(builder)
+        verify(1, builder)
     }
 
     /**
@@ -130,8 +130,12 @@ enum class WiremockMethod() {
     }
     ;
 
+    /** For preparing. */
     abstract fun stubForPath(path: String): MappingBuilder
+
+    /** For verification. */
     abstract fun requestedFor(path: String): RequestPatternBuilder
+
 }
 
 

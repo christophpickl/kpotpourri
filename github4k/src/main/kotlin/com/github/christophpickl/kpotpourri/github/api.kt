@@ -101,7 +101,6 @@ class GithubApiImpl(
                 url = "/milestones/${milestone.number}",
                 jacksonObject = UpdateMilestoneRequestJson(state = State.Closed.jsonValue),
                 returnType = UpdateMilestoneResponseJson::class) {
-//                TODO headers = listOf("X-HTTP-Method-Override" to "PATCH"), // HttpURLConnection hack which does not support PATCH method
         }
         if (response.state != State.Closed.jsonValue) {
             throw Github4kException("Failed to close milestone: $milestone")
