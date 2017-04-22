@@ -1,7 +1,8 @@
 package com.github.christophpickl.kpotpourri.release4k
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.numbers.format
+import com.github.christophpickl.kpotpourri.common.time.MsTimification
+import com.github.christophpickl.kpotpourri.common.time.timify
 import com.github.christophpickl.kpotpourri.github.GithubConfig
 import com.github.christophpickl.kpotpourri.release4k.internal.Release4kImpl
 import com.github.christophpickl.kpotpourri.release4k.internal.kout
@@ -16,8 +17,7 @@ inline fun release4k(func: Release4k.() -> Unit) {
         func(impl)
         impl.onFinish()
     }
-    // TODO format minutes as well
-    kout("Total release time: ${(msNeeded / 1000.0).format(3)} secs")
+    kout("Total release time: " + msNeeded.timify(MsTimification.MinutesAndSeconds))
 }
 
 interface Release4k {
