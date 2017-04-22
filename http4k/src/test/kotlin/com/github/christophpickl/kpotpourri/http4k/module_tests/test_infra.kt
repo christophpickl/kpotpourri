@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.module_tests
 
-import com.github.christophpickl.kpotpourri.http4k.GetRequestOpts
+import com.github.christophpickl.kpotpourri.http4k.BodylessRequestOpts
+import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.Http4kBuilder
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
@@ -28,17 +29,22 @@ import org.testng.annotations.Test
 
     protected fun wheneverExecuteHttpMockReturnResponse(
             statusCode: StatusCode = SC_200_Ok,
-            bodyAsString: String = ""
+            bodyAsString: String = "",
+            headers: Map<String, String> = emptyMap()
     ) {
-        whenever(httpMock.execute(any())).thenReturn(Response4k(statusCode, bodyAsString))
+        whenever(httpMock.execute(any())).thenReturn(Response4k(statusCode, bodyAsString, headers))
     }
 
-    protected fun http4kGet(withGlobals: Http4kBuilder.() -> Unit = {}, withRequest: GetRequestOpts.() -> Unit = {}) {
-        val http4k = buildMockHttp4k(withGlobals)
+    protected fun wheneverExecuteHttpMockReturnResponse(response: Response4k) {
+        whenever(httpMock.execute(any())).thenReturn(response)
+    }
+
+    protected fun http4kGet(withGlobals: Http4kBuilder.() -> Unit = {}, withRequest: BodylessRequestOpts.() -> Unit = {}) {
+        val http4k = http4kWithMock(withGlobals)
         http4k.get(testUrl, withRequest)
     }
 
-    protected fun buildMockHttp4k(withGlobals: Http4kBuilder.() -> Unit = {}) =
+    protected fun http4kWithMock(withGlobals: Http4kBuilder.() -> Unit = {}) =
         buildHttp4k {
             overrideHttpImpl = httpMock
             withGlobals(this)
@@ -47,8 +53,9 @@ import org.testng.annotations.Test
     protected fun verifyHttpMockExecutedWithRequest(
             method: HttpMethod4k = HttpMethod4k.GET,
             url: String = testUrl,
-            headers: Map<String, String> = emptyMap()
+            headers: Map<String, String> = emptyMap(),
+            requestBody: DefiniteRequestBody? = null
     ) {
-        verify(httpMock).execute(Request4k(method, url, headers))
+        verify(httpMock).execute(Request4k(method, url, headers, requestBody))
     }
 }

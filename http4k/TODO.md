@@ -5,6 +5,7 @@
 
 * support 2nd implementation (fuel, spring rest template)
 * support cookies for request/response
+* get rid of ByteSource in (public) API
 
 ## TODOs Med
 

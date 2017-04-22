@@ -8,7 +8,7 @@ import org.testng.annotations.Test
 
     fun `baseUrl by string`() {
         wheneverExecuteHttpMockReturnResponse()
-        val http4k = buildMockHttp4k(withGlobals = { baseUrlBy(testBaseUrl) })
+        val http4k = http4kWithMock(withGlobals = { baseUrlBy(testBaseUrl) })
 
         http4k.get("testEndpoint")
 
@@ -17,7 +17,7 @@ import org.testng.annotations.Test
 
     fun `Given base URL has trailing slash, When GET slash, Then there should only be one trailing slash`() {
         wheneverExecuteHttpMockReturnResponse()
-        val http4k = buildMockHttp4k(withGlobals = { baseUrlBy("$testBaseUrl/") })
+        val http4k = http4kWithMock(withGlobals = { baseUrlBy("$testBaseUrl/") })
 
         http4k.get(url = "/")
 

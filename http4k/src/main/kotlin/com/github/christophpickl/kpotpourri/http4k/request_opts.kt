@@ -29,9 +29,9 @@ interface AnyRequestOpts : StatusCheckConfig, HeadersConfig, QueryParamConfig {
 
 
 /**
- * Got no body, opposed to POST/PUT requests.
+ * Got no body, opposed to POST/PUT/etc requests.
  */
-data class GetRequestOpts(
+data class BodylessRequestOpts(
         override val headers: HeadersMap = HeadersMap(),
         override val queryParams: MutableMap<String, String> = HashMap(),
         override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
@@ -40,48 +40,9 @@ data class GetRequestOpts(
 ) : AnyRequestOpts
 
 /**
- * POST.
+ * Got additional requestBody parameter, for POST/PUT/etc.
  */
-data class PostRequestOpts(
-        override val headers: HeadersMap = HeadersMap(),
-        override val queryParams: MutableMap<String, String> = HashMap(),
-        override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
-        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
-        override var disableBaseUrl: Boolean = false,
-
-        override var requestBody: RequestBody = None
-) : AnyRequestOpts, RequestWithEntityOpts
-
-/**
- * PUT.
- */
-data class PutRequestOpts(
-        override val headers: HeadersMap = HeadersMap(),
-        override val queryParams: MutableMap<String, String> = HashMap(),
-        override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
-        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
-        override var disableBaseUrl: Boolean = false,
-
-        override var requestBody: RequestBody = None
-) : AnyRequestOpts, RequestWithEntityOpts
-
-/**
- * DELETE.
- */
-data class DeleteRequestOpts(
-        override val headers: HeadersMap = HeadersMap(),
-        override val queryParams: MutableMap<String, String> = HashMap(),
-        override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
-        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
-        override var disableBaseUrl: Boolean = false,
-
-        override var requestBody: RequestBody = None
-) : AnyRequestOpts, RequestWithEntityOpts
-
-/**
- * PATCH.
- */
-data class PatchRequestOpts(
+data class BodyfullRequestOpts(
         override val headers: HeadersMap = HeadersMap(),
         override val queryParams: MutableMap<String, String> = HashMap(),
         override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,

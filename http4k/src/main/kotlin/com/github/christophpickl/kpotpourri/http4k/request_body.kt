@@ -10,15 +10,34 @@ import java.io.File
 interface RequestWithEntityOpts {
     var requestBody: RequestBody
 
-    fun requestBodyDisabled() { requestBody = None }
-    fun requestBody(body: String) { requestBody = StringBody(body) }
-    fun requestBody(jacksonObject: Any) { requestBody = JsonBody(jacksonObject) }
+    fun requestBodyDisabled() {
+        requestBody = None
+    }
+
+    fun requestBody(body: String) {
+        requestBody = StringBody(body)
+    }
+
+    fun requestBody(body: Any) {
+        if (body is String) {
+            requestBody = StringBody(body)
+//        } else if (body is ByteArray) {
+//            requestBody = BytesBody(body)
+        } else if (body is Number) {
+            requestBody = StringBody(body.toString())
+        } else {
+            requestBody = JsonBody(body)
+        }
+    }
+
     fun requestBytesBody(contentType: String, bytes: ByteSource) {
         requestBody = BytesBody(contentType, bytes)
     }
+
     fun requestBytesBody(contentType: String, bytes: ByteArray) {
         requestBody = BytesBody(contentType, ByteSource.wrap(bytes))
     }
+
     fun requestFileBody(contentType: String, file: File) {
         file.verifyExistsAndIsFile()
         requestBody = BytesBody(contentType, Files.asByteSource(file))

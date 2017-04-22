@@ -1,15 +1,13 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.common.string.toBooleanLenient2
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
-import com.github.christophpickl.kpotpourri.http4k.DeleteRequestOpts
-import com.github.christophpickl.kpotpourri.http4k.GetRequestOpts
+import com.github.christophpickl.kpotpourri.http4k.BodyfullRequestOpts
+import com.github.christophpickl.kpotpourri.http4k.BodylessRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfig
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
-import com.github.christophpickl.kpotpourri.http4k.PatchRequestOpts
-import com.github.christophpickl.kpotpourri.http4k.PostRequestOpts
-import com.github.christophpickl.kpotpourri.http4k.PutRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import kotlin.reflect.KClass
@@ -22,20 +20,20 @@ internal class Http4kImpl(
 
     private val log = LOG {}
 
-    override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: GetRequestOpts.() -> Unit) =
-            any(HttpMethod4k.GET, GetRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
+            any(HttpMethod4k.GET, BodylessRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: PostRequestOpts.() -> Unit) =
-            any(HttpMethod4k.POST, PostRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+            any(HttpMethod4k.POST, BodyfullRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> put(url: String, returnType: KClass<R>, withOpts: PutRequestOpts.() -> Unit) =
-            any(HttpMethod4k.PUT, PutRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> put(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+            any(HttpMethod4k.PUT, BodyfullRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> delete(url: String, returnType: KClass<R>, withOpts: DeleteRequestOpts.() -> Unit) =
-            any(HttpMethod4k.DELETE, DeleteRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> delete(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
+            any(HttpMethod4k.DELETE, BodylessRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit) =
-            any(HttpMethod4k.PATCH, PatchRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+            any(HttpMethod4k.PATCH, BodyfullRequestOpts(), url, returnType, withOpts)
 
     /**
      * GET, POST, ... or any other. Preparing a [Request4k] instance and passing it to the specific implementation.
@@ -88,6 +86,17 @@ internal class Http4kImpl(
             when (returnType) {
                 Response4k::class -> response as R
                 String::class -> response.bodyAsString as R
+                Any::class -> response as R
+                Unit::class -> Unit as R
+                // could catch parsing exceptions here ;)
+                Float::class -> response.bodyAsString.toFloat() as R
+                Double::class -> response.bodyAsString.toDouble() as R
+                Byte::class -> response.bodyAsString.toByte() as R
+                // ByteArray::class -> ??? as R
+                Short::class -> response.bodyAsString.toShort() as R
+                Int::class -> response.bodyAsString.toInt() as R
+                Long::class -> response.bodyAsString.toLong() as R
+                Boolean::class -> response.bodyAsString.toBooleanLenient2() as R
                 else -> mapper.readValue(response.bodyAsString, returnType.java)
             }
 

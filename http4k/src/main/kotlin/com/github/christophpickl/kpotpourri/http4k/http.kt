@@ -23,6 +23,11 @@ data class UrlConfig(
         val path: String = "" // e.g.: "/rest"
 )
 
+enum class HttpBodyfullMethod4k() {
+    POST,
+    PUT,
+    PATCH
+}
 
 // see com.github.tomakehurst.wiremock.http.RequestMethod
 // GET("GET"),
