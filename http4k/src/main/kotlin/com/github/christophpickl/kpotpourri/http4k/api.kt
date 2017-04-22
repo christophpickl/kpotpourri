@@ -34,8 +34,6 @@ class Http4kBuilder : GlobalHttp4kConfig {
 
 interface Http4k {
 
-    // TODO fun <R: Any> any(method: ...)
-
     fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: GetRequestOpts.() -> Unit = {}): R
     fun get(url: String, withOpts: GetRequestOpts.() -> Unit = {}) =
             get(url, Response4k::class, withOpts)
@@ -45,6 +43,18 @@ interface Http4k {
             post(url, Response4k::class, withOpts)
     fun <R : Any> post(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PostRequestOpts.() -> Unit = {}) =
             post(url, returnType, { requestBody(jacksonObject); withOpts(this) })
+
+    fun <R : Any> put(url: String, returnType: KClass<R>, withOpts: PutRequestOpts.() -> Unit = {}): R
+    fun put(url: String, withOpts: PutRequestOpts.() -> Unit = {}) =
+            put(url, Response4k::class, withOpts)
+    fun <R : Any> put(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PutRequestOpts.() -> Unit = {}) =
+            put(url, returnType, { requestBody(jacksonObject); withOpts(this) })
+
+    fun <R : Any> delete(url: String, returnType: KClass<R>, withOpts: DeleteRequestOpts.() -> Unit = {}): R
+    fun delete(url: String, withOpts: DeleteRequestOpts.() -> Unit = {}) =
+            delete(url, Response4k::class, withOpts)
+    fun <R : Any> delete(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: DeleteRequestOpts.() -> Unit = {}) =
+            delete(url, returnType, { requestBody(jacksonObject); withOpts(this) })
 
     fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit = {}): R
     fun patch(url: String, withOpts: PatchRequestOpts.() -> Unit = {}) =

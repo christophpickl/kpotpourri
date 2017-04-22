@@ -52,6 +52,31 @@ data class PostRequestOpts(
         override var requestBody: RequestBody = None
 ) : AnyRequestOpts, RequestWithEntityOpts
 
+/**
+ * PUT.
+ */
+data class PutRequestOpts(
+        override val headers: HeadersMap = HeadersMap(),
+        override val queryParams: MutableMap<String, String> = HashMap(),
+        override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
+        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
+        override var disableBaseUrl: Boolean = false,
+
+        override var requestBody: RequestBody = None
+) : AnyRequestOpts, RequestWithEntityOpts
+
+/**
+ * DELETE.
+ */
+data class DeleteRequestOpts(
+        override val headers: HeadersMap = HeadersMap(),
+        override val queryParams: MutableMap<String, String> = HashMap(),
+        override var statusCheck: StatusCheckMode = DEFAULT_STATUS_CHECK_MODE,
+        override var basicAuth: BasicAuthMode = DEFAULT_AUTH_MODE,
+        override var disableBaseUrl: Boolean = false,
+
+        override var requestBody: RequestBody = None
+) : AnyRequestOpts, RequestWithEntityOpts
 
 /**
  * PATCH.
@@ -65,8 +90,3 @@ data class PatchRequestOpts(
 
         override var requestBody: RequestBody = None
 ) : AnyRequestOpts, RequestWithEntityOpts
-
-
-// PUT
-// DELETE
-// ...

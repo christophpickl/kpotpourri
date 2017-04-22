@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
+import com.github.christophpickl.kpotpourri.wiremock4k.InternalMockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
@@ -124,6 +125,28 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
         )
     }
 
+    // PUT
+    // =================================================================================================================
+
+    fun `Given default Http4k, When PUT, Then should be received`() {
+        givenToMockEndpointUrl(WiremockMethod.PUT)
+
+        http4k.put(mockEndpointUrl)
+
+        verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PUT))
+    }
+
+    // DELETE
+    // =================================================================================================================
+
+    fun `Given default Http4k, When DELETE, Then should be received`() {
+        givenToMockEndpointUrl(WiremockMethod.DELETE)
+
+        http4k.delete(mockEndpointUrl)
+
+        verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.DELETE))
+    }
+
     // PATCH
     // =================================================================================================================
 
@@ -132,13 +155,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
 
         http4k.patch(mockEndpointUrl)
 
-        verifyPatchRequest(MockRequest(mockEndpointUrl))
+        verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PATCH))
     }
-    // PUT
-    // =================================================================================================================
-
-    // DELETE
-    // =================================================================================================================
-
 
 }

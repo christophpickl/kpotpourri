@@ -11,10 +11,12 @@ import com.github.christophpickl.kpotpourri.http4k.internal.HttpImplFactory
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.methods.CloseableHttpResponse
+import org.apache.http.client.methods.HttpDelete
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPatch
 import org.apache.http.client.methods.HttpPost
+import org.apache.http.client.methods.HttpPut
 import org.apache.http.client.methods.HttpRequestBase
 import org.apache.http.entity.ByteArrayEntity
 import org.apache.http.impl.client.HttpClientBuilder
@@ -68,6 +70,8 @@ class ApacheHttpClientHttpImpl(metaMap: MetaMap) : HttpImpl {
         HttpMethod4k.GET -> HttpGet(url)
         HttpMethod4k.POST -> HttpPost(url)
         HttpMethod4k.PATCH -> HttpPatch(url)
+        HttpMethod4k.PUT -> HttpPut(url)
+        HttpMethod4k.DELETE -> HttpDelete(url)
     }
 
     private fun HttpRequestBase.addBodyIfNecessary(request: Request4k) {

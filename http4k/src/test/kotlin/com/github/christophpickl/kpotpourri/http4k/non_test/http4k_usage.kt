@@ -16,7 +16,6 @@ fun main(args: Array<String>) {
                                 .withStatus(200)
                                 .withBody("wiremock response body")))
 
-        // execute HTTP4K ...
 
         val http4k = buildHttp4k {
             baseUrlBy("http://some.server/rest")

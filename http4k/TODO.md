@@ -3,7 +3,6 @@
 
 ## TODOs High
 
-* Support POST/PUT/DELETE/PATCH...
 
 ## TODOs Med
 

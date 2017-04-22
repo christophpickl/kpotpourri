@@ -61,8 +61,12 @@ abstract class WiremockTest(
         verifyRequest(request.toInternal(WiremockMethod.POST))
     }
 
-    protected fun verifyPatchRequest(request: MockRequest) {
-        verifyRequest(request.toInternal(WiremockMethod.PATCH))
+    protected fun verifyPutRequest(request: MockRequest) {
+        verifyRequest(request.toInternal(WiremockMethod.PUT))
+    }
+
+    protected fun verifyDeleteRequest(request: MockRequest) {
+        verifyRequest(request.toInternal(WiremockMethod.DELETE))
     }
 
     protected fun verifyRequest(
@@ -107,6 +111,14 @@ enum class WiremockMethod() {
     POST() {
         override fun stubForPath(path: String) = post(urlEqualTo(path))!!
         override fun requestedFor(path: String) = postRequestedFor(urlEqualTo(path))!!
+    },
+    PUT() {
+        override fun stubForPath(path: String) = put(urlEqualTo(path))!!
+        override fun requestedFor(path: String) = putRequestedFor(urlEqualTo(path))!!
+    },
+    DELETE() {
+        override fun stubForPath(path: String) = delete(urlEqualTo(path))!!
+        override fun requestedFor(path: String) = deleteRequestedFor(urlEqualTo(path))!!
     },
     PATCH() {
         override fun stubForPath(path: String) = patch(urlEqualTo(path))!!

@@ -34,9 +34,9 @@ data class UrlConfig(
 enum class HttpMethod4k(val isRequestBodySupported: Boolean = false) {
     GET(),
     POST(isRequestBodySupported = true),
+    PUT(isRequestBodySupported = true),
+    DELETE(),
      PATCH(isRequestBodySupported = true)
-    // PUT(isRequestBodySupported = true)
-    // DELETE(),
     // OPTIONS(),
     // HEAD(),
     // TRACE(),
