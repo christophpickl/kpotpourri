@@ -32,36 +32,40 @@ class Http4kBuilder : GlobalHttp4kConfig {
     }
 }
 
+/**
+ * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.
+ *
+ * return type: either any jackson unmarshallable object, or an [Response4k] instance by default.
+ * url: combined with optional global base URL
+ * body: something which will be marshalled by jackson
+ */
 interface Http4k {
 
+    fun get(url: String, withOpts: GetRequestOpts.() -> Unit = {}) = get(url, Response4k::class, withOpts)
     fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: GetRequestOpts.() -> Unit = {}): R
-    fun get(url: String, withOpts: GetRequestOpts.() -> Unit = {}) =
-            get(url, Response4k::class, withOpts)
 
+    fun post(url: String, withOpts: PostRequestOpts.() -> Unit = {}) = post(url, Response4k::class, withOpts)
+    fun <R : Any> post(url: String, body: Any, withOpts: PostRequestOpts.() -> Unit = {}) = post(url, Response4k::class, { requestBody(body); withOpts(this) })
+    fun <R : Any> post(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PostRequestOpts.() -> Unit = {}) = post(url, returnType, { requestBody(jacksonObject); withOpts(this) })
     fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: PostRequestOpts.() -> Unit = {}): R
-    fun post(url: String, withOpts: PostRequestOpts.() -> Unit = {}) =
-            post(url, Response4k::class, withOpts)
-    fun <R : Any> post(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PostRequestOpts.() -> Unit = {}) =
-            post(url, returnType, { requestBody(jacksonObject); withOpts(this) })
 
+    fun put(url: String, withOpts: PutRequestOpts.() -> Unit = {}) = put(url, Response4k::class, withOpts)
+    fun <R : Any> put(url: String, jacksonObject: Any, withOpts: PutRequestOpts.() -> Unit = {}) = put(url, Response4k::class, { requestBody(jacksonObject); withOpts(this) })
+    fun <R : Any> put(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PutRequestOpts.() -> Unit = {}) = put(url, returnType, { requestBody(jacksonObject); withOpts(this) })
     fun <R : Any> put(url: String, returnType: KClass<R>, withOpts: PutRequestOpts.() -> Unit = {}): R
-    fun put(url: String, withOpts: PutRequestOpts.() -> Unit = {}) =
-            put(url, Response4k::class, withOpts)
-    fun <R : Any> put(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PutRequestOpts.() -> Unit = {}) =
-            put(url, returnType, { requestBody(jacksonObject); withOpts(this) })
 
+    fun delete(url: String, withOpts: DeleteRequestOpts.() -> Unit = {}) = delete(url, Response4k::class, withOpts)
+    fun <R : Any> delete(url: String, jacksonObject: Any, withOpts: DeleteRequestOpts.() -> Unit = {}) = delete(url, Response4k::class, { requestBody(jacksonObject); withOpts(this) })
+    fun <R : Any> delete(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: DeleteRequestOpts.() -> Unit = {}) = delete(url, returnType, { requestBody(jacksonObject); withOpts(this) })
     fun <R : Any> delete(url: String, returnType: KClass<R>, withOpts: DeleteRequestOpts.() -> Unit = {}): R
-    fun delete(url: String, withOpts: DeleteRequestOpts.() -> Unit = {}) =
-            delete(url, Response4k::class, withOpts)
-    fun <R : Any> delete(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: DeleteRequestOpts.() -> Unit = {}) =
-            delete(url, returnType, { requestBody(jacksonObject); withOpts(this) })
 
+    fun patch(url: String, withOpts: PatchRequestOpts.() -> Unit = {}) = patch(url, Response4k::class, withOpts)
+    fun <R : Any> patch(url: String, jacksonObject: Any, withOpts: PatchRequestOpts.() -> Unit = {}) = patch(url, Response4k::class, { requestBody(jacksonObject); withOpts(this) })
+    fun <R : Any> patch(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit = {}) = patch(url, returnType, { requestBody(jacksonObject); withOpts(this) })
     fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit = {}): R
-    fun patch(url: String, withOpts: PatchRequestOpts.() -> Unit = {}) =
-            patch(url, Response4k::class, withOpts)
-    fun <R : Any> patch(url: String, jacksonObject: Any, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit = {}) =
-            patch(url, returnType, { requestBody(jacksonObject); withOpts(this) })
 
+    // OPTION
+    // HEAD
 }
 
 data class Request4k(

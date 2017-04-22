@@ -37,9 +37,8 @@ internal class Http4kImpl(
     override fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: PatchRequestOpts.() -> Unit) =
             any(HttpMethod4k.PATCH, PatchRequestOpts(), url, returnType, withOpts)
 
-
     /**
-     * GET, POST, ... or any other.
+     * GET, POST, ... or any other. Preparing a [Request4k] instance and passing it to the specific implementation.
      */
     private inline fun <R : Any, reified OPT : AnyRequestOpts> any(
             method: HttpMethod4k,

@@ -34,7 +34,7 @@ fun <K, V> mapContainsExactly(vararg entries: Pair<K, V>): Matcher<Map<K, V>> = 
     override val negatedDescription: String get() = "does not contain exactly $entriesDescribed"
 }
 
-// MINOR TEST this; should actually be in commons, but as of cyclic dependency otherwise... :-/
+// should actually be in commons, but as of cyclic dependency otherwise... :-/
 fun <K, V> Map<K, V>.containsExact(other: Map<K, V>): Boolean {
     this.entries.forEach { (k, v) ->
         if (!other.contains(k) || other[k] != v) {

@@ -88,7 +88,7 @@ class ApacheHttpClientHttpImpl(private val metaMap: MetaMap) : HttpImpl {
 
         request.requestBody?.let { body ->
             val requestByteArray = when (body) {
-            // MINOR or use StringEntity (better charset and content type support)
+            // or use StringEntity (better charset and content type support)
                 is DefiniteRequestBody.DefiniteStringBody -> body.string.toByteArray()
                 is DefiniteRequestBody.DefiniteBytesBody -> body.bytes.read()
             }

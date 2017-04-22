@@ -53,14 +53,14 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
     )
 
     @Test(dataProvider = "provideVersionSampleAndReadExecution")
-    fun `read versionX - When type X, Then Version vX is returned`(version: Version, readVersion: () -> Any, ignoreDefault: (Any) -> Any) {
+    fun `read versionX - When type X, Then Version vX is returned`(version: Version, readVersion: () -> Any, @Suppress("UNUSED_PARAMETER") ignoreDefault: (Any) -> Any) {
         type(version.niceString) {
             readVersion() shouldMatchValue version
         }
     }
 
     @Test(dataProvider = "provideVersionSampleAndReadExecution")
-    fun `read versionX - When invalid and then valid entered, Then output contains invalid input`(anyValid: Version, readVersion: () -> Any, ignoreDefault: (Any) -> Any) {
+    fun `read versionX - When invalid and then valid entered, Then output contains invalid input`(anyValid: Version, readVersion: () -> Any, @Suppress("UNUSED_PARAMETER") ignoreDefault: (Any) -> Any) {
         val invalidInput = "invalidTestInput"
         // any correct version nr is ok
         val stdout = type("$invalidInput\n${anyValid.niceString}") {
@@ -70,7 +70,7 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
     }
 
     @Test(dataProvider = "provideVersionSampleAndReadExecution")
-    fun `read versionX - Given default version, When hit enter, Then default version is returned and output contains default`(defaultVersion: Version, ignore: () -> Any, readWithDefault: (Any) -> Any) {
+    fun `read versionX - Given default version, When hit enter, Then default version is returned and output contains default`(defaultVersion: Version, @Suppress("UNUSED_PARAMETER") ignore: () -> Any, readWithDefault: (Any) -> Any) {
         val stdout = hitEnter() {
             readWithDefault(defaultVersion) shouldMatchValue defaultVersion
         }

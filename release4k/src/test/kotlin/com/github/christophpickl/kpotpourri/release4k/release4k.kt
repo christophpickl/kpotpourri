@@ -56,8 +56,7 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("GRADLE BUILD")
-    // TODO enable: checkTodo!
-    gradlew("clean check test build $syspropNextVersion")
+    gradlew("clean check checkTodo test build $syspropNextVersion")
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")
