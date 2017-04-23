@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 
 
 internal class Http4kImpl(
-        private val httpImpl: HttpImpl,
+        private val httpClient: HttpClient,
         private val globals: GlobalHttp4kConfig
 ) : Http4k {
 
@@ -66,7 +66,7 @@ internal class Http4kImpl(
         )
 
         log.debug { "Executing: $request4k" }
-        val response4k = httpImpl.execute(request4k)
+        val response4k = httpClient.execute(request4k)
         log.trace { "response body: <<${response4k.bodyAsString}>>" }
         checkStatusCode(globals.statusCheck, requestOpts.statusCheck, request4k, response4k)
         return castReturnType(response4k, returnType)

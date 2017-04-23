@@ -1,6 +1,3 @@
-// http4k-apache build.gradle
-
-// ./gradlew :http4k-apache:test
 
 dependencies {
     compile project(':common4k')

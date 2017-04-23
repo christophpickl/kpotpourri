@@ -9,12 +9,12 @@ import com.google.common.base.MoreObjects
 import java.net.SocketTimeoutException
 
 
-interface HttpImpl {
+interface HttpClient {
     fun execute(request: Request4k): Response4k
 }
 
-interface HttpImplFactory {
-    fun build(metaMap: MetaMap): HttpImpl
+interface HttpClientFactory {
+    fun build(metaMap: MetaMap): HttpClient
 }
 
 internal val mapper = ObjectMapper()

@@ -10,7 +10,7 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
-import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -22,10 +22,10 @@ import org.testng.annotations.Test
 
     protected val testUrl = "testUrl"
 
-    protected lateinit var httpMock: HttpImpl
+    protected lateinit var httpMock: HttpClient
 
     @BeforeMethod fun `init mock`() {
-        httpMock = mock<HttpImpl>()
+        httpMock = mock<HttpClient>()
     }
 
     protected fun wheneverExecuteHttpMockReturnResponse(
@@ -47,7 +47,7 @@ import org.testng.annotations.Test
 
     protected fun http4kWithMock(withGlobals: Http4kBuilder.() -> Unit = {}) =
         buildHttp4k {
-            overrideHttpImpl = httpMock
+            overrideHttpClient = httpMock
             withGlobals(this)
         }
 

@@ -3,16 +3,24 @@ package com.github.christophpickl.kpotpourri.http4k_apache
 import com.github.christophpickl.kpotpourri.common.string.combineUrlParts
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientType
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
 import com.github.christophpickl.kpotpourri.http4k.internal.MutableMetaMap
 import com.github.christophpickl.kpotpourri.http4k.internal.TimeoutException
+import com.github.christophpickl.kpotpourri.http4k.non_test.AbstractHttpClientFactoryDetectorTest
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.*
+import kotlin.reflect.KClass
 
-class ApacheHttpClientHttpImplTest : WiremockTest() {
+class ApacheHttpClientFactoryDetectorTest : AbstractHttpClientFactoryDetectorTest<ApacheHttpClient>() {
+    override val expectedType: KClass<ApacheHttpClient> get() = ApacheHttpClient::class
+    override val httpClientEnum get() = HttpClientType.ApacheHttpClient
+}
+
+class ApacheHttpClientTest : WiremockTest() {
 
     private val mockUrl = "/foo"
     private val mockResponseBody = "bar"
@@ -48,6 +56,7 @@ class ApacheHttpClientHttpImplTest : WiremockTest() {
         ), meta)
 
     private fun execute(request: Request4k, meta: MetaMap = MetaMap()) =
-        ApacheHttpClientHttpImpl(meta).execute(request)
+            ApacheHttpClientFactory().build(meta).execute(request)
+//        ApacheHttpClientHttpImpl(meta).execute(request)
 
 }

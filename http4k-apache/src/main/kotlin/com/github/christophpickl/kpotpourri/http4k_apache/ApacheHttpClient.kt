@@ -6,8 +6,8 @@ import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
-import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
-import com.github.christophpickl.kpotpourri.http4k.internal.HttpImplFactory
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientFactory
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
 import com.github.christophpickl.kpotpourri.http4k.internal.TimeoutException
 import org.apache.http.client.config.RequestConfig
@@ -26,14 +26,13 @@ import java.io.ByteArrayOutputStream
 import java.net.SocketTimeoutException
 
 
-class ApacheHttpClientHttpImplFactory : HttpImplFactory {
+class ApacheHttpClientFactory : HttpClientFactory {
     override fun build(metaMap: MetaMap) =
-            ApacheHttpClientHttpImpl(metaMap)
-
+            ApacheHttpClient(metaMap)
 }
 
 // https://hc.apache.org/httpcomponents-client-4.5.x/quickstart.html
-class ApacheHttpClientHttpImpl(private val metaMap: MetaMap) : HttpImpl {
+class ApacheHttpClient(private val metaMap: MetaMap) : HttpClient {
 
     private val log = LOG {}
 

@@ -89,7 +89,7 @@ abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWirem
     }
 
     private fun buildHttp4kWithGlobalHeaders(func: (HeadersMap) -> Unit) = buildHttp4k {
-        overrideHttpImpl = restClient()
+        overrideHttpClient = restClient()
         baseUrlBy(wiremockBaseUrl)
         func(headers)
     }

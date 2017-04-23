@@ -8,14 +8,14 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.SC_418_Teapot
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
-import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import org.testng.annotations.BeforeMethod
 
-typealias HttpImplProducer = () -> HttpImpl
+typealias HttpImplProducer = () -> HttpClient
 
 abstract class Http4kWiremockTest(
         private val httpImpl: HttpImplProducer,
@@ -40,7 +40,7 @@ abstract class Http4kWiremockTest(
     protected fun buildCustomHttp4k(withBuilder: Http4kBuilder.() -> Unit = {}) = buildHttp4k {
         log.trace { "buildCustomHttp4k()" }
         baseUrlBy(wiremockBaseUrl)
-        overrideHttpImpl = httpImpl()
+        overrideHttpClient = httpImpl()
         withBuilder(this)
     }
 

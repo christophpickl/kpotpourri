@@ -4,9 +4,9 @@ import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode.Anything
 import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 import com.github.christophpickl.kpotpourri.http4k.internal.Http4kImpl
-import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
+import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientFactoryDetector
 import com.github.christophpickl.kpotpourri.http4k.internal.MutableMetaMap
-import com.github.christophpickl.kpotpourri.http4k.internal.RestClientFactory
 import kotlin.reflect.KClass
 
 
@@ -23,12 +23,16 @@ class Http4kBuilder : GlobalHttp4kConfig {
     override var basicAuth: BasicAuthMode = BasicAuthDisabled
     override var statusCheck: StatusCheckMode = Anything
 
-    internal var overrideHttpImpl: HttpImpl? = null
+    internal var overrideHttpClient: HttpClient? = null
     val _implMetaMap = MutableMetaMap()
 
     fun end(): Http4k {
-        val restClient = if (overrideHttpImpl != null) overrideHttpImpl!!
-        else RestClientFactory.lookupRestClientByImplementation().build(_implMetaMap)
+        val restClient = if (overrideHttpClient != null) {
+            overrideHttpClient!!
+        } else {
+            val httpClientFactory = HttpClientFactoryDetector.detect()
+            httpClientFactory.build(_implMetaMap)
+        }
         return Http4kImpl(restClient, this)
     }
 }

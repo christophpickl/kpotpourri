@@ -2,45 +2,46 @@ package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
+import com.google.common.annotations.VisibleForTesting
 
-
-internal enum class SupportedImplementation(
+enum class HttpClientType(
         val fqnToLookFor: String
 ) {
-    APACHE_HTTP("com.github.christophpickl.kpotpourri.http4k_apache.ApacheHttpClientHttpImplFactory")
+    ApacheHttpClient("com.github.christophpickl.kpotpourri.http4k_apache.ApacheHttpClientFactory"),
+    FuelClient("com.github.christophpickl.kpotpourri.http4k_fuel.FuelHttpClientFactory")
+
     // when adding new implementation
     // 1) add new enum here
     // 2) create new module and add RestClient impl
-    // 3) enahnce http4k-tests with new impl tests
+    // 3) add tests
     // FUEL
     // Spring RestTemplate
 }
 
-internal object RestClientFactory {
+internal object HttpClientFactoryDetector {
 
     private val log = LOG {}
 
-    fun lookupRestClientByImplementation(): HttpImplFactory {
-        val availableImplementations = SupportedImplementation.values().map { reflectivelyClassExists(it.fqnToLookFor) }.filterNotNull()
+    fun detect(): HttpClientFactory {
+        val availableClients = HttpClientType.values().map { reflectivelyClassExists(it.fqnToLookFor) }.filterNotNull()
         if (log.isDebugEnabled) {
             log.debug("Available HTTP4k implementations:")
-            availableImplementations.forEach {
+            availableClients.forEach {
                 log.debug("* $it")
             }
         }
 
-
-        return when (availableImplementations.size) {
+        return when (availableClients.size) {
             0 -> throw Http4kException("Http4k could not find any available implementation! Add a new (runtime) dependency for http4k-apache, http4k-fuel, etc.")
-            1 -> instantiateRestClient(availableImplementations[0])
-            else -> throw Http4kException("Multiple implementations found: " + availableImplementations.map { it.name }.joinToString(", "))
+            1 -> instantiateRestClient(availableClients[0])
+            else -> throw Http4kException("Multiple implementations found: " + availableClients.map { it.name }.joinToString(", "))
         }
     }
 
-    private fun instantiateRestClient(type: Class<*>) =
-            type.newInstance() as HttpImplFactory
+    @VisibleForTesting fun instantiateRestClient(type: Class<*>) =
+            type.newInstance() as HttpClientFactory
 
-    private fun reflectivelyClassExists(fqn: String): Class<*>? {
+    @VisibleForTesting fun reflectivelyClassExists(fqn: String): Class<*>? {
         try {
             return Class.forName(fqn)
         } catch(e: ClassNotFoundException) {

@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.http4k_apache
+package com.github.christophpickl.kpotpourri.http4k_fuel
 
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.integration_tests.AuthIT
@@ -11,7 +11,7 @@ import com.github.christophpickl.kpotpourri.http4k.integration_tests.StatusCodeC
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
 import org.testng.annotations.Test
 
-val clientProducer = { ApacheHttpClient(MetaMap()) }
+val clientProducer = { FuelHttpClient(MetaMap()) }
 
 @Test class AuthApacheIT : AuthIT(clientProducer)
 @Test class BaseUrlApacheIT : BaseUrlIT(clientProducer)
@@ -23,6 +23,6 @@ val clientProducer = { ApacheHttpClient(MetaMap()) }
 
 fun main(args: Array<String>) {
     buildHttp4k {
-        apacheConnectTimeout(500)
+//        customProperty(500)
     }
 }
