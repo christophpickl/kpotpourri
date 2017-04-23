@@ -52,6 +52,24 @@ allprojects {
     apply plugin: 'idea'
 }
 
+// VERSIONS
+project.ext.version_guava = "21.0"
+project.ext.version_jacoco = "0.7.9"
+// logging
+project.ext.version_logback = "1.2.3"
+project.ext.version_jcl = "1.7.25"
+project.ext.version_kotlin_logging = "1.4.4"
+// web
+project.ext.version_jackson = "2.0.1"
+project.ext.version_jackson_kotlin = "2.8.7"
+project.ext.version_apache_httpclient = "4.5.3"
+// test
+project.ext.version_testng = "6.11"
+project.ext.version_hamkrest = "1.3.0.0"
+project.ext.version_mockito_kotlin = "1.4.0"
+project.ext.version_wiremock = "2.6.0"
+
+
 subprojects { subproject ->
 
     println("[KPOT]")
@@ -81,14 +99,14 @@ subprojects { subproject ->
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
         compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-        compile 'io.github.microutils:kotlin-logging:1.4.4'
-        compile 'com.google.guava:guava:21.0'
+        compile "io.github.microutils:kotlin-logging:" + version_kotlin_logging
+        compile "com.google.guava:guava:" + version_guava
 
         if (subproject.name != "test4k") {
             println "[KPOT] adding test4k dependency for ${subproject.name}"
             testCompile project(':test4k')
         }
-        testRuntime "ch.qos.logback:logback-classic:1.2.3"
+        testRuntime "ch.qos.logback:logback-classic:" + version_logback
     }
 
     test {
@@ -108,7 +126,7 @@ subprojects { subproject ->
     }
 
     jacoco {
-        toolVersion = "0.7.9"
+        toolVersion = version_jacoco
     }
 
     test {

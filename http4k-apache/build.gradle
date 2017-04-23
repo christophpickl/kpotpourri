@@ -6,7 +6,7 @@ dependencies {
     compile project(':common4k')
     compile project(':http4k')
 
-    compile "org.apache.httpcomponents:httpclient:4.5.3"
+    compile "org.apache.httpcomponents:httpclient:" + rootProject.version_apache_httpclient
 
     testCompile project(':wiremock4k')
     testCompile project(':http4k').sourceSets.test.output

@@ -4,5 +4,5 @@ dependencies {
     compile project(':common4k')
     compile project(':test4k')
 
-    compile "com.github.tomakehurst:wiremock:2.5.1"
+    compile "com.github.tomakehurst:wiremock:" + rootProject.version_wiremock
 }
