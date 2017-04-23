@@ -2,14 +2,13 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
-import com.github.christophpickl.kpotpourri.http4k.Http4k2
+import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.Http4kBuilder
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.SC_418_Teapot
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
-import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
@@ -31,11 +30,11 @@ abstract class Http4kWiremockTest(
     private val log = LOG {}
     /** "http://localhost:8042/my" */
     protected val mockWiremockUrlAndEndpointUrl = concatUrlParts(wiremockBaseUrl, mockEndpointUrl)
-    protected lateinit var http4k: Http4k2
+    protected lateinit var http4k: Http4k
 
     @BeforeMethod
     fun `before method, reset http4k instance with base URL and override http implementation`() {
-        http4k = buildCustomHttp4k().toK2()
+        http4k = buildCustomHttp4k()
     }
 
     protected fun buildCustomHttp4k(withBuilder: Http4kBuilder.() -> Unit = {}) = buildHttp4k {
@@ -43,7 +42,7 @@ abstract class Http4kWiremockTest(
         baseUrlBy(wiremockBaseUrl)
         overrideHttpImpl = httpImpl()
         withBuilder(this)
-    }.toK2()
+    }
 
     protected fun givenGetMockEndpointUrl(
             statusCode: StatusCode = SC_200_Ok,

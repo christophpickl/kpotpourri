@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.http4k.Response4k
+import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContains
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
@@ -53,7 +54,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
     fun `Given default Http4k and wiremocked JSON response, When GET, Then JSON DTO should be marshalled`() {
         givenGetMockEndpointUrl(body = PersonDto.dummy.toJson())
 
-        val actulJsonDto = http4k.get(mockEndpointUrl, PersonDto::class)
+        val actulJsonDto = http4k.get<PersonDto>(mockEndpointUrl)
 
         actulJsonDto shouldMatchValue PersonDto.dummy
     }

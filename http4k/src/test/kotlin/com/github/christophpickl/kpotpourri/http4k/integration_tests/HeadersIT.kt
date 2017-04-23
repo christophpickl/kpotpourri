@@ -1,8 +1,8 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
-import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
@@ -92,6 +92,6 @@ abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWirem
         overrideHttpImpl = restClient()
         baseUrlBy(wiremockBaseUrl)
         func(headers)
-    }.toK2()
+    }
 
 }

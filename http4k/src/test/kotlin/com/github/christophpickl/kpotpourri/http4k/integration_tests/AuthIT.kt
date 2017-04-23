@@ -3,7 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k.integration_tests
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
 import com.github.christophpickl.kpotpourri.http4k.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
-import com.github.christophpickl.kpotpourri.http4k.toK2
+import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.tomakehurst.wiremock.client.WireMock
 
@@ -33,7 +33,7 @@ abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restCli
         givenGetMockEndpointUrl()
         val http4k = buildHttp4k {
             basicAuth(username, password)
-        }.toK2()
+        }
 
         http4k.get<Any>(concatUrlParts(wiremockBaseUrl, mockEndpointUrl))
 
@@ -46,7 +46,7 @@ abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restCli
         givenGetMockEndpointUrl()
         val http4k = buildHttp4k {
             basicAuth("some other", "some password")
-        }.toK2()
+        }
 
         http4k.get<Any>(concatUrlParts(wiremockBaseUrl, mockEndpointUrl)) {
             basicAuth = BasicAuth(

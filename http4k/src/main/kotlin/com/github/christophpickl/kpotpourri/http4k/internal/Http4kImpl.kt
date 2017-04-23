@@ -20,19 +20,19 @@ internal class Http4kImpl(
 
     private val log = LOG {}
 
-    override fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
+    override fun <R : Any> getX(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
             any(HttpMethod4k.GET, BodylessRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+    override fun <R : Any> postX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
             any(HttpMethod4k.POST, BodyfullRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> put(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+    override fun <R : Any> putX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
             any(HttpMethod4k.PUT, BodyfullRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> delete(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
+    override fun <R : Any> deleteX(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
             any(HttpMethod4k.DELETE, BodylessRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+    override fun <R : Any> patchX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
             any(HttpMethod4k.PATCH, BodyfullRequestOpts(), url, returnType, withOpts)
 
     /**

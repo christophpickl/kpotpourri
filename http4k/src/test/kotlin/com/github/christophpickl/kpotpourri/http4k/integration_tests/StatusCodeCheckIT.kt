@@ -15,7 +15,7 @@ import com.github.christophpickl.kpotpourri.http4k.StatusCheckResult
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
-import com.github.christophpickl.kpotpourri.http4k.toK2
+import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
@@ -28,7 +28,7 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
         val http4k = buildHttp4k {
             baseUrlBy(wiremockBaseUrl)
             enforceStatusCheck(SC_200_Ok)
-        }.toK2()
+        }
 
         http4k.get<Any>(mockEndpointUrl) {
             enforceStatusCheck(SC_500_InternalError)
@@ -41,7 +41,7 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
         val http4k = buildHttp4k {
             baseUrlBy(wiremockBaseUrl)
             enforceStatusCheck(SC_418_Teapot)
-        }.toK2()
+        }
 
         assertThrown<Http4kStatusCodeException> ({ e -> e.expected == SCR_418_Teapot && e.actual == SC_201_Created }) {
             http4k.get<Any>(mockEndpointUrl) {

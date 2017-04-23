@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.http4k.non_test
 
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
+import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
@@ -22,6 +23,8 @@ fun main(args: Array<String>) {
         val http4k = buildHttp4k {
             baseUrlBy("http://some.server/rest")
             addHeader("someConstant" to "headerValue")
+            addQueryParam("sort" to "name")
+            enforceStatusFamily(StatusFamily.Success_2)
         }.toK2()
 
         val response: Response4k = http4k.get("/resource") {
