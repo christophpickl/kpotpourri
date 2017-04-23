@@ -32,7 +32,7 @@ class Http4kBuilder : GlobalHttp4kConfig {
     }
 }
 
-class Http4k2(val http4k: Http4k) {
+class Http4k2(val http4k: Http4k) : Http4k by http4k {
 
     inline fun <reified R : Any> anyBodyfull(method: HttpBodyfullMethod4k, url: String, body: Any? = null, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) {
         when (method) {
@@ -50,6 +50,8 @@ class Http4k2(val http4k: Http4k) {
 
 }
 
+fun Http4k.toK2() = Http4k2(this)
+
 /**
  * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.
  *
@@ -59,23 +61,23 @@ class Http4k2(val http4k: Http4k) {
  */
 interface Http4k {
 
-    fun get(url: String, withOpts: BodylessRequestOpts.() -> Unit = {}) = get(url, Response4k::class, withOpts)
+//    fun get(url: String, withOpts: BodylessRequestOpts.() -> Unit = {}) = get(url, Response4k::class, withOpts)
     fun <R : Any> get(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
 
-    fun post(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = post(url, Response4k::class, withOpts)
+//    fun post(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = post(url, Response4k::class, withOpts)
     fun <R : Any> post(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = post(url, Response4k::class, { requestBody(body); withOpts(this) })
     fun <R : Any> post(url: String, body: Any, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}) = post(url, returnType, { requestBody(body); withOpts(this) })
     fun <R : Any> post(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
 
-    fun put(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = put(url, Response4k::class, withOpts)
+//    fun put(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = put(url, Response4k::class, withOpts)
     fun <R : Any> put(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = put(url, Response4k::class, { requestBody(body); withOpts(this) })
     fun <R : Any> put(url: String, body: Any, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}) = put(url, returnType, { requestBody(body); withOpts(this) })
     fun <R : Any> put(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
 
-    fun delete(url: String, withOpts: BodylessRequestOpts.() -> Unit = {}) = delete(url, Response4k::class, withOpts)
+//    fun delete(url: String, withOpts: BodylessRequestOpts.() -> Unit = {}) = delete(url, Response4k::class, withOpts)
     fun <R : Any> delete(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
 
-    fun patch(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patch(url, Response4k::class, withOpts)
+//    fun patch(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patch(url, Response4k::class, withOpts)
     fun <R : Any> patch(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patch(url, Response4k::class, { requestBody(body); withOpts(this) })
     fun <R : Any> patch(url: String, body: Any, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patch(url, returnType, { requestBody(body); withOpts(this) })
     fun <R : Any> patch(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R

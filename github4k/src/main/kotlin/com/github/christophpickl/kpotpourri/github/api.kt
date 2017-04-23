@@ -10,6 +10,7 @@ import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.http4k.toK2
 
 // https://developer.github.com/v3/
 
@@ -57,7 +58,7 @@ class GithubApiImpl(
         basicAuth(config.username, config.password)
         addHeader("Accept" to GITHUB_MIMETYPE)
         enforceStatusFamily(StatusFamily.Success_2)
-    }
+    }.toK2()
 
 
     override fun listOpenMilestones(): List<Milestone> {
@@ -97,10 +98,8 @@ class GithubApiImpl(
         if (milestone.state == State.Closed) {
             throw Github4kException("Milestone already closed: $milestone")
         }
-        val response = http4k.patch(
-                url = "/milestones/${milestone.number}",
-                jacksonObject = UpdateMilestoneRequestJson(state = State.Closed.jsonValue),
-                returnType = UpdateMilestoneResponseJson::class) {
+        val response = http4k.patch<UpdateMilestoneResponseJson>("/milestones/${milestone.number}") {
+            requestBody(UpdateMilestoneRequestJson(state = State.Closed.jsonValue))
         }
         if (response.state != State.Closed.jsonValue) {
             throw Github4kException("Failed to close milestone: $milestone")
