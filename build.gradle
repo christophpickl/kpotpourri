@@ -61,7 +61,7 @@ project.ext.version_jcl = "1.7.25"
 project.ext.version_kotlin_logging = "1.4.4"
 // web
 project.ext.version_jackson = "2.0.1"
-project.ext.version_jackson_kotlin = "2.8.7"
+project.ext.version_jackson_kotlin = "2.8.8"
 project.ext.version_apache_httpclient = "4.5.3"
 // test
 project.ext.version_testng = "6.11"
