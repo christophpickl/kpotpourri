@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.module_tests
 
+import com.github.christophpickl.kpotpourri.http4k.get
 import org.testng.annotations.Test
 
 @Test class BaseUrlTest : ComponentTest() {

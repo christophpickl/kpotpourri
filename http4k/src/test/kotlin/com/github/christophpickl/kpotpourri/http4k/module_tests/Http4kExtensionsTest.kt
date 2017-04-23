@@ -1,15 +1,12 @@
 package com.github.christophpickl.kpotpourri.http4k.module_tests
 
-import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
-import com.github.christophpickl.kpotpourri.http4k.Http4k2
-import com.github.christophpickl.kpotpourri.http4k.HttpBodyfullMethod4k
-import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
+import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import org.testng.annotations.Test
 
-@Test class Http4k2Test : ComponentTest() {
+@Test class Http4kExtensionsTest : ComponentTest() {
 
     private val dto = Dto.testee
 
@@ -17,7 +14,7 @@ import org.testng.annotations.Test
         wheneverExecuteHttpMockReturnResponse()
         val http4k = http4kWithMock()
 
-        Http4k2(http4k).get<Response4k>("url") {
+        http4k.get<Response4k>("url") {
             addHeader("a" to "b")
         }
 
@@ -29,7 +26,7 @@ import org.testng.annotations.Test
         wheneverExecuteHttpMockReturnResponse(expected)
         val http4k = http4kWithMock()
 
-        val response: Response4k = Http4k2(http4k).get("url")
+        val response: Response4k = http4k.get("url")
 
         response shouldMatchValue expected
     }
@@ -54,18 +51,18 @@ import org.testng.annotations.Test
         response shouldMatchValue dto
     }
 
-    fun `anyBodyfull with Dto`() {
-        wheneverExecuteHttpMockReturnResponse()
-        val http4k = http4kWithMock()
-
-        Http4k2(http4k).anyBodyfull<Response4k>(HttpBodyfullMethod4k.POST, "url", dto)
-
-        verifyHttpMockExecutedWithRequest(
-                method = HttpMethod4k.POST,
-                url = "url",
-                headers = mapOf("Content-Type" to "application/json"),
-                requestBody = DefiniteRequestBody.DefiniteStringBody(dto.toJson()))
-    }
+//    fun `anyBodyfull with Dto`() {
+//        wheneverExecuteHttpMockReturnResponse()
+//        val http4k = http4kWithMock()
+//
+//        http4k.anyBodyfull<Response4k>(HttpBodyfullMethod4k.POST, "url", dto)
+//
+//        verifyHttpMockExecutedWithRequest(
+//                method = HttpMethod4k.POST,
+//                url = "url",
+//                headers = mapOf("Content-Type" to "application/json"),
+//                requestBody = DefiniteRequestBody.DefiniteStringBody(dto.toJson()))
+//    }
 
     private data class Dto(val name: String, val age: Int) {
         companion object {

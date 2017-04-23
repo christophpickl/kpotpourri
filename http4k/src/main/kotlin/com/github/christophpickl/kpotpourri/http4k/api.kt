@@ -46,10 +46,10 @@ class Http4kBuilder : GlobalHttp4kConfig {
 
 // in order to reifie generic type, must not be in an interface
 inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getX(url, R::class, withOpts)
-inline fun <reified R : Any> Http4k.post(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postX(url, R::class, withOpts)
-inline fun <reified R : Any> Http4k.put(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putX(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.post(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postX(url, body, R::class, withOpts)
+inline fun <reified R : Any> Http4k.put(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putX(url, body, R::class, withOpts)
 inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteX(url, R::class, withOpts)
-inline fun <reified R : Any> Http4k.patch(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchX(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.patch(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchX(url, body, R::class, withOpts)
 
 /**
  * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.

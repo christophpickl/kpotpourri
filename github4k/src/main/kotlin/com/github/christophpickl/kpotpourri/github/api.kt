@@ -10,7 +10,9 @@ import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
-import com.github.christophpickl.kpotpourri.http4k.toK2
+import com.github.christophpickl.kpotpourri.http4k.get
+import com.github.christophpickl.kpotpourri.http4k.patch
+import com.github.christophpickl.kpotpourri.http4k.post
 
 // https://developer.github.com/v3/
 
@@ -58,20 +60,20 @@ class GithubApiImpl(
         basicAuth(config.username, config.password)
         addHeader("Accept" to GITHUB_MIMETYPE)
         enforceStatusFamily(StatusFamily.Success_2)
-    }.toK2()
+    }
 
 
     override fun listOpenMilestones(): List<Milestone> {
         log.debug("listOpenMilestones()")
         // state defaults to "open"
-        return http4k.get("/milestones", Array<MilestoneJson>::class)
+        return http4k.get<Array<MilestoneJson>>("/milestones")
                 .map { it.toMilestone() }
                 .sortedBy { it.version }
     }
 
     override fun listIssues(milestone: Milestone): List<Issue> {
         log.debug("listIssues(milestone={})", milestone)
-        return http4k.get("/issues", Array<IssueJson>::class) {
+        return http4k.get<Array<IssueJson>>("/issues") {
             addQueryParam("state" to "all")
             addQueryParam("milestone" to milestone.number)
         }
@@ -85,7 +87,7 @@ class GithubApiImpl(
      * https://developer.github.com/v3/repos/#list-tags
      */
     override fun listTags() =
-            http4k.get("/tags", Array<Tag>::class)
+            http4k.get<Array<Tag>>("/tags")
                     .toList()
                     .sortedBy { it.name }
 
@@ -112,7 +114,7 @@ class GithubApiImpl(
      * https://developer.github.com/v3/repos/releases/#create-a-release
      */
     override fun createNewRelease(createRequest: CreateReleaseRequest) =
-            http4k.post("/releases", createRequest, CreateReleaseResponse::class)
+            http4k.post<CreateReleaseResponse>("/releases", createRequest)
 
     /**
      * GET /repos/:owner/:repo/releases
@@ -120,7 +122,7 @@ class GithubApiImpl(
      * https://developer.github.com/v3/repos/releases/#list-releases-for-a-repository
      */
     override fun listReleases(): List<CreateReleaseResponse> =
-            http4k.get("/releases", Array<CreateReleaseResponse>::class)
+            http4k.get<Array<CreateReleaseResponse>>("/releases")
                     .toList()
                     .sortedBy { it.name }
 
@@ -132,11 +134,11 @@ class GithubApiImpl(
     override fun uploadReleaseAsset(upload: AssetUpload) {
         // "upload_url": "https://uploads.github.com/repos/christophpickl/gadsu_release_playground/releases/5934443/assets{?name,label}",
 
-        val uploadUrl = http4k.get("/releases/${upload.releaseId}", SingleReleaseJson::class).upload_url.removeSuffix("{?name,label}")
+        val uploadUrl = http4k.get<SingleReleaseJson>("/releases/${upload.releaseId}").upload_url.removeSuffix("{?name,label}")
         log.debug { "Upload URL for github assets: $uploadUrl" }
         // "https://uploads.github.com/repos/christophpickl/gadsu_release_playground/releases/5934443/assets{?name,label}"
 
-        val response = http4k.post(uploadUrl, AssetUploadResponse::class) {
+        val response = http4k.post<AssetUploadResponse>(uploadUrl) {
             addHeader("Content-Type" to upload.contentType)
             addQueryParam("name" to upload.fileName)
             requestBytesBody(upload.contentType, upload.bytes)

@@ -9,8 +9,8 @@ import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpImpl
-import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -49,7 +49,7 @@ import org.testng.annotations.Test
         buildHttp4k {
             overrideHttpImpl = httpMock
             withGlobals(this)
-        }.toK2()
+        }
 
     protected fun verifyHttpMockExecutedWithRequest(
             method: HttpMethod4k = HttpMethod4k.GET,

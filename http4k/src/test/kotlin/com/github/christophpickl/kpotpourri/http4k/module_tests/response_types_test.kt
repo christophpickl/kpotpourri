@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.http4k.module_tests
 
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
+import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import org.testng.annotations.Test
@@ -35,7 +36,7 @@ import kotlin.reflect.KClass
         wheneverExecuteHttpMockReturnResponse(bodyAsString = "a")
 
         assertThrown<NumberFormatException> {
-            http4kWithMock().get(testUrl, Int::class)
+            http4kWithMock().get<Int>(testUrl)
         }
     }
 
@@ -45,7 +46,7 @@ import kotlin.reflect.KClass
 
     private fun <R : Any> assertResponse(returnType: KClass<R>, body: String, expected: Any) {
         wheneverExecuteHttpMockReturnResponse(bodyAsString = body)
-        val response = http4kWithMock().get(testUrl, returnType)
+        val response = http4kWithMock().getX(testUrl, returnType)
         response shouldMatchValue expected
     }
 

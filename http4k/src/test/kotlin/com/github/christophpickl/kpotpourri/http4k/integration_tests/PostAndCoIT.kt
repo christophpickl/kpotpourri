@@ -1,5 +1,9 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
+import com.github.christophpickl.kpotpourri.http4k.delete
+import com.github.christophpickl.kpotpourri.http4k.patch
+import com.github.christophpickl.kpotpourri.http4k.post
+import com.github.christophpickl.kpotpourri.http4k.put
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.InternalMockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
@@ -33,7 +37,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
                 .willReturn(WireMock.aResponse()
                         .withBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy.toJson())))
 
-        val dto = http4k.post(mockEndpointUrl, PersonDto::class)
+        val dto = http4k.post<PersonDto>(mockEndpointUrl)
 
         dto shouldMatchValue com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy
     }
@@ -96,7 +100,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
             withBody(responseDto.toJson())
         }
 
-        val actualResponseDto = http4k.post(mockEndpointUrl, PersonDto::class) {
+        val actualResponseDto = http4k.post<PersonDto>(mockEndpointUrl) {
             requestBody(requestDto)
         }
 

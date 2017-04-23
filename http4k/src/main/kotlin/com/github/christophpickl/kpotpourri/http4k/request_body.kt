@@ -19,9 +19,11 @@ interface RequestWithEntityOpts {
     }
 
     fun requestBody(body: Any) {
-        if (body is String) {
+        if (body is Unit) {
+            requestBodyDisabled()
+        } else if (body is String) {
             requestBody = StringBody(body)
-//        } else if (body is ByteArray) {
+//        MINOR } else if (body is ByteArray) {
 //            requestBody = BytesBody(body)
         } else if (body is Number) {
             requestBody = StringBody(body.toString())

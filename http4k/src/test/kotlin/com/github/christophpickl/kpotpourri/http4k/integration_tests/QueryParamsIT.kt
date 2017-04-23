@@ -51,4 +51,19 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
         verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
     }
 
+    fun `Given query params in baseUrl and globals, When query param is set too, Then params are concatenated properly`() {
+        val queryParamUrlSuffix = "?k1=v1&k2=v2&k3=v3"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+
+        http4k = buildCustomHttp4k {
+            baseUrlBy("$wiremockBaseUrl$mockEndpointUrl?k1=v1")
+            queryParams += "k2" to "v2"
+        }
+        http4k.get<Any>("") {
+            queryParams += "k3" to "v3"
+        }
+
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+    }
+
 }

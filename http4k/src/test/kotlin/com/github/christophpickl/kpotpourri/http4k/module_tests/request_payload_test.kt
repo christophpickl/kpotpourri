@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.http4k.module_tests
 
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
+import com.github.christophpickl.kpotpourri.http4k.post
 import com.github.christophpickl.kpotpourri.test4k.skip
 import com.google.common.io.ByteSource
 import org.testng.annotations.Test
