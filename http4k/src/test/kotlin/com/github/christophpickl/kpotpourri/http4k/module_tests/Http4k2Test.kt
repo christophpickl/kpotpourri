@@ -39,7 +39,7 @@ import org.testng.annotations.Test
         wheneverExecuteHttpMockReturnResponse(expected)
         val http4k = http4kWithMock()
 
-        val response: String = Http4k2(http4k).get("url")
+        val response: String = http4k.get("url")
 
         response shouldMatchValue expected.bodyAsString
     }
@@ -49,7 +49,7 @@ import org.testng.annotations.Test
         wheneverExecuteHttpMockReturnResponse(expected)
         val http4k = http4kWithMock()
 
-        val response: Dto = Http4k2(http4k).get("url")
+        val response: Dto = http4k.get("url")
 
         response shouldMatchValue dto
     }

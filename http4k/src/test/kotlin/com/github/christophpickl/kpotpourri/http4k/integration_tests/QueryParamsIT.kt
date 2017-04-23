@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
+import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.github.christophpickl.kpotpourri.test4k.SOME_KEY1
 import com.github.christophpickl.kpotpourri.test4k.SOME_KEY2
 import com.github.christophpickl.kpotpourri.test4k.SOME_PAIR
@@ -14,7 +15,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
     fun `When no param is set, Then url stays same`() {
         givenGetMockEndpointUrl()
 
-        http4k.get(mockEndpointUrl)
+        http4k.get<Any>(mockEndpointUrl)
 
         verifyWiremockGet(MockRequest(mockEndpointUrl))
     }
@@ -22,7 +23,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
     fun `When query param is set, Then url changed`() {
         givenGetMockEndpointUrl()
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             queryParams += SOME_PAIR
         }
 
@@ -36,8 +37,8 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
         http4k = buildCustomHttp4k {
             // http://localhost:8042 -- /mock -- query params1
             baseUrlBy("$wiremockBaseUrl$mockEndpointUrl?$SOME_KEY1=$SOME_VAL1")
-        }
-        http4k.get("") {
+        }.toK2()
+        http4k.get<Any>("") {
             queryParams += SOME_PAIR2 // add query params2
         }
 

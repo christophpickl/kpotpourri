@@ -10,7 +10,7 @@ import org.testng.annotations.Test
         wheneverExecuteHttpMockReturnResponse()
         val http4k = http4kWithMock(withGlobals = { baseUrlBy(testBaseUrl) })
 
-        http4k.get("testEndpoint")
+        http4k.get<Any>("testEndpoint")
 
         verifyHttpMockExecutedWithRequest(url = "$testBaseUrl/testEndpoint")
     }
@@ -19,7 +19,7 @@ import org.testng.annotations.Test
         wheneverExecuteHttpMockReturnResponse()
         val http4k = http4kWithMock(withGlobals = { baseUrlBy("$testBaseUrl/") })
 
-        http4k.get(url = "/")
+        http4k.get<Any>(url = "/")
 
         verifyHttpMockExecutedWithRequest(url = "http://localhost:8042")
     }

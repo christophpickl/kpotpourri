@@ -1,8 +1,8 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
-import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
+import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
@@ -29,7 +29,7 @@ abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWirem
             headers += KEY to VAL
         }
 
-        http4k.get(mockEndpointUrl)
+        http4k.get<Any>(mockEndpointUrl)
 
         verifyGetMockRequest {
             withHeader(KEY, WireMock.equalTo(VAL))
@@ -39,7 +39,7 @@ abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWirem
     fun `When global is not set and request is set, Then request header is used`() {
         givenGetMockEndpointUrl()
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             headers += KEY to VAL
         }
 
@@ -55,7 +55,7 @@ abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWirem
             headers += KEY1 to VAL
         }
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             headers += KEY2 to VAL
         }
 
@@ -72,7 +72,7 @@ abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWirem
             headers += KEY_LOWER to VAL1
         }
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             headers += KEY_UPPER to VAL2
         }
 
@@ -88,11 +88,10 @@ abstract class HeadersIT(private val restClient: HttpImplProducer) : Http4kWirem
         verify(getRequestBuilder)
     }
 
-    private fun buildHttp4kWithGlobalHeaders(func: (HeadersMap) -> Unit): Http4k {
-        return buildHttp4k {
-            overrideHttpImpl = restClient()
-            baseUrlBy(wiremockBaseUrl)
-            func(headers)
-        }
-    }
+    private fun buildHttp4kWithGlobalHeaders(func: (HeadersMap) -> Unit) = buildHttp4k {
+        overrideHttpImpl = restClient()
+        baseUrlBy(wiremockBaseUrl)
+        func(headers)
+    }.toK2()
+
 }

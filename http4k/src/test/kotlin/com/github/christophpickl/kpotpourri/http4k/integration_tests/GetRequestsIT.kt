@@ -16,7 +16,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
                 body = anyResponseBody
         )
 
-        val response = http4k.get(mockEndpointUrl)
+        val response = http4k.get<Response4k>(mockEndpointUrl)
 
         response shouldMatchValue Response4k(
                 statusCode = anyStatusCode,
@@ -28,7 +28,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
     fun `Given default Http4k, When GET with header, Then verify headers are set on request`() {
         givenGetMockEndpointUrl()
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             headers += headerName to headerValue
         }
 
@@ -42,7 +42,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
             withHeader(headerName, headerValue)
         }
 
-        val response = http4k.get(mockEndpointUrl)
+        val response = http4k.get<Response4k>(mockEndpointUrl)
 
         // mapContains at least custom header, but additionally others from wiremock
         assertThat(response.headers, mapContains(headerName to headerValue))

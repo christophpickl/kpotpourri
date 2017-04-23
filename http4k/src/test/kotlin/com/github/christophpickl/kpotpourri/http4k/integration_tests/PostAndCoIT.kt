@@ -23,7 +23,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When POST, Then should be received`() {
         givenPostToMockEndpointUrl()
 
-        http4k.post(mockEndpointUrl)
+        http4k.post<Any>(mockEndpointUrl)
 
         verifyPostRequest(MockRequest(mockEndpointUrl))
     }
@@ -41,7 +41,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When POST with JSON body, Then body should be received and content type set`() {
         givenPostToMockEndpointUrl()
 
-        http4k.post(mockEndpointUrl) {
+        http4k.post<Any>(mockEndpointUrl) {
             requestBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy)
         }
 
@@ -54,7 +54,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When POST with JSON body and custom content type, Then default content type should have been overridden`() {
         givenPostToMockEndpointUrl()
 
-        http4k.post(mockEndpointUrl) {
+        http4k.post<Any>(mockEndpointUrl) {
             requestBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy)
             headers += "content-type" to "application/foobar"
         }
@@ -68,7 +68,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, WHen POST with request body disabled, Then no body should have been sent`() {
         givenPostToMockEndpointUrl()
 
-        http4k.post(mockEndpointUrl) {
+        http4k.post<Any>(mockEndpointUrl) {
             requestBodyDisabled()
         }
 
@@ -80,7 +80,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When POST with string request body, Then string body should have been sent`() {
         givenPostToMockEndpointUrl()
 
-        http4k.post(mockEndpointUrl) {
+        http4k.post<Any>(mockEndpointUrl) {
             requestBody(REQUEST_STRING_BODY)
         }
 
@@ -131,7 +131,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When PUT, Then should be received`() {
         givenToMockEndpointUrl(WiremockMethod.PUT)
 
-        http4k.put(mockEndpointUrl)
+        http4k.put<Any>(mockEndpointUrl)
 
         verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PUT))
     }
@@ -142,7 +142,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When DELETE, Then should be received`() {
         givenToMockEndpointUrl(WiremockMethod.DELETE)
 
-        http4k.delete(mockEndpointUrl)
+        http4k.delete<Any>(mockEndpointUrl)
 
         verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.DELETE))
     }
@@ -153,7 +153,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When PATCH, Then should be received`() {
         givenToMockEndpointUrl(WiremockMethod.PATCH)
 
-        http4k.patch(mockEndpointUrl)
+        http4k.patch<Any>(mockEndpointUrl)
 
         verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PATCH))
     }

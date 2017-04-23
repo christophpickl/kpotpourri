@@ -1,7 +1,9 @@
 package com.github.christophpickl.kpotpourri.http4k.non_test
 
+import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -20,16 +22,20 @@ fun main(args: Array<String>) {
         val http4k = buildHttp4k {
             baseUrlBy("http://some.server/rest")
             addHeader("someConstant" to "headerValue")
-        }
-        val dto = http4k.get("/resource", SomeDto::class) {
-            addHeader("Accept" to "my/content")
-            addQueryParam("sort" to "asc")
-        }
+        }.toK2()
 
-        val response = http4k.get("/resource") {
+        val response: Response4k = http4k.get("/resource") {
             addHeader("Accept" to "my/content")
             addQueryParam("sort" to "asc")
         }
+        println("read: $response")
+
+        val dto: SomeDto = http4k.get("/resource") {
+            addHeader("Accept" to "my/content")
+            addQueryParam("sort" to "asc")
+        }
+        println("read: $dto")
+
 //        response.bodyAsString
 //        response.headers
         if (response.statusCode != SC_200_Ok) {

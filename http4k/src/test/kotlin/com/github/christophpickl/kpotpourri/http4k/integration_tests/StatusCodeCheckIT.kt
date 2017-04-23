@@ -15,6 +15,7 @@ import com.github.christophpickl.kpotpourri.http4k.StatusCheckResult
 import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.http4k.toK2
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
@@ -27,9 +28,9 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
         val http4k = buildHttp4k {
             baseUrlBy(wiremockBaseUrl)
             enforceStatusCheck(SC_200_Ok)
-        }
+        }.toK2()
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             enforceStatusCheck(SC_500_InternalError)
         }
     }
@@ -40,10 +41,10 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
         val http4k = buildHttp4k {
             baseUrlBy(wiremockBaseUrl)
             enforceStatusCheck(SC_418_Teapot)
-        }
+        }.toK2()
 
         assertThrown<Http4kStatusCodeException> ({ e -> e.expected == SCR_418_Teapot && e.actual == SC_201_Created }) {
-            http4k.get(mockEndpointUrl) {
+            http4k.get<Any>(mockEndpointUrl) {
                 // DEFAULT: unsetStatusCheck()
             }
         }
@@ -52,7 +53,7 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
     fun `Given status 500, When check is disabled, Then do nothing`() {
         givenGetMockEndpointUrl(statusCode = SC_500_InternalError)
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             anyStatusCheck()
         }
     }
@@ -60,7 +61,7 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
     fun `Given status 200, When check enforced to 200, Then do nothing`() {
         givenGetMockEndpointUrl(statusCode = SC_200_Ok)
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             enforceStatusCheck(SC_200_Ok)
         }
     }
@@ -78,7 +79,7 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
     fun `Given custom status check, When check succeeds, Then do nothing`() {
         givenGetMockEndpointUrl(statusCode = SC_200_Ok)
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             customStatusCheck { _, _ ->
                 StatusCheckResult.Ok
             }
@@ -101,7 +102,7 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
     fun `Given status family check, When check succeeds, Then do nothing`() {
         givenGetMockEndpointUrl(statusCode = SC_200_Ok)
 
-        http4k.get(mockEndpointUrl) {
+        http4k.get<Any>(mockEndpointUrl) {
             enforceStatusFamily(StatusFamily.Success_2)
         }
     }
@@ -132,7 +133,7 @@ abstract class StatusCodeCheckIT (restClient: HttpImplProducer) : Http4kWiremock
         assertThrown<Http4kStatusCodeException>({ e ->
             e.actual == someInvalidStatus && e.expected == SR_2xx_Success
         }) {
-            buildCustomHttp4k { enforceStatusFamily(StatusFamily.Success_2) }.get(mockEndpointUrl)
+            buildCustomHttp4k { enforceStatusFamily(StatusFamily.Success_2) }.get<Any>(mockEndpointUrl)
         }
     }
 }
