@@ -31,7 +31,6 @@ interface AnyRequestOpts : StatusCheckConfig, HeadersConfig, QueryParamConfig {
 /**
  * Got no body, opposed to POST/PUT/etc requests.
  */
-// FIXME do not distinguish between bodyfull and bodyless :)
 data class BodylessRequestOpts(
         override val headers: HeadersMap = HeadersMap(),
         override val queryParams: MutableMap<String, String> = HashMap(),

@@ -12,7 +12,6 @@ fun <T> allOf(vararg matchers: Matcher<T>): Matcher<T> =
 
 fun <T> allOf(matchers: List<Matcher<T>>): Matcher<T> {
     var allMatcher = matchers[0]
-    var first = true
     matchers.forEachIndexed { i, matcher ->
         if (i != 0) {
             allMatcher = allMatcher and matcher

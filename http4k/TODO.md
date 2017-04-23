@@ -6,6 +6,7 @@
 * support 2nd implementation (fuel, spring rest template)
 * support cookies for request/response
 * get rid of ByteSource in (public) API
+* do not distinguish between bodyfull and bodyless :)
 
 ## TODOs Med
 

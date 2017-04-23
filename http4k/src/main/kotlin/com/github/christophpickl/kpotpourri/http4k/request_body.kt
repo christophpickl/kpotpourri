@@ -23,8 +23,10 @@ interface RequestWithEntityOpts {
             requestBodyDisabled()
         } else if (body is String) {
             requestBody = StringBody(body)
-//        MINOR } else if (body is ByteArray) {
-//            requestBody = BytesBody(body)
+        } else if (body is File) {
+            requestFileBody("*/*", body)
+        } else if (body is ByteArray) {
+            requestBytesBody("*/*", body)
         } else if (body is Number) {
             requestBody = StringBody(body.toString())
         } else {

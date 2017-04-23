@@ -13,7 +13,7 @@ internal object UrlBuilder {
         } else {
             globals.baseUrl.combine(url)
         }
-        val params = buildQueryParams(url, requestOpts, globals)
+        val params = buildQueryParams(requestOpts, globals)
         return build(maybeOverriddenBaseUrl, params)
     }
 
@@ -30,7 +30,7 @@ internal object UrlBuilder {
                 .joinToString("&")
     }
 
-    private fun buildQueryParams(url: String, requestOpts: AnyRequestOpts, globals: GlobalHttp4kConfig): MutableMap<String, String> {
+    private fun buildQueryParams(requestOpts: AnyRequestOpts, globals: GlobalHttp4kConfig): MutableMap<String, String> {
         return LinkedHashMap<String, String>().apply {
             putAll(globals.queryParams)
             putAll(requestOpts.queryParams)
