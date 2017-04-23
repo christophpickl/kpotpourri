@@ -10,7 +10,7 @@ import java.net.SocketTimeoutException
 
 
 interface HttpClient {
-    fun execute(request: Request4k): Response4k
+    fun execute(request4k: Request4k): Response4k
 }
 
 interface HttpClientFactory {

@@ -41,10 +41,10 @@ class ApacheHttpClient(private val metaMap: MetaMap) : HttpClient {
         log.debug { "new ApacheHttpClientRestClient(metaMap=$metaMap)" }
     }
 
-    override fun execute(request: Request4k): Response4k {
-        val httpRequest = request.toHttpRequest()
-        httpRequest.setHeaders(request.headers.entries.map { BasicHeader(it.key, it.value) }.toTypedArray())
-        httpRequest.addBodyIfNecessary(request)
+    override fun execute(request4k: Request4k): Response4k {
+        val httpRequest = request4k.toHttpRequest()
+        httpRequest.setHeaders(request4k.headers.entries.map { BasicHeader(it.key, it.value) }.toTypedArray())
+        httpRequest.addBodyIfNecessary(request4k)
 
         httpRequest.config = RequestConfig.custom()
                 .apply {

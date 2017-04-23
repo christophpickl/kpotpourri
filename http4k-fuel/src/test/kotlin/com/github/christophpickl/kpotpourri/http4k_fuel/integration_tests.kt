@@ -13,13 +13,13 @@ import org.testng.annotations.Test
 
 val clientProducer = { FuelHttpClient(MetaMap()) }
 
-@Test class AuthApacheIT : AuthIT(clientProducer)
-@Test class BaseUrlApacheIT : BaseUrlIT(clientProducer)
-@Test class GetRequestsApacheIT : GetRequestsIT(clientProducer)
-@Test class HeadersApacheIT : HeadersIT(clientProducer)
-@Test class PostAndCoApacheIT : PostAndCoIT(clientProducer)
-@Test class QueryParamsApacheIT : QueryParamsIT(clientProducer)
-@Test class StatusCodeCheckApacheIT : StatusCodeCheckIT(clientProducer)
+@Test class AuthFuelIT : AuthIT(clientProducer)
+@Test class BaseUrlFuelIT : BaseUrlIT(clientProducer)
+@Test class GetRequestsFuelIT : GetRequestsIT(clientProducer)
+@Test class HeadersFuelIT : HeadersIT(clientProducer)
+@Test class PostAndCoFuelIT : PostAndCoIT(clientProducer)
+@Test class QueryParamsFuelIT : QueryParamsIT(clientProducer)
+@Test class StatusCodeCheckFuelIT : StatusCodeCheckIT(clientProducer)
 
 fun main(args: Array<String>) {
     buildHttp4k {

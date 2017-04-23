@@ -159,7 +159,12 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
 
         http4k.patch<Any>(mockEndpointUrl)
 
-        verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PATCH))
+        if (javaClass.simpleName == "PostAndCoFuelIT") {
+            verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.POST,
+                    func = { withHeader("X-HTTP-Method-Override", equalTo("PATCH"))}))
+        } else {
+            verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PATCH))
+        }
     }
 
 }
