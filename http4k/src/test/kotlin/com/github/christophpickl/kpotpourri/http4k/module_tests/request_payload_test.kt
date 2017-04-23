@@ -3,8 +3,6 @@ package com.github.christophpickl.kpotpourri.http4k.module_tests
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.post
-import com.github.christophpickl.kpotpourri.test4k.skip
-import com.google.common.io.ByteSource
 import org.testng.annotations.Test
 
 
@@ -60,19 +58,18 @@ import org.testng.annotations.Test
         )
     }
 
-    fun `When ByteArray request body, then ByteArray sent`() {
-        skip("not yet implemented. see: RequestWithEntityOpts.")
-        val bytes = byteArrayOf(0, 1, 1, 0)
-        wheneverExecuteHttpMockReturnResponse()
-
-        http4kWithMock().post<Unit>(testUrl, body = bytes)
-
-        verifyHttpMockExecutedWithRequest(
-                method = HttpMethod4k.POST,
-                headers = mapOf("Content-Type" to "???/???"),
-                requestBody = DefiniteRequestBody.DefiniteBytesBody(ByteSource.wrap(bytes))
-        )
-    }
+//    fun `When ByteArray request body, then ByteArray sent`() {
+//        val bytes = byteArrayOf(0, 1, 1, 0)
+//        wheneverExecuteHttpMockReturnResponse()
+//
+//        http4kWithMock().post<Unit>(testUrl, body = bytes)
+//
+//        verifyHttpMockExecutedWithRequest(
+//                method = HttpMethod4k.POST,
+//                headers = mapOf("Content-Type" to "???/???"),
+//                requestBody = DefiniteRequestBody.DefiniteBytesBody(ByteSource.wrap(bytes))
+//        )
+//    }
 
 
     private data class Dto(val name: String, val age: Int) {
