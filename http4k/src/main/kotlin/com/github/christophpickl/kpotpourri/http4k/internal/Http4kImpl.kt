@@ -60,7 +60,7 @@ internal class Http4kImpl(
 
         val request4k = Request4k(
                 method = method,
-                url = buildUrl(requestOpts, url),
+                url = UrlBuilder.build2(url, globals, requestOpts),
                 headers = headers.map,
                 requestBody = requestTypeAndBody?.requestBody
         )
@@ -70,15 +70,6 @@ internal class Http4kImpl(
         log.trace { "response body: <<${response4k.bodyAsString}>>" }
         checkStatusCode(globals.statusCheck, requestOpts.statusCheck, request4k, response4k)
         return castReturnType(response4k, returnType)
-    }
-
-    private fun buildUrl(requestOpts: AnyRequestOpts, url: String): String {
-        val maybeOverriddenBaseUrl = if (requestOpts.disableBaseUrl) {
-            url
-        } else {
-            globals.baseUrl.combine(url)
-        }
-        return UrlBuilder.build(maybeOverriddenBaseUrl, requestOpts.queryParams)
     }
 
     @Suppress("UNCHECKED_CAST")

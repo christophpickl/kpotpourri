@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.http4k.get
+import com.github.christophpickl.kpotpourri.test4k.skip
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 
 
@@ -30,11 +31,26 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
         http4k = buildCustomHttp4k {
             queryParams += "k" to "v"
         }
-        //FIXME test me
 
         http4k.get<Any>(mockEndpointUrl)
 
         verifyWiremockGet(MockRequest("$mockEndpointUrl?k=v"))
+    }
+
+
+    fun `When query param is set in globals and request, Then request overrides`() {
+        val queryParamUrlSuffix = "?k=request"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+
+        http4k = buildCustomHttp4k {
+            queryParams += "k" to "global"
+        }
+
+        http4k.get<Any>(mockEndpointUrl) {
+            queryParams += "k" to "request"
+        }
+
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
     }
 
     fun `Given query params in baseUrl, When query param is set, Then params are concatenated properly`() {
@@ -61,6 +77,22 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
         }
         http4k.get<Any>("") {
             queryParams += "k3" to "v3"
+        }
+
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+    }
+
+    fun `Given same query param in baseUrl, globals and request, Then params are duplicated, MEH`() {
+        skip("support baseUrl query param parsing and override properly") // MINOR support baseUrl query param parsing and override properly
+        val queryParamUrlSuffix = "?k=request"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+
+        http4k = buildCustomHttp4k {
+            baseUrlBy("$wiremockBaseUrl$mockEndpointUrl?k=base")
+            queryParams += "k" to "global"
+        }
+        http4k.get<Any>("") {
+            queryParams += "k" to "request"
         }
 
         verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
