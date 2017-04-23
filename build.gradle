@@ -25,6 +25,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
         classpath 'com.autoscout24.gradle:gradle-todo-plugin:1.0'
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1" // as i dont know how to apply via plugins {} to submodules
+        classpath 'org.standardout:gradle-versioneye-plugin:1.4.0'
     }
 }
 
@@ -33,6 +34,12 @@ println "[KPOT] -D BINTRAY_USER=${System.getenv('BINTRAY_USER')}"
 
 group = 'com.github.christophpickl.kpotpourri'
 version = myVersion
+
+
+apply plugin: 'org.standardout.versioneye'
+versioneye {
+    includeSubProjects = true
+}
 
 allprojects {
     group = 'com.github.christophpickl.kpotpourri'
