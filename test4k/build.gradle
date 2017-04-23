@@ -4,7 +4,7 @@ dependencies {
     // no dependency to project :common, as this would lead to cyclic dependency
     compile "org.testng:testng:" + rootProject.version_testng
     compile "com.natpryce:hamkrest:1.3.0.0" + rootProject.version_hamkrest
-    compile "com.nhaarman:mockito-kotlin:1.4.0" + rootProject.version_mockito_kotlin
+    compile "com.nhaarman:mockito-kotlin:" + rootProject.version_mockito_kotlin
 
     runtime "ch.qos.logback:logback-core:" + rootProject.version_logback
 }
