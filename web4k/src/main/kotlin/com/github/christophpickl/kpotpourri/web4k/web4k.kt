@@ -32,7 +32,7 @@ class WebAppInitializingConfiguration : AnnotationConfiguration() {
 class MyWebAppInitializer : WebApplicationInitializer {
     val log = LOG {}
     override fun onStartup(container: ServletContext) {
-        log.info("On startup ...")
+        log.info("Starting up servlet context ...")
     }
 }
 

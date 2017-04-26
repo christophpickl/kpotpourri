@@ -114,6 +114,7 @@ subprojects { subproject ->
         compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
         compile "io.github.microutils:kotlin-logging:" + version_kotlin_logging
+        runtime "org.slf4j:jcl-over-slf4j:" + rootProject.version_jcl
         compile "com.google.guava:guava:" + version_guava
 
         if (subproject.name != "test4k") {

@@ -16,40 +16,44 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 
 fun main(args: Array<String>) {
+    println("MAIN... START")
     JettyServer(
             springConfig = DemoSpringConfig::class,
-            port = 8441,
-            contextPath = "/test").startInteractively()
+            port = TEST_PORT,
+            servletPrefix = SERVLET_PREFIX).startInteractively()
+    println("MAIN... END")
 }
+
 @Configuration
 @Import(WebConfig::class)
-internal class DemoSpringConfig {
+class DemoSpringConfig {
     @Bean fun myResource() = MyResource()
 }
 
+private val TEST_PORT = 8442
+private val SERVLET_PREFIX = "/test"
 private val DUMMY_RESPONSE = "test dummy response"
-@Path("/resource")
+
+@Path("/")
 class MyResource {
 
     @GET
     @Path("/")
-    @Produces("application/json")
+    @Produces("text/plain")
     fun getRoot() = DUMMY_RESPONSE
 
 }
 
 @Test class JettyServerIntegrationTest {
 
-    private val port = 8441
-    private val contextPath = "/test"
 
     private lateinit var jetty: JettyServer
 
-    @BeforeClass fun `init jetty`() {
+    @BeforeClass fun `start jetty`() {
         jetty = JettyServer(
                 springConfig = DemoSpringConfig::class,
-                port = port,
-                contextPath = contextPath)
+                port = TEST_PORT,
+                servletPrefix = SERVLET_PREFIX)
         jetty.start()
     }
 
@@ -59,7 +63,7 @@ class MyResource {
 
     fun `make a GET request and proper response should have been returned`() {
         val http4k = buildHttp4k {
-            baseUrlBy("http://localhost:$port$contextPath")
+            baseUrlBy("http://localhost:$TEST_PORT$SERVLET_PREFIX")
         }
 
         val response = http4k.get<Response4k>("/")
@@ -69,6 +73,5 @@ class MyResource {
                 headers = response.headers // just copy them
         )
     }
-
 
 }

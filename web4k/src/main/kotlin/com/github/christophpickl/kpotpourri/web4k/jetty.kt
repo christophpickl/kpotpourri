@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.web4k
 
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.webapp.Configuration
 import org.eclipse.jetty.webapp.WebAppContext
@@ -12,23 +13,26 @@ import kotlin.reflect.KClass
 class JettyServer(
         private val springConfig: KClass<*>,
         private val port: Int = DEFAULT_BUFFER_SIZE,
-        private val contextPath: String = "/rest"
+        private val servletPrefix: String = "/rest"
 ) {
 
     companion object {
         val DEFAULT_PORT = 8442
     }
-    private lateinit var server: Server
+
+    private val log = LOG {}
+
+    private var server: Server? = null
 
     fun start() {
         println("Starting Jetty ...")
 
         server = Server(DEFAULT_PORT)
-        server.handler = newContext()
-        server.start()
+        server!!.handler = newContext()
+        server!!.start()
 
         println()
-        println("Jetty started at http://localhost:$port$contextPath :)")
+        println("Jetty started at http://localhost:$port$servletPrefix :)")
     }
 
     private fun newContext(): WebAppContext {
@@ -39,7 +43,7 @@ class JettyServer(
 
         initReasEasyAndSpring(context)
 
-        context.addFilter(RequestResponseDumpFilter::class.java, "$contextPath/*", null)
+        context.addFilter(RequestResponseDumpFilter::class.java, "$servletPrefix/*", null)
 
         val configs = arrayOf<Configuration>(WebAppInitializingConfiguration())
         context.configurations = configs
@@ -50,18 +54,19 @@ class JettyServer(
     }
 
     private fun initReasEasyAndSpring(context: WebAppContext) {
-        context.setInitParameter("resteasy.servlet.mapping.prefix", contextPath)
+        log.info { "Registering RestEasy servlet mapping prefix: $servletPrefix" }
+        context.setInitParameter("resteasy.servlet.mapping.prefix", servletPrefix)
 
         context.addEventListener(ResteasyBootstrap())
-        context.addServlet(HttpServletDispatcher::class.java, "$contextPath/*")
+        context.addServlet(HttpServletDispatcher::class.java, "$servletPrefix/*")
 
         context.addEventListener(SpringContextLoaderListener())
         context.setInitParameter("contextClass", AnnotationConfigWebApplicationContext::class.java.name)
+        log.info { "Registering spring config: ${springConfig.java.name}" }
         context.setInitParameter("contextConfigLocation", springConfig.java.name)
-
     }
 
-    fun startInteractively()  {
+    fun startInteractively() {
         start()
         println("Hit ENTER to quit Jetty.")
         readLine()
@@ -70,13 +75,11 @@ class JettyServer(
     }
 
     fun stop() {
-        @Suppress("SENSELESS_COMPARISON")
-        if (server == null) {
-            throw IllegalStateException("Jetty was not yet started!")
-        }
-        println("Stopping Jetty...")
-        server.stop()
-        server.join()
+        server?.let {
+            println("Stopping Jetty...")
+            it.stop()
+            it.join()
+        } ?: throw IllegalStateException("Jetty was not yet started!")
     }
 
 }
