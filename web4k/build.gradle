@@ -1,0 +1,26 @@
+
+
+apply plugin: "kotlin-spring"
+
+dependencies {
+    compile project(':common4k')
+
+    // web server
+    runtime "javax.servlet:javax.servlet-api:" + rootProject.version_servlet
+    compile "org.eclipse.jetty.aggregate:jetty-all:" + rootProject.version_jetty
+    compile "org.jboss.resteasy:resteasy-jaxrs:" + rootProject.version_resteasy
+    compile "org.jboss.resteasy:resteasy-servlet-initializer:" + rootProject.version_resteasy
+    compile "org.jboss.resteasy:resteasy-spring:" + rootProject.version_resteasy
+    compile "org.springframework:spring-web:" + rootProject.version_spring
+    compile "org.ow2.asm:asm:" + rootProject.version_asm
+
+    // json
+    compile "org.jboss.resteasy:resteasy-jackson2-provider:" + rootProject.version_resteasy_jackson
+    compile "com.fasterxml.jackson.core:jackson-core:" + rootProject.version_jackson
+    compile "com.fasterxml.jackson.core:jackson-annotations:" + rootProject.version_jackson
+    compile "com.fasterxml.jackson.core:jackson-databind:" + rootProject.version_jackson
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:" + rootProject.version_jackson_kotlin
+
+    testCompile project(':http4k')
+    testRuntime project(':http4k-apache')
+}

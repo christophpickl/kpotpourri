@@ -42,7 +42,7 @@ class FuelHttpClient(private val metaMap: MetaMap) : HttpClient {
     override fun execute(request4k: Request4k): Response4k {
         log.debug { "execute($request4k) ... $metaMap" }
 
-        val (request, response, result) = request4k.url.httpAny(request4k.method)
+        val (_, response, result) = request4k.url.httpAny(request4k.method)
                 .apply {
                     header(request4k.headers)
                     if (request4k.method == HttpMethod4k.PATCH) {

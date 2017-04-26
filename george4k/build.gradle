@@ -1,0 +1,11 @@
+
+// This is a Kotlin SDK for the George API.
+
+dependencies {
+    compile project(':common4k')
+    compile project(':http4k')
+    runtime project(':http4k-apache')
+
+    testCompile project(':wiremock4k')
+    testCompile project(':common4k').sourceSets.test.output
+}

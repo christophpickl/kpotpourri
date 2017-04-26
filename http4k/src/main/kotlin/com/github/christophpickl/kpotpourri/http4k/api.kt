@@ -10,7 +10,7 @@ import com.github.christophpickl.kpotpourri.http4k.internal.MutableMetaMap
 import kotlin.reflect.KClass
 
 
-fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit): Http4k {
+fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit = {}): Http4k {
     val builder = Http4kBuilder()
     withBuilder.invoke(builder)
     return builder.end()
