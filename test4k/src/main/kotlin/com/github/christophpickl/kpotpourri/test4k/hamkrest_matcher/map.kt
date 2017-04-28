@@ -4,6 +4,9 @@ import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.describe
 
+/**
+ * Checks if the actual Map contains at least the given entry.
+ */
 fun <K, V> mapContains(entry: Pair<K, V>): Matcher<Map<K, V>> = object : Matcher.Primitive<Map<K, V>>() {
     override fun invoke(actual: Map<K, V>): MatchResult {
         return if (actual.containsKey(entry.first) && actual[entry.first] == entry.second) {
@@ -17,6 +20,9 @@ fun <K, V> mapContains(entry: Pair<K, V>): Matcher<Map<K, V>> = object : Matcher
     override val negatedDescription: String get() = "does not contain ${describe(entry)}"
 }
 
+/**
+ * Checks if the actual Map contains _exactly_ the given entries, ignoring the order.
+ */
 fun <K, V> mapContainsExactly(vararg entries: Pair<K, V>): Matcher<Map<K, V>> = object : Matcher.Primitive<Map<K, V>>() {
 
     private val entriesDescribed: String by lazy { describe(entries.joinToString(", ")) }
@@ -34,8 +40,10 @@ fun <K, V> mapContainsExactly(vararg entries: Pair<K, V>): Matcher<Map<K, V>> = 
     override val negatedDescription: String get() = "does not contain exactly $entriesDescribed"
 }
 
-// should actually be in commons, but as of cyclic dependency otherwise... :-/
-fun <K, V> Map<K, V>.containsExact(other: Map<K, V>): Boolean {
+/**
+ * Should actually be in common4k but that would introduce a cyclic dependency.
+ */
+private fun <K, V> Map<K, V>.containsExact(other: Map<K, V>): Boolean {
     this.entries.forEach { (k, v) ->
         if (!other.contains(k) || other[k] != v) {
             return false
