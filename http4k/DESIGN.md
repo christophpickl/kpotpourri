@@ -74,7 +74,7 @@ http4k.post("http://localhost/dto") {
 ## Setting Up
 
 ```kotlin
-val http4k = buildHttp4k() {
+val http4k = buildHttp4k {
     baseUrl = "http://some.server/rest"
     queryParams += "q" to "value"
     headers += "Accept" to "application/json"

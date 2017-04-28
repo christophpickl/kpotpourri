@@ -16,7 +16,7 @@ class HeadersMap {
     }
 
     fun addAll(add: Map<String, String>) {
-        add.forEach { k, v -> addEntry(k, v) }
+        add.forEach(this::addEntry)
     }
 
     private fun addEntry(key: String, value: String) {

@@ -12,11 +12,13 @@ import com.github.christophpickl.kpotpourri.test4k.fail
 import org.testng.annotations.Test
 import kotlin.reflect.KClass
 
+@Suppress("unused")
 val Request4k.Companion.testDummy: Request4k get() = Request4k(
         method = HttpMethod4k.GET,
         url = "/my"
 )
 
+@Suppress("unused")
 val Response4k.Companion.testDummy: Response4k get() = Response4k(
         statusCode = SC_200_Ok,
         bodyAsString = "response body"

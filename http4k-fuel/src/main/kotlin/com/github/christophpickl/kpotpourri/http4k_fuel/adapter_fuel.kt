@@ -7,7 +7,6 @@ import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
-import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientFactory
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.httpDelete
@@ -16,9 +15,6 @@ import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpPut
 import com.github.kittinunf.result.Result
 
-class FuelHttpClientFactory : HttpClientFactory {
-    override fun build(metaMap: MetaMap) = FuelHttpClient(metaMap)
-}
 
 class FuelHttpClient(private val metaMap: MetaMap) : HttpClient {
 

@@ -34,9 +34,9 @@ interface GithubApi {
 
 class GithubApiImpl(
         private val config: GithubConfig,
-        private val protocol: HttpProtocol = HttpProtocol.Https,
-        private val hostName: String = "api.github.com",
-        private val port: Int = 443
+        protocol: HttpProtocol = HttpProtocol.Https,
+        hostName: String = "api.github.com",
+        port: Int = 443
 ) : GithubApi {
 
     private val log = LOG {}
@@ -86,7 +86,7 @@ class GithubApiImpl(
     override fun listTags() =
             http4k.get<Array<Tag>>("/tags")
                     .toList()
-                    .sortedBy { it.name }
+                    .sortedBy(Tag::name)
 
     /**
      * PATCH /repos/:owner/:repo/milestones/:number

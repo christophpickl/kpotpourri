@@ -102,7 +102,7 @@ private val testPort = 8082
         val actualTags = testee().listTags()
 
         verifyWiremockGet(MockRequest(requestPath))
-        assertThat(actualTags.map { it.name }, com.natpryce.hamkrest.equalTo(listOf("1.0", "1.1")))
+        assertThat(actualTags.map(Tag::name), com.natpryce.hamkrest.equalTo(listOf("1.0", "1.1")))
     }
 
     fun `close milestone - sunshine`() {

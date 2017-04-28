@@ -96,7 +96,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     fun `Given default Http4k, When POST with JSON request body and custom response body, Then both should be ok`() {
         val requestDto = com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy1
         val responseDto  = com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy2
-        givenPostToMockEndpointUrl() {
+        givenPostToMockEndpointUrl {
             withBody(responseDto.toJson())
         }
 

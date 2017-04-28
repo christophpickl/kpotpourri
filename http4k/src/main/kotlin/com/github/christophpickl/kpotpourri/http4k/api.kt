@@ -56,6 +56,7 @@ inline fun <reified R : Any> Http4k.put(url: String, body: Any = Unit, noinline 
 inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteX(url, R::class, withOpts)
 inline fun <reified R : Any> Http4k.patch(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchX(url, body, R::class, withOpts)
 
+@Suppress("unused")
 /**
  * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.
  *

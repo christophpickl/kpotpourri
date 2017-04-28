@@ -50,11 +50,11 @@ class RequestResponseDumpFilter : HttpFilter() {
     }
 
     private fun formatHeaders(response: HttpServletResponse): String {
-        return _formatHeaders(response.headerNames, { response.getHeader(it) })
+        return _formatHeaders(response.headerNames, response::getHeader)
     }
 
     private fun formatHeaders(request: HttpServletRequest): String {
-        return _formatHeaders(request.headerNames.toList(), { request.getHeader(it) })
+        return _formatHeaders(request.headerNames.toList(), request::getHeader)
 
     }
 

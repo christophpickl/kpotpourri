@@ -47,6 +47,7 @@ fun String.htmlize() =
 /**
  * Save the string to the given file using Guava. No validation at all.
  */
+// MINOR test me
 fun String.saveToFile(target: File) {
     Files.write(this, target, Charsets.UTF_8)
 }
@@ -89,7 +90,7 @@ fun String.splitAsArguments(): List<String> {
     val result = mutableListOf<String>()
     var stringCollect = StringBuilder()
     var quoteOpen = false
-    for (index in 0..length - 1) {
+    (0..length - 1).forEach { index ->
         val char = this[index]
         if (char == '\"') {
             if (quoteOpen) {

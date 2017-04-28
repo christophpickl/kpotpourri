@@ -19,6 +19,7 @@ fun Array<out Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: 
 /**
  * Prints the output of `toPrettyString` to std out.
  */
+// MINOR test me
 fun Array<out Any>.prettyPrint(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) {
     println(toPrettyString(prefix, joiner))
 }
@@ -36,6 +37,7 @@ fun List<Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: Strin
 /**
  * Prints the output of `toPrettyString` to std out.
  */
+// MINOR test me
 fun List<Any>.prettyPrint(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) {
     println(toPrettyString(prefix, joiner))
 }
@@ -58,7 +60,7 @@ fun <T> List<T>.plusIf(condition: Boolean, elementToAdd: T): List<T> {
  * Checks if there are the same keys for both maps.
  */
 fun <K, V> Map<K, V>.hasIntersection(that: Map<K, V>): Boolean {
-    return this.keys.firstOrNull { that.containsKey(it) } != null
+    return this.keys.firstOrNull(that::containsKey) != null
 }
 
 /**

@@ -71,7 +71,7 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
 
     @Test(dataProvider = "provideVersionSampleAndReadExecution")
     fun `read versionX - Given default version, When hit enter, Then default version is returned and output contains default`(defaultVersion: Version, @Suppress("UNUSED_PARAMETER") ignore: () -> Any, readWithDefault: (Any) -> Any) {
-        val stdout = hitEnter() {
+        val stdout = hitEnter {
             readWithDefault(defaultVersion) shouldMatchValue defaultVersion
         }
         assertThat(stdout, containsSubstrings(defaultVersion.niceString))

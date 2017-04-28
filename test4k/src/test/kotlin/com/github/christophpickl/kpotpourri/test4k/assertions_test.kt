@@ -7,7 +7,7 @@ import org.testng.annotations.Test
     private val ANY_MESSAGE = "testMessage"
 
     fun `assertThrown without matcher - Given proper exception type, Should match type`() {
-        assertThrown<MyException>() {
+        assertThrown<MyException> {
             throw MyException(ANY_MESSAGE)
         }
     }

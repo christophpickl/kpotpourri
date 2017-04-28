@@ -11,6 +11,7 @@ private val log = LOG {}
 /**
  * Ignores the thrown exception when invoking `Closeable.close()`.
  */
+// MINOR test me
 fun Closeable.closeSilently() {
     try {
         close()

@@ -72,7 +72,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
     val niceString: String by lazy {
         numbers.joinToString(".") + if (type == VersionType.Snapshot) "-SNAPSHOT" else ""
     }
-
+    // MINOR test readXyz
     data class VersionParts1(override val type: VersionType, val version: Int) :
             Version(type, listOf(version)) {
 

@@ -12,41 +12,11 @@ package com.github.christophpickl.kpotpourri.common
  */
 annotation class KotlinNoArg
 
-enum class Two { A, B }
-/*
-fun whenTwo(two: Two) {
-    // no error, just a warning
-    when(two) {
-        Two.A -> return
-    }
-    // error but introduces warning about unused :-/
-    val unused = when(two) {
-        Two.A -> return
-    }
-    // as nice it can get
-    when(two) {
-        Two.A -> return
-    }.safe
-}
-fun whenTwo2(two: Two) = when (two) {
-    Two.A -> Unit
-// compile error
-}
- */
-fun foo() {
-    "".enforceAllBranchesCovered
-    Unit.enforceAllBranchesCovered
-//    Nothing.enforceAllBranchesCovered // ... nope
-//    val two = Two.A
-//    val x: Nothing = when(two) {
-//        Two.A -> return
-//    }
-//    when(two) {
-//        Two.A -> return
-//    }.enforceAllBranchesCovered2
-}
 // Nothing is final, therefor cant add as <A : Nothing>
+// MINOR pseudo-test me
 val Nothing.enforceAllBranchesCovered2: Unit get() = Unit
+// MINOR maybe can use Any?
 val <A> A.enforceAllBranchesCovered: Unit get() = Unit
 
+@Suppress("unused")
 fun sleepRand() = Thread.sleep((Math.random() * 500.0).toLong() + 500)

@@ -42,6 +42,6 @@ class MutableMetaMap : MetaMap() {
  */
 class TimeoutException(message: String, cause: Exception? = null): SocketTimeoutException(message) {
     init {
-        cause?.let { initCause(it) }
+        cause?.let(this::initCause)
     }
 }
