@@ -10,6 +10,7 @@ import com.github.christophpickl.kpotpourri.github.non_test.toTagsJson
 import com.github.christophpickl.kpotpourri.github.non_test.wrapJsonArrayBrackets
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
+import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
@@ -210,7 +211,7 @@ private val testPort = 8082
     data class StateObject(
             val state: String
     ) {
-        fun toJson() = mapper.writeValueAsString(this)!!
+        fun toJson() = mapper.asString(this)!!
     }
 
 }

@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.web4k
 import com.github.christophpickl.kpotpourri.common.exception.formatted
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
+import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Custom
 import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Default
@@ -98,7 +99,7 @@ private object JsonErrorHandler : CustomErrorHandler {
         error.response.contentType = "application/json"
         // maybe display request headers...?
 
-        val json = mapper.writeValueAsString(ErrorResponse(
+        val json = mapper.asString(ErrorResponse(
                 message = if (error.response is Response) error.response.reason else null,
                 statusCode = error.response.status,
                 // TODO if wrong media type is sent, this only contains "Bad Request",

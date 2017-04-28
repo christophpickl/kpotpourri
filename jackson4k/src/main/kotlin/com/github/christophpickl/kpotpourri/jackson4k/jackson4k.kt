@@ -36,3 +36,5 @@ fun buildJackson4kObjectMapper(
         // setSerializationInclusion(JsonInclude.Include.ALWAYS)
     }
 }
+
+fun ObjectMapper.asString(toBeJsonified: Any) = writeValueAsString(toBeJsonified)!!

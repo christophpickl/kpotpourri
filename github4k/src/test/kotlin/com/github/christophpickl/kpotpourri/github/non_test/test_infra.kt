@@ -11,6 +11,7 @@ import com.github.christophpickl.kpotpourri.github.Milestone
 import com.github.christophpickl.kpotpourri.github.State
 import com.github.christophpickl.kpotpourri.github.Tag
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
+import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
@@ -92,7 +93,7 @@ val CreateReleaseRequest.Companion.testInstance get() = CreateReleaseRequest(
         prerelease = true
 )
 
-fun CreateReleaseRequest.toJson() = mapper.writeValueAsString(this)!!
+fun CreateReleaseRequest.toJson() = mapper.asString(this)
 fun CreateReleaseRequest.toEqualJson(): StringValuePattern = equalTo(toJson())
 
 val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
@@ -106,7 +107,7 @@ val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
         prerelease = true
 )
 
-fun CreateReleaseResponse.toJson() = mapper.writeValueAsString(this)!!
+fun CreateReleaseResponse.toJson() = mapper.asString(this)
 
 val AssetUpload.Companion.testInstance get() = AssetUpload(
         releaseId = 1,

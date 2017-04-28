@@ -3,11 +3,16 @@ package com.github.christophpickl.kpotpourri.http4k.module_tests
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.post
+import com.github.christophpickl.kpotpourri.jackson4k.asString
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import org.testng.annotations.Test
 
 
 @Test class RequestPayloadTest : ComponentTest() {
 
+    companion object {
+        private val mapper = buildJackson4kObjectMapper()
+    }
     private val requestBody = "requestBody"
 
     fun `When String request body, then string sent and plain text header set`() {
@@ -58,6 +63,7 @@ import org.testng.annotations.Test
         )
     }
 
+    // MINOR implement test for byte array request payload
 //    fun `When ByteArray request body, then ByteArray sent`() {
 //        val bytes = byteArrayOf(0, 1, 1, 0)
 //        wheneverExecuteHttpMockReturnResponse()
@@ -77,7 +83,7 @@ import org.testng.annotations.Test
             val testee = Dto("a", 1)
         }
 
-        fun toJson() = "{\"name\":\"$name\",\"age\":$age}"
+        fun toJson() = mapper.asString(this)
     }
 
 }
