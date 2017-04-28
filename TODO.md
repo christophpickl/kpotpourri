@@ -37,6 +37,9 @@
 
 ## Low
 
+* fine tune dokka output (XyzKt files, code format, ...)
+* @BUILD: automatically execute dokka task on package
+* @BUILD: creating sources artifact in gradle for MyPublication doesnt work
 * versioneye tracks only deps for reactor project :-/
 * own android lib (harvest yobu)
 * deploy to official maven repo (see nat pryce's hamkrest for how to do that)

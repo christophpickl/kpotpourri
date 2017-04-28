@@ -5,8 +5,12 @@ import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteBytesBody
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteStringBody
-import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.BytesBody
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.JsonBody
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.None
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.StringBody
 import com.github.christophpickl.kpotpourri.http4k.RequestWithEntityOpts
+import com.github.christophpickl.kpotpourri.jackson4k.asString
 
 private val log = LOG {}
 
@@ -23,7 +27,7 @@ internal fun prepareBodyAndContentType(requestOpts: AnyRequestOpts): TypeAndBody
     return when (body) {
         is None -> null
         is StringBody -> TypeAndBody("text/plain", DefiniteStringBody(body.stringEntity))
-        is JsonBody -> TypeAndBody("application/json", DefiniteStringBody(mapper.writeValueAsString(body.jacksonEntity)))
+        is JsonBody -> TypeAndBody("application/json", DefiniteStringBody(mapper.asString(body.jacksonEntity)))
         is BytesBody -> TypeAndBody(body.contentType, DefiniteBytesBody(body.bytes))
     }
 }

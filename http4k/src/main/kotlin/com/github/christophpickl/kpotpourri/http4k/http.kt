@@ -6,6 +6,7 @@ import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 interface HeadersConfig {
     val headers: HeadersMap
 
+    // TODO add "accept", ... and other common stuff
     fun addHeader(header: Pair<String, String>) {
         headers += header
     }

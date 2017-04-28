@@ -1,16 +1,24 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
+import com.github.christophpickl.kpotpourri.http4k.BodyfullRequestOpts
+import com.github.christophpickl.kpotpourri.http4k.BodylessRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteBytesBody
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteStringBody
-import com.github.christophpickl.kpotpourri.http4k.BodylessRequestOpts
-import com.github.christophpickl.kpotpourri.http4k.BodyfullRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.RequestBody
-import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.BytesBody
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.JsonBody
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.StringBody
+import com.github.christophpickl.kpotpourri.jackson4k.asString
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.google.common.io.ByteSource
 import org.testng.annotations.Test
 
 @Test class RequestBodyTest {
+
+    companion object {
+        private val mapper = buildJackson4kObjectMapper()
+    }
 
     fun `prepareBodyAndContentType - When prepare non-RequestWithEntityOpts, Then return null`() {
         val request = BodylessRequestOpts()
@@ -37,7 +45,9 @@ import org.testng.annotations.Test
         actual shouldMatchValue TypeAndBody("text/plain", DefiniteStringBody(stringEntity))
     }
 
-    data class Person(val name: String)
+    data class Person(val name: String) {
+        fun toJson() = mapper.asString(this)
+    }
 
     fun `prepareBodyAndContentType - When prepare sub-RequestWithEntityOpts with body JSON, Then return string and content type`() {
         val jsonEntity = Person("foobar")
@@ -45,7 +55,7 @@ import org.testng.annotations.Test
 
         val actual = prepareBodyAndContentType(request)
 
-        actual shouldMatchValue TypeAndBody("application/json", DefiniteStringBody("""{"name":"foobar"}"""))
+        actual shouldMatchValue TypeAndBody("application/json", DefiniteStringBody(jsonEntity.toJson()))
     }
 
     fun `prepareBodyAndContentType - When prepare sub-RequestWithEntityOpts with body bytes, Then return bytes and content type`() {

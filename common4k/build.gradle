@@ -2,7 +2,6 @@
 // common build.gradle
 
 dependencies {
-    testCompile "org.slf4j:jcl-over-slf4j:" + rootProject.version_jcl
     testCompile "ch.qos.logback:logback-core:" + rootProject.version_logback
     testCompile "ch.qos.logback:logback-classic:" + rootProject.version_logback
 }

@@ -5,6 +5,7 @@ import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchV
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isA
+import com.natpryce.hamkrest.isEmpty
 import org.testng.annotations.Test
 
 
@@ -57,6 +58,11 @@ import org.testng.annotations.Test
     fun `toPrettyString custom prefix and joiner`() {
         assertThat(listOf("a", "b").toPrettyString("* ", "\t"),
                 equalTo("* a\t* b"))
+    }
+
+    fun `plusIf ok`() {
+        assertThat(emptyList<String>().plusIf(false, "a"), isEmpty)
+        assertThat(emptyList<String>().plusIf(true, "a"), equalTo(listOf("a")))
     }
 
 }

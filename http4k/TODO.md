@@ -23,6 +23,7 @@
 * NotFoundException, BadRequestException, ... for most important status codes
 * multi form upload
 * support variable replacement in passed URL
+* enable/disable log output for (request/response) body
 
 ## TODOs Low
 

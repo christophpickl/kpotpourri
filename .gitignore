@@ -6,9 +6,11 @@
 /http4k-apache/build/
 /http4k-fuel/build/
 /http4k-tests/build/
+/jackson4k/build/
 /release4k/build/
 /swing4k/build/
 /test4k/build/
+/web4k/build/
 /wiremock4k/build/
 /.gradle/**
 

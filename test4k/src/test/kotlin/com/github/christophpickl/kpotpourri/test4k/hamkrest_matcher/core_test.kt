@@ -7,60 +7,71 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.startsWith
 import org.testng.annotations.Test
 
-
-@Test class CustomShouldTest {
-
-    fun `shouldMatchValue given equal objects should match`() {
-        "x" shouldMatchValue "x"
-    }
-
-    fun `shouldNotMatchValue given non-equal objects should match`() {
-        "x" shouldNotMatchValue "y"
-    }
-
-    fun `shouldMatchValue given non-equal objects should throw`() {
-        assertThrown<AssertionError> {
-            "x" shouldMatchValue "y"
-        }
-    }
-
-    fun `shouldNotMatchValue given equal objects should throw`() {
-        assertThrown<AssertionError> {
-            "x" shouldNotMatchValue "x"
-        }
-    }
-
-}
-
 @Test class CustomMatchersTest {
 
-    fun `allOf - vararg sunshine`() {
+    fun `allOf - Given vararg which mathes, Should not throw`() {
         assertThat("foobar", allOf(startsWith("f"), endsWith("r")))
     }
 
-    fun `allOf - vararg fail`() {
+    fun `allOf - Given vararg which not matches, Should throw`() {
         assertThrown<AssertionError> {
             assertThat("fooxxx", allOf(startsWith("f"), endsWith("r")))
         }
     }
 
-    fun `not given non-equal objects should match`() {
+    fun `allOf - Given list which matches, Should not throw`() {
+        assertThat("foobar", allOf(listOf(startsWith("f"), endsWith("r"))))
+    }
+
+    fun `allOf - Given list which empty matchers, Should throw`() {
+        assertThrown<IllegalArgumentException>({ e -> e.message!!.contains("empty")}) {
+            assertThat("", allOf(emptyList()))
+        }
+    }
+
+    fun `allOf - Given list which not matches, Should throw`() {
+        assertThrown<AssertionError> {
+            assertThat("fooxxx", allOf(listOf(startsWith("f"), endsWith("r"))))
+        }
+    }
+
+    fun `not - Given non-equal objects should match`() {
         assertThat("x", not(equalTo("y")))
     }
 
-    fun `notEqualTo given non-equal objects should match`() {
-        assertThat("x", notEqualTo("y"))
-    }
-
-    fun `not given equal objects should throw`() {
+    fun `not - Given equal objects should throw`() {
         assertThrown<AssertionError> {
             assertThat("x", not(equalTo("x")))
         }
     }
 
-    fun `notEqualTo given equal objects should throw`() {
+    fun `notEqualTo - Given non-equal objects should match`() {
+        assertThat("x", notEqualTo("y"))
+    }
+
+    fun `notEqualTo - Given equal objects should throw`() {
         assertThrown<AssertionError> {
             assertThat("x", notEqualTo("x"))
+        }
+    }
+
+    fun `nullValue - Given null string, Should not throw`() {
+        assertThat(null as String?, nullValue())
+    }
+
+    fun `nullValue - Given empty string, Should throw`() {
+        assertThrown<AssertionError> {
+            assertThat("", nullValue())
+        }
+    }
+
+    fun `notNullValue - Given empty string, Should not throw`() {
+        assertThat("", notNullValue())
+    }
+
+    fun `notNullValue - Given null string, Should throw`() {
+        assertThrown<AssertionError> {
+            assertThat(null as String?, notNullValue())
         }
     }
 
