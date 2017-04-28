@@ -11,12 +11,15 @@ import com.github.christophpickl.kpotpourri.github.Milestone
 import com.github.christophpickl.kpotpourri.github.State
 import com.github.christophpickl.kpotpourri.github.Tag
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import com.google.common.io.ByteSource
 import java.io.File
 
 private val log = LOG {}
+
+private val mapper = buildJackson4kObjectMapper()
 
 fun String.wrapJsonArrayBrackets() = "[ $this ]"
 
@@ -89,8 +92,8 @@ val CreateReleaseRequest.Companion.testInstance get() = CreateReleaseRequest(
         prerelease = true
 )
 
-fun CreateReleaseRequest.toEqualJson(): StringValuePattern = equalTo("""{"tag_name":"$tag_name","name":"$name","body":"$body","draft":$draft,"prerelease":$prerelease}""")
-
+fun CreateReleaseRequest.toJson() = mapper.writeValueAsString(this)!!
+fun CreateReleaseRequest.toEqualJson(): StringValuePattern = equalTo(toJson())
 
 val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
         id = 1,
@@ -103,7 +106,7 @@ val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
         prerelease = true
 )
 
-fun CreateReleaseResponse.toJson() = """{"id":$id,"url":"$url","tag_name":"$tag_name","name":"$name","body":"$body","draft":$draft,"prerelease":$prerelease}"""
+fun CreateReleaseResponse.toJson() = mapper.writeValueAsString(this)!!
 
 val AssetUpload.Companion.testInstance get() = AssetUpload(
         releaseId = 1,

@@ -9,9 +9,13 @@ import com.github.christophpickl.kpotpourri.github.non_test.toJson
 import com.github.christophpickl.kpotpourri.github.non_test.toTagsJson
 import com.github.christophpickl.kpotpourri.github.non_test.wrapJsonArrayBrackets
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
+import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.*
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.GET
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.PATCH
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.POST
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.natpryce.hamkrest.assertion.assertThat
@@ -19,12 +23,15 @@ import org.testng.annotations.Test
 
 private val testPort = 8082
 
-@Test class Github4kIntegrationTestes : WiremockTest(testPort) {
+@Test class Github4kIntegrationTest : WiremockTest(testPort) {
+
+    companion object {
+        private val mapper = buildJackson4kObjectMapper()
+    }
 
     private val repositoryOwner = "testOwner"
     private val repositoryName = "testName"
     private val endpointPrefix = "/repos/$repositoryOwner/$repositoryName"
-
     private val pathMilestones = "$endpointPrefix/milestones"
 
     fun `headers Authorization and Accept are always set`() {
@@ -107,7 +114,7 @@ private val testPort = 8082
         testee().close(milestone)
 
         verifyRequest(PATCH, requestPath) {
-            withRequestBody(equalTo("""{"state":"closed"}"""))
+            withRequestBody(equalTo(StateObject("closed").toJson()))
         }
     }
 
@@ -198,5 +205,12 @@ private val testPort = 8082
             hostName = "localhost",
             port = testPort
     )
+
+    @JsonObject
+    data class StateObject(
+            val state: String
+    ) {
+        fun toJson() = mapper.writeValueAsString(this)!!
+    }
 
 }
