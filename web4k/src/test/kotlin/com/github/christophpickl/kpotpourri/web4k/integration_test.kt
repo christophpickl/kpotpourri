@@ -5,24 +5,18 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
+import com.github.christophpickl.kpotpourri.web4k.non_test.MyResource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.testng.annotations.AfterClass
-import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
+import javax.servlet.FilterChain
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
-
-fun main(args: Array<String>) {
-    println("MAIN... START")
-    JettyServer(
-            springConfig = DemoSpringConfig::class,
-            port = TEST_PORT,
-            servletPrefix = SERVLET_PREFIX).startInteractively()
-    println("MAIN... END")
-}
 
 @Configuration
 @Import(WebConfig::class)
@@ -30,8 +24,6 @@ class DemoSpringConfig {
     @Bean fun myResource() = MyResource()
 }
 
-private val TEST_PORT = 8442
-private val SERVLET_PREFIX = "/test"
 private val DUMMY_RESPONSE = "test dummy response"
 
 @Path("/")
@@ -46,32 +38,61 @@ class MyResource {
 
 @Test class JettyServerIntegrationTest {
 
-
     private lateinit var jetty: JettyServer
 
-    @BeforeClass fun `start jetty`() {
-        jetty = JettyServer(
-                springConfig = DemoSpringConfig::class,
-                port = TEST_PORT,
-                servletPrefix = SERVLET_PREFIX)
+    private val defaultConfig = JettyConfig(
+            springConfig = DemoSpringConfig::class,
+            port = 8449,
+            servletPrefix = "/test"
+    )
+
+    private fun startJetty(config: JettyConfig) {
+        jetty = JettyServer(config)
         jetty.start()
     }
 
     @AfterClass fun `stop jetty`() {
-        jetty.stop()
+        if (jetty.isRunning) {
+            jetty.stop()
+        }
+    }
+
+    private fun http4k() = buildHttp4k {
+        baseUrlBy(jetty.fullUrl)
     }
 
     fun `make a GET request and proper response should have been returned`() {
-        val http4k = buildHttp4k {
-            baseUrlBy("http://localhost:$TEST_PORT$SERVLET_PREFIX")
-        }
+        startJetty(defaultConfig)
 
-        val response = http4k.get<Response4k>("/")
+        val response = http4k().get<Response4k>("/")
+
         response shouldMatchValue Response4k(
                 statusCode = SC_200_Ok,
                 bodyAsString = DUMMY_RESPONSE,
                 headers = response.headers // just copy them
         )
+    }
+
+    fun `When adding custom filter, Then it should have caught the header`() {
+        TestableHttpFilter.filtered.clear()
+        startJetty(defaultConfig.copy(filters = listOf(TestableHttpFilter::class)))
+
+        http4k().get<Response4k>("/")
+
+        TestableHttpFilter.filtered.size shouldMatchValue 1
+    }
+
+}
+
+class TestableHttpFilter : HttpFilter() {
+    companion object {
+        // static hack, as jetty requires us to use class references rather than object references
+        val filtered: MutableList<Pair<HttpServletRequest, HttpServletResponse>> = mutableListOf()
+    }
+
+    override fun doHttpFilter(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
+        chain.doFilter(request, response)
+        filtered.add(request to response)
     }
 
 }

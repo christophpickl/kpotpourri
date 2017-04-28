@@ -22,6 +22,9 @@ fun <T> allOf(matchers: List<Matcher<T>>): Matcher<T> {
 
 fun <T> not(negated: Matcher<T?>): Matcher<T?> = Matcher.Negation(negated)
 
+fun notNullValue() = not(equalTo(null))
+fun nullValue() = equalTo(null)
+
 fun <T> notEqualTo(expected: T) =
         not(equalTo(expected))
 

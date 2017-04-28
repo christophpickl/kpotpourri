@@ -16,3 +16,12 @@ fun <E: RuntimeException> E.tryOrRethrow(action: () -> Unit) {
         throw this.initCause(e)
     }
 }
+
+// TODO print stack trace as string
+/*
+StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            th.printStackTrace(pw);
+            pw.flush();
+            and get recursively the CAUSE
+ */
