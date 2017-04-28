@@ -25,3 +25,7 @@ StringWriter sw = new StringWriter();
             pw.flush();
             and get recursively the CAUSE
  */
+
+// TODO test this
+fun Array<StackTraceElement>.formatted() =
+        map { "${it.className}#${it.methodName}() at ${it.fileName}:${it.lineNumber}" }

@@ -5,7 +5,7 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.CustomHandler
+import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Custom
 import com.github.christophpickl.kpotpourri.web4k.non_test.MyResource
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
@@ -85,20 +85,31 @@ class MyResource {
         TestableHttpFilter.filtered.size shouldMatchValue 1
     }
 
-    fun `custom error handler`() {
-        val caughtErrors = mutableListOf<ErrorHandlingObject>()
-        startJetty(defaultConfig.copy(errorHandler = CustomHandler(object : SpecificErrorHandler {
-            override fun handle(error: ErrorHandlingObject) {
+    fun `error handler, When handler set to custom, Then error should have been propagated`() {
+        val caughtErrors = mutableListOf<ErrorObject>()
+        startJetty(defaultConfig.copy(errorHandler = Custom(object : CustomErrorHandler {
+            override fun handle(error: ErrorObject) {
                 caughtErrors.add(error)
             }
         })))
 
-        http4k().get<Response4k>("/") {
-            addHeader("accept" to "invalid")
-        }
+        anyInvalidHttpRequest()
 
         assertThat(caughtErrors.size, equalTo(1))
     }
+
+    fun `error handler, When handler set to JSON, Then JSON object should have been rendered`() {
+        startJetty(defaultConfig.copy(errorHandler = ErrorHandlerType.Json))
+
+        val response = anyInvalidHttpRequest()
+
+        println(response)
+    }
+
+    private fun anyInvalidHttpRequest() =
+            http4k().get<Response4k>("/") {
+                addHeader("accept" to "invalid")
+            }
 
 }
 

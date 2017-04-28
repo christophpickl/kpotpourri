@@ -1,8 +1,11 @@
 package com.github.christophpickl.kpotpourri.web4k
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.CustomHandler
-import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.DefaultHandler
+import com.github.christophpickl.kpotpourri.common.exception.formatted
+import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
+import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Custom
+import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Default
 import org.eclipse.jetty.server.Request
 import org.eclipse.jetty.server.Response
 import org.eclipse.jetty.server.handler.ErrorHandler
@@ -11,16 +14,32 @@ import java.io.Writer
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * Choose how to handle errors: A) default, 2) json or 3) custom defined handler.
+ */
 sealed class ErrorHandlerType {
-    object DefaultHandler : ErrorHandlerType()
-    class CustomHandler(val handler: SpecificErrorHandler) : ErrorHandlerType()
+
+    /** Means do nothing, let the default jetty handler do all the stuff (rendering HTML). */
+    object Default : ErrorHandlerType()
+
+    /** Respond in a JSON only style. */
+    object Json : ErrorHandlerType()
+
+    /** Define it the way you want :) */
+    class Custom(val handler: CustomErrorHandler) : ErrorHandlerType()
 }
 
-interface SpecificErrorHandler {
-    fun handle(error: ErrorHandlingObject)
+/**
+ * If ErrorHandlerType.Custom is set, this type is expected.
+ */
+interface CustomErrorHandler {
+    fun handle(error: ErrorObject)
 }
 
-data class ErrorHandlingObject(
+/**
+ * Compound value object containing all relevant data to handle an error.
+ */
+data class ErrorObject(
         val request: HttpServletRequest,
         val response: HttpServletResponse,
         val writer: Writer,
@@ -28,89 +47,89 @@ data class ErrorHandlingObject(
 )
 
 
+/**
+ * Will be registered when setting up jetty.
+ */
 // TODO does not catch 404s
 class RootErrorHandler(
         private val handlerType: ErrorHandlerType,
         private val exposeExceptions: Boolean
 ) : ErrorHandler() {
-    private val log = com.github.christophpickl.kpotpourri.common.logging.LOG {}
+
+    private val log = LOG {}
 
     override fun handle(target: String?, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse) {
         log.debug { "handle(target=$target, baseRequest=$baseRequest, request=$request, response=$response)" }
-//        val method = request.method
-//    if (!HttpMethod.GET.`is`(method) && !HttpMethod.POST.`is`(method) && !HttpMethod.HEAD.`is`(method)) {
-//        baseRequest.isHandled = true
-//        return
-//    }
+
+        val handler: CustomErrorHandler = when (handlerType) {
+            is Default -> return super.handle(target, baseRequest, request, response)
+            ErrorHandlerType.Json -> JsonErrorHandler
+            is Custom -> handlerType.handler
+        }
 
         baseRequest.isHandled = true
-//    if (_cacheControl != null)
-//        response.setHeader(HttpHeader.CACHE_CONTROL.asString(), _cacheControl)
-        val writer = ByteArrayISO8859Writer(4096)
-
-        val handler: SpecificErrorHandler = when (handlerType) {
-            DefaultHandler -> DefaultJsonErrorHandler
-            is CustomHandler -> handlerType.handler
+        response.setHeader("Cache-Control", "must-revalidate,no-cache,no-store")
+        ByteArrayISO8859Writer(4096).writeToResponse(response) { writer ->
+            handler.handle(ErrorObject(request, response, writer, exposeExceptions))
         }
-        handler.handle(ErrorHandlingObject(
-                request, response, writer, exposeExceptions
-        ))
+    }
 
-        writer.flush()
-        response.setContentLength(writer.size())
-        writer.writeTo(response.outputStream)
-        writer.destroy()
+    fun ByteArrayISO8859Writer.writeToResponse(response: HttpServletResponse, func: (ByteArrayISO8859Writer) -> Unit) {
+        func(this)
+        flush()
+        response.setContentLength(size())
+        writeTo(response.outputStream)
+        destroy()
     }
 
 }
 
+/**
+ * Renders proper JSON.
+ */
+private object JsonErrorHandler : CustomErrorHandler {
 
+    private val SERVLET_ATTRIBUTE_EXCEPTION = "javax.servlet.error.exception"
+    private val SERVLET_ATTRIBUTE_ERROR_MESSAGE = "javax.servlet.error.message"
 
-private object DefaultJsonErrorHandler : SpecificErrorHandler {
+    private val mapper = jacksonObjectMapper() // TODO dont render NULLs => use jackson4k (easier configuration)
 
-    private val mapper = jacksonObjectMapper() // TODO dont render NULLs
-
-    override fun handle(error: ErrorHandlingObject) {
+    override fun handle(error: ErrorObject) {
         error.response.contentType = "application/json"
         // maybe display request headers...?
-        val stackTrace = if (error.exposeExceptions) {
-            val thrown = error.request.getAttribute("javax.servlet.error.exception") as? Throwable
-            thrown?.toStackTrace()
-        } else {
-            null
-        }
 
         val json = mapper.writeValueAsString(JsonErrorPage(
                 message = if (error.response is Response) error.response.reason else null,
                 statusCode = error.response.status,
                 // TODO if wrong media type is sent, this only contains "Bad Request",
                 // but this is available: java.lang.IllegalArgumentException: RESTEASY003340: Failure parsing MediaType string: asdf
-                errorMessage = error.request.getAttribute("javax.servlet.error.message") as String,
+                errorMessage = error.request.getAttribute(SERVLET_ATTRIBUTE_ERROR_MESSAGE) as String,
                 requestMethod = error.request.method,
                 requestUrl = error.request.requestURL.toString(),
-                stackTrace = stackTrace
+                stackTrace = buildStackTrace(error)
         ))
         error.writer.write(json)
     }
 
+    private fun buildStackTrace(error: ErrorObject): StackTrace? {
+        if (!error.exposeExceptions) {
+            return null
+        }
+        val thrown = error.request.getAttribute(SERVLET_ATTRIBUTE_EXCEPTION) as? Throwable
+        return thrown?.toStackTrace()
+    }
+
 }
 
-private data class StackTrace(
-        /** The FQN. */
-        val type: String,
-        val message: String?,
-        val trace: List<String>,
-        val cause: StackTrace?
-)
+private fun Throwable.toStackTrace(): StackTrace =
+        StackTrace(
+                type = javaClass.name,
+                message = message,
+                trace = stackTrace.formatted(),
+                cause = cause?.toStackTrace()
+        )
 
-private fun Throwable.toStackTrace(): StackTrace {
-    return StackTrace(javaClass.name, message, parseStackElements(stackTrace), cause?.toStackTrace())
-}
-
-private fun parseStackElements(elements: Array<StackTraceElement>): List<String> {
-    return elements.map { "${it.className}#${it.methodName}() at ${it.fileName}:${it.lineNumber}" }
-}
-
+@JsonObject
 private data class JsonErrorPage(
         val requestMethod: String,
         val requestUrl: String,
@@ -119,4 +138,19 @@ private data class JsonErrorPage(
         val errorMessage: String,
         val message: String?,
         val stackTrace: StackTrace?
+)
+
+@JsonObject
+private data class StackTrace(
+        /** The full qualified name of the exception class. */
+        val type: String,
+
+        /** The (optional) exception message. */
+        val message: String?,
+
+        /** Stack trace elements formatted as string. */
+        val trace: List<String>,
+
+        /** Recursive root cause until we reach the end. */
+        val cause: StackTrace?
 )

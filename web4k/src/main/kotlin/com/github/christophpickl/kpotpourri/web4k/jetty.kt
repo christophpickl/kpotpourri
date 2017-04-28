@@ -16,8 +16,14 @@ import java.util.*
 import javax.servlet.Filter
 import kotlin.reflect.KClass
 
+/**
+ * If nothing else defined, 8442 will be default port used by Jetty.
+ */
 val DEFAULT_JETTY_PORT = 8442
 
+/**
+ * Global configuration object for Jetty and the associated web application.
+ */
 data class JettyConfig(
         val springConfig: KClass<*>,
         val port: Int = DEFAULT_JETTY_PORT,
@@ -27,9 +33,12 @@ data class JettyConfig(
         val filters: List<KClass<out Filter>> = emptyList(),
         val enableRequestResponseFilter: Boolean = true,
         val exposeExceptions: Boolean = false,
-        val errorHandler: ErrorHandlerType = ErrorHandlerType.DefaultHandler
+        val errorHandler: ErrorHandlerType = ErrorHandlerType.Default
 )
 
+/**
+ * Core class to start/stop Jetty server.
+ */
 class JettyServer(private val config: JettyConfig) {
 
     companion object {
@@ -37,12 +46,18 @@ class JettyServer(private val config: JettyConfig) {
         private val CONTEXT_PATH = "/"
     }
 
-    val fullUrl = combineUrlParts("http://localhost:${config.port}", CONTEXT_PATH, config.servletPrefix)
     private val log = LOG {}
-
     private var server: Server = Server(config.port)
+
+    /** Check if Jetty server is in RUNNING state. */
     val isRunning get() = server.isRunning
 
+    /** Full URL containing protocol, host, port, context and servlet path. */
+    val fullUrl = combineUrlParts("http://localhost:${config.port}", CONTEXT_PATH, config.servletPrefix)
+
+    /**
+     * Starts the server, or throws an error if it's already running/starting/started.
+     */
     fun start(suppressOutput: Boolean = false) {
         if (server.isRunning || server.isStarting || server.isStarted) {
             throw IllegalStateException("Jetty was already started!")
@@ -59,6 +74,9 @@ class JettyServer(private val config: JettyConfig) {
         if (!suppressOutput) logOrPrintln("Jetty started at $fullUrl :)")
     }
 
+    /**
+     * Starts the server and waits for user input to stop Jetty.
+     */
     fun startInteractively() {
         println("Starting jetty at $fullUrl")
         start(suppressOutput = true)
@@ -68,6 +86,9 @@ class JettyServer(private val config: JettyConfig) {
         println("Jetty stopped. Bye bye.")
     }
 
+    /**
+     * Will throw an error if server is not (yet) running.
+     */
     fun stop() {
         if (!server.isRunning) {
             throw IllegalStateException("Jetty was not yet started!")
@@ -83,6 +104,7 @@ class JettyServer(private val config: JettyConfig) {
         context.contextPath = CONTEXT_PATH
         context.isParentLoaderPriority = true
         context.configurations = arrayOf<Configuration>(WebAppInitializingConfiguration())
+        // always override the error handler (could also disable explicit setting via config though)
         context.errorHandler = RootErrorHandler(config.errorHandler, config.exposeExceptions)
         initReasEasyAndSpring(context)
 
