@@ -98,7 +98,7 @@ private object JsonErrorHandler : CustomErrorHandler {
         error.response.contentType = "application/json"
         // maybe display request headers...?
 
-        val json = mapper.writeValueAsString(JsonErrorPage(
+        val json = mapper.writeValueAsString(ErrorResponse(
                 message = if (error.response is Response) error.response.reason else null,
                 statusCode = error.response.status,
                 // TODO if wrong media type is sent, this only contains "Bad Request",
@@ -130,7 +130,7 @@ private fun Throwable.toStackTrace(): StackTrace =
         )
 
 @JsonObject
-private data class JsonErrorPage(
+data class ErrorResponse(
         val requestMethod: String,
         val requestUrl: String,
         val statusCode: Int,
@@ -141,7 +141,7 @@ private data class JsonErrorPage(
 )
 
 @JsonObject
-private data class StackTrace(
+data class StackTrace(
         /** The full qualified name of the exception class. */
         val type: String,
 

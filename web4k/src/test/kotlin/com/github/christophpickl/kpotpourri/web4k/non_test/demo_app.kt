@@ -1,7 +1,6 @@
 package com.github.christophpickl.kpotpourri.web4k.non_test
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.web4k.DemoSpringConfig
 import com.github.christophpickl.kpotpourri.web4k.JettyConfig
 import com.github.christophpickl.kpotpourri.web4k.JettyServer
 import com.github.christophpickl.kpotpourri.web4k.WebConfig
@@ -14,18 +13,17 @@ import javax.ws.rs.Produces
 
 fun main(args: Array<String>) {
     JettyServer(JettyConfig(
-            springConfig = DemoSpringConfig::class,
-            exposeExceptions = true
+            springConfig = DemoSpringConfig::class
     )).startInteractively()
 }
 
 @Configuration @Import(WebConfig::class)
 class DemoSpringConfig {
-    @Bean fun myResource() = MyResource()
+    @Bean fun demoResource() = DemoResource()
 }
 
 @Path("/")
-class MyResource {
+class DemoResource {
     @GET @Produces("text/plain")
     fun getRoot() = "this is root"
 

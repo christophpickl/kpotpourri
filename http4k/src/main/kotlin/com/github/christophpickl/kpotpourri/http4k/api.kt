@@ -7,6 +7,7 @@ import com.github.christophpickl.kpotpourri.http4k.internal.Http4kImpl
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientFactoryDetector
 import com.github.christophpickl.kpotpourri.http4k.internal.MutableMetaMap
+import com.github.christophpickl.kpotpourri.http4k.internal.mapper
 import kotlin.reflect.KClass
 
 
@@ -134,6 +135,11 @@ data class Response4k(
         val headers: Map<String, String> = emptyMap()
 ) {
     companion object // test extensions
+
+    // TODO TEST this
+    fun <T : Any> readJson(targetType: KClass<T>): T {
+        return mapper.readValue(bodyAsString, targetType.java)
+    }
 }
 
 
