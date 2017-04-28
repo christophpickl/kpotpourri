@@ -1,8 +1,9 @@
 
 dependencies {
+    compile project(':common4k')
+
     compile "com.fasterxml.jackson.core:jackson-core:" + rootProject.version_jackson
     compile "com.fasterxml.jackson.core:jackson-annotations:" + rootProject.version_jackson
     compile "com.fasterxml.jackson.core:jackson-databind:" + rootProject.version_jackson
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:" + rootProject.version_jackson_kotlin
-
 }

@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.github.christophpickl.kpotpourri.common.logging.LOG
 
+private val log = LOG {}
 
 /**
  * Changes the rendering/reading behaviour of Jackson in a simple to use and pre-configured way.
@@ -39,7 +41,7 @@ data class Jackson4kConfig(
 fun buildJackson4k(withConfig: WithConfig = {}): ObjectMapper {
     val config = Jackson4kConfig()
     withConfig.invoke(config)
-
+    log.debug { "buildJackson4k with: $config" }
     return jacksonObjectMapper().apply {
         if (config.indentOutput) {
             enable(SerializationFeature.INDENT_OUTPUT)
