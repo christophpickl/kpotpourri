@@ -1,9 +1,9 @@
 package com.github.christophpickl.kpotpourri.web4k
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.christophpickl.kpotpourri.common.exception.formatted
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
 import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Custom
 import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Default
 import org.eclipse.jetty.server.Request
@@ -92,7 +92,7 @@ private object JsonErrorHandler : CustomErrorHandler {
     private val SERVLET_ATTRIBUTE_EXCEPTION = "javax.servlet.error.exception"
     private val SERVLET_ATTRIBUTE_ERROR_MESSAGE = "javax.servlet.error.message"
 
-    private val mapper = jacksonObjectMapper() // TODO dont render NULLs => use jackson4k (easier configuration)
+    private val mapper = buildJackson4kObjectMapper() // TODO dont render NULLs => use jackson4k (easier configuration)
 
     override fun handle(error: ErrorObject) {
         error.response.contentType = "application/json"

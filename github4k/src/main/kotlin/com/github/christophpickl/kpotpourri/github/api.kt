@@ -52,9 +52,6 @@ class GithubApiImpl(
         private val GITHUB_MIMETYPE = "application/vnd.github.v3+json"
     }
 
-//    private val mapper = ObjectMapper()
-//            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
     private val http4k = buildHttp4k {
         baseUrlBy(baseUrlConfig)
         basicAuth(config.username, config.password)
