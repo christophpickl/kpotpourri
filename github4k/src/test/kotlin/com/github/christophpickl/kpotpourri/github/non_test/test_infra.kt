@@ -12,7 +12,7 @@ import com.github.christophpickl.kpotpourri.github.State
 import com.github.christophpickl.kpotpourri.github.Tag
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import com.google.common.io.ByteSource
@@ -20,10 +20,11 @@ import java.io.File
 
 private val log = LOG {}
 
-private val mapper = buildJackson4kObjectMapper()
+private val mapper = buildJackson4k()
 
 fun String.wrapJsonArrayBrackets() = "[ $this ]"
 
+@Suppress("unused")
 val GithubConfig.Companion.testRepository get() = GithubConfig(
         repositoryName = "gadsu_release_playground",
         repositoryOwner = "christophpickl",
@@ -46,6 +47,7 @@ private fun detectGithubPass(): String {
     return file.readText().trim()
 }
 
+@Suppress("unused")
 val Milestone.Companion.testInstance get() = Milestone(
         version = "1.0",
         number = 1,
@@ -60,6 +62,7 @@ fun Milestone.toJson() = """{
     "url": "$url"
 }"""
 
+@Suppress("unused")
 val Issue.Companion.testInstance get() = Issue(
         title = "testTitle",
         number = 1,
@@ -76,6 +79,7 @@ fun Issue.toJson() = """{
 
 fun List<Issue>.toIssuesJson() = map(Issue::toJson).joinToString().wrapJsonArrayBrackets()
 
+@Suppress("unused")
 val Tag.Companion.testInstance get() = Tag("testName")
 
 fun Tag.toJson() = """{
@@ -85,6 +89,7 @@ fun Tag.toJson() = """{
 fun List<Tag>.toTagsJson() = map(Tag::toJson).joinToString().wrapJsonArrayBrackets()
 
 
+@Suppress("unused")
 val CreateReleaseRequest.Companion.testInstance get() = CreateReleaseRequest(
         tag_name = "testTagName",
         name = "testName",
@@ -96,6 +101,7 @@ val CreateReleaseRequest.Companion.testInstance get() = CreateReleaseRequest(
 fun CreateReleaseRequest.toJson() = mapper.asString(this)
 fun CreateReleaseRequest.toEqualJson(): StringValuePattern = equalTo(toJson())
 
+@Suppress("unused")
 val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
         id = 1,
         url = "testUrl",
@@ -109,12 +115,15 @@ val CreateReleaseResponse.Companion.testInstance get() = CreateReleaseResponse(
 
 fun CreateReleaseResponse.toJson() = mapper.asString(this)
 
+@Suppress("unused")
 val AssetUpload.Companion.testInstance get() = AssetUpload(
         releaseId = 1,
         fileName = "testFileName.txt",
         contentType = "content/type",
         bytes = ByteSource.wrap(byteArrayOf(0, 1, 1, 0))
 )
+
+@Suppress("unused")
 internal val AssetUploadResponse.Companion.testInstance get() = AssetUploadResponse(
         name = "testName",
         state = "testeState",

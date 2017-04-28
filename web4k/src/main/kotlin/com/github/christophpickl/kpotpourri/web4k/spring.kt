@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.web4k
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.ws.rs.Consumes
@@ -30,7 +30,7 @@ class JsonParseExceptionMapper extends ExceptionMapper[JsonParseException] {
 @Produces(MediaType.APPLICATION_JSON)
 class KotlinObjectMapperProvider : ContextResolver<ObjectMapper> {
     override fun getContext(type: Class<*>?) =
-    buildJackson4kObjectMapper(
+    buildJackson4k {
             failOnUnknownProperties = true
-    )
+    }
 }

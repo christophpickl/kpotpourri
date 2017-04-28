@@ -10,7 +10,7 @@ import com.github.christophpickl.kpotpourri.http4k.StatusCode
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
@@ -19,7 +19,7 @@ import org.testng.annotations.BeforeMethod
 
 typealias HttpImplProducer = () -> HttpClient
 
-val testMapper = buildJackson4kObjectMapper()
+val testMapper = buildJackson4k()
 
 abstract class Http4kWiremockTest(
         private val httpImpl: HttpImplProducer,

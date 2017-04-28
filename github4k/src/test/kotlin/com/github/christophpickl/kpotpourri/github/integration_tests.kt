@@ -11,12 +11,10 @@ import com.github.christophpickl.kpotpourri.github.non_test.wrapJsonArrayBracket
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.GET
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.PATCH
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.POST
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.*
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.natpryce.hamkrest.assertion.assertThat
@@ -27,7 +25,7 @@ private val testPort = 8082
 @Test class Github4kIntegrationTest : WiremockTest(testPort) {
 
     companion object {
-        private val mapper = buildJackson4kObjectMapper()
+        private val mapper = buildJackson4k()
     }
 
     private val repositoryOwner = "testOwner"
@@ -211,7 +209,7 @@ private val testPort = 8082
     data class StateObject(
             val state: String
     ) {
-        fun toJson() = mapper.asString(this)!!
+        fun toJson() = mapper.asString(this)
     }
 
 }

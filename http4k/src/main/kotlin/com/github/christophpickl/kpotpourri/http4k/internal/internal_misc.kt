@@ -2,7 +2,7 @@ package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kObjectMapper
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.google.common.base.MoreObjects
 import java.net.SocketTimeoutException
 
@@ -15,7 +15,7 @@ interface HttpClientFactory {
     fun build(metaMap: MetaMap): HttpClient
 }
 
-internal val mapper = buildJackson4kObjectMapper()
+internal val mapper = buildJackson4k()
 
 /**
  * Meta data values for concrete implementations.
