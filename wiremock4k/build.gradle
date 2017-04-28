@@ -1,4 +1,5 @@
-// wiremock4k build.gradle
+
+// enhanced test capabilities for wiremock.
 
 dependencies {
     compile project(':common4k')

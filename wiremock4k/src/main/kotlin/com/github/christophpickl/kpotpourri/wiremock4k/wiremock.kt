@@ -17,7 +17,9 @@ val WIREMOCK_HOSTNAME = "localhost"
 val WIREMOCK_PORT = 8042
 //const val WIREMOCK_DEFAULT_URL = "http://$WIREMOCK_HOSTNAME:$WIREMOCK_PORT"
 
-// TODO get rid of baseclass and introduce TestNG listeners
+/**
+ * Needs to be a base class in order to provide more explicit functionality.
+ */
 @Test(groups = arrayOf("wiremock"))
 abstract class WiremockTest(
         private val port: Int = WIREMOCK_PORT
