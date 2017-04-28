@@ -1,6 +1,10 @@
 
 # HTTP4K Todos
 
+* moar http clients:
+    * spring REST template
+    * https://github.com/jkcclemens/khttp
+
 ## TODOs High
 
 * support cookies for request/response
@@ -40,3 +44,13 @@
 - Automatically invoke handler on Android Main Thread when using Android Module
 - RxJava support out of the box
 - Cancel in-flight request
+
+## From khttp
+
+
+- International domains and URLs
+- Sessions with cookie persistence
+- Elegant key/value cookies
+- Automatic decompression
+- Unicode response bodies
+- Connection timeouts
