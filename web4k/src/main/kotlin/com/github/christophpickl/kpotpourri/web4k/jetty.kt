@@ -26,7 +26,8 @@ data class JettyConfig(
         // could pass Data structure which also allows changing the path
         val filters: List<KClass<out Filter>> = emptyList(),
         val enableRequestResponseFilter: Boolean = true,
-        val exposeExceptions: Boolean = false
+        val exposeExceptions: Boolean = false,
+        val errorHandler: ErrorHandlerType = ErrorHandlerType.DefaultHandler
 )
 
 class JettyServer(private val config: JettyConfig) {
@@ -82,7 +83,7 @@ class JettyServer(private val config: JettyConfig) {
         context.contextPath = CONTEXT_PATH
         context.isParentLoaderPriority = true
         context.configurations = arrayOf<Configuration>(WebAppInitializingConfiguration())
-        context.errorHandler = JsonErrorHandler(config.exposeExceptions)
+        context.errorHandler = RootErrorHandler(config.errorHandler, config.exposeExceptions)
         initReasEasyAndSpring(context)
 
         config.filters.plusIf(config.enableRequestResponseFilter, RequestResponseDumpFilter::class).forEach {

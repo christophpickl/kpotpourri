@@ -5,7 +5,10 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
+import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.CustomHandler
 import com.github.christophpickl.kpotpourri.web4k.non_test.MyResource
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -80,6 +83,21 @@ class MyResource {
         http4k().get<Response4k>("/")
 
         TestableHttpFilter.filtered.size shouldMatchValue 1
+    }
+
+    fun `custom error handler`() {
+        val caughtErrors = mutableListOf<ErrorHandlingObject>()
+        startJetty(defaultConfig.copy(errorHandler = CustomHandler(object : SpecificErrorHandler {
+            override fun handle(error: ErrorHandlingObject) {
+                caughtErrors.add(error)
+            }
+        })))
+
+        http4k().get<Response4k>("/") {
+            addHeader("accept" to "invalid")
+        }
+
+        assertThat(caughtErrors.size, equalTo(1))
     }
 
 }
