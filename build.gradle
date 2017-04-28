@@ -233,7 +233,6 @@ subprojects { subproject ->
         publications {
             MyPublication(MavenPublication) {
                 from components.java
-                // TODO this does not work :-(
             artifact sourcesJar
             artifact javadocJar
                 groupId 'com.github.christophpickl.kpotpourri'
@@ -295,8 +294,6 @@ subprojects { subproject ->
 
     bintrayUpload.dependsOn verifyNotSnapshotVersion
 
-
-    // TODO automatically execute dokka task on package
     dokka {
 //        moduleName = 'data'
         outputFormat = 'javadoc'
