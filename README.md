@@ -1,7 +1,7 @@
 # KPotpourri
 
 [ ![jcenter](https://api.bintray.com/packages/christophpickl/cpickl/kpotpourri/images/download.svg) ](https://bintray.com/christophpickl/cpickl/kpotpourri/_latestVersion)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.1.1-blue.svg)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.1.2-blue.svg)](http://kotlinlang.org)
 [![Travis](https://img.shields.io/travis/christophpickl/kpotpourri.svg)](https://travis-ci.org/christophpickl/kpotpourri)
 [![codecov](https://codecov.io/gh/christophpickl/kpotpourri/branch/master/graph/badge.svg)](https://codecov.io/gh/christophpickl/kpotpourri)
 [![Issues](https://img.shields.io/github/issues/christophpickl/kpotpourri.svg)](https://github.com/christophpickl/kpotpourri/issues?q=is%3Aopen)
@@ -9,8 +9,22 @@
 
 ## About
 
-_KPotpourri_ is a collection of some common, useful _stuff_, mostly introducing a Kotlin-ish API for existing libraries
-Logback, TestNG, Wiremock and others.
+_KPotpourri_ is a collection of libraries covering many different aspects of day-to-day programming.
+Mostly they introduce a more Kotlin-ish API over existing libraries like Logback, TestNG, Wiremock and others.
+It tries to reduce the need of repeating yourself, filling the gaps and simplify usage by taking advantage Kotlin's language features. 
+
+Following libraries are currently available:
+
+* Common4k
+* Github4k
+* Http4k
+* Jackson4k
+* Logback4k
+* Release4k
+* Swing4k
+* Test4k
+* Web4k
+* Wiremock4k
 
 
 ## Setup
@@ -33,21 +47,17 @@ dependencies {
 }
 ```
 
-## Libraries
+## Common4k
 
-As stated above, KPotpourri provides a set of libraries covering many different aspects of day-to-day programming.
-The following section contains a short introduction of what and how it achieve this task.
-
-### Common4k
-
-Ordinary extensions for the standard library.
+Ordinary extensions for the standard library which I felt like missing.
 
 ```kotlin
 TODO()
 ```
 
+<!---[Read more](common4k/README.md)--->
 
-### Http4k
+## Http4k
 
 Http4k is an abstraction for writing HTTP clients in a Kotlin-ish fashion, similar to what [Slf4j](https://www.slf4j.org/) is doing for logging in Java.
 It supports [Apache's HTTP client](https://hc.apache.org/httpcomponents-client-ga/), [Fuel](https://github.com/kittinunf/Fuel) and maybe will in future support other major HTTP clients like [Spring's ReST template](https://spring.io/guides/gs/consuming-rest/) and others.  
@@ -78,7 +88,7 @@ val dto = http4k.get("/dto", Dto::class)
 [Read more](http4k/README.md)
 
 
-### Jackson4k
+## Jackson4k
 
 Jackson configured in a nice way using Kotlin language features.
 
@@ -89,7 +99,7 @@ TODO()
 <!---[Read more](jackson4k/README.md)--->
 
 
-### Web4k
+## Web4k
 
 Preconfigured Jetty using ReST easy in order to rapidly set-up a Java like ReST API.
 
@@ -97,10 +107,10 @@ Preconfigured Jetty using ReST easy in order to rapidly set-up a Java like ReST 
 TODO()
 ```
 
-<!---[Read more](4k/README.md)--->
+<!---[Read more](web4k/README.md)--->
 
 
-### Github4k
+## Github4k
 
 GitHub API abstraction
 
@@ -119,7 +129,7 @@ Extensions for the good old GUI framework (or use [TornadoFX](https://github.com
 TODO()
 ```
 
-<!---[Read more](4k/README.md)--->
+<!---[Read more](swing4k/README.md)--->
 
 
 ### Release4k
@@ -130,9 +140,9 @@ Simple replacement for common release shell scripts.
 TODO()
 ```
 
-<!---[Read more](4k/README.md)--->
+<!---[Read more](release4k/README.md)--->
 
-### Logback4k
+## Logback4k
 
 Simple way to programmatically configure logback, instead of using static XML files.
 
@@ -140,10 +150,10 @@ Simple way to programmatically configure logback, instead of using static XML fi
 TODO()
 ```
 
-<!---[Read more](4k/README.md)--->
+<!---[Read more](logback4k/README.md)--->
 
 
-### Github4k
+## Github4k
 
 High level SDK for accessing Github features.
 
@@ -151,21 +161,26 @@ High level SDK for accessing Github features.
 TODO()
 ```
 
-<!---[Read more](4k/README.md)--->
+<!---[Read more](github4k/README.md)--->
 
 
-### Test4k
+## Test4k
 
-Test extensions, using TestNG, hamkrest and mockito-kotlin
+Test extensions using TestNG, hamkrest and mockito-kotlin.
 
 ```kotlin
-TODO()
+// instead of throwing a SkipException which leads to a warning about unreachable code ...
+@Test fun `test is still work in progress`() {
+    skip("WIP")
+    // ... no warning about unreachable code
+} 
+
 ```
 
-<!---[Read more](4k/README.md)--->
+<!---[Read more](test4k/README.md)--->
 
 
-### Wiremock4k
+## Wiremock4k
 
 Simplify the [Wirmock](http://wiremock.org/) API.
 
@@ -173,4 +188,4 @@ Simplify the [Wirmock](http://wiremock.org/) API.
 TODO()
 ```
 
-<!---[Read more](4k/README.md)--->
+<!---[Read more](wiremock4k/README.md)--->
