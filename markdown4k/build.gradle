@@ -1,4 +1,28 @@
 
+repositories {
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+}
+
 dependencies {
     compile project(':common4k')
+
+    compile('org.jetbrains.kotlin:kotlin-jsr223-local-example:1.1-SNAPSHOT') {
+        // get rid of: warning: library has Kotlin runtime bundled into it
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-runtime'
+    }
+
+    testRuntime project(':george4k')
+    testRuntime project(':github4k')
+    testRuntime project(':http4k')
+    testRuntime project(':http4k-apache')
+    testRuntime project(':http4k-fuel')
+    testRuntime project(':jackson4k')
+    testRuntime project(':logback4k')
+    testRuntime project(':release4k')
+    testRuntime project(':swing4k')
+    testRuntime project(':test4k')
+    testRuntime project(':web4k')
+    testRuntime project(':wiremock4k')
 }

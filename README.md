@@ -65,6 +65,10 @@ It supports [Apache's HTTP client](https://hc.apache.org/httpcomponents-client-g
 **Sample code:**
 
 ```kotlin
+import com.github.christophpickl.kpotpourri.http4k.Response4k
+import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
+import com.github.christophpickl.kpotpourri.http4k.get
+
 // setup the http4k instance with some global settings
 val http4k = buildHttp4k { 
     baseUrlBy("http://some.server/rest")
@@ -82,6 +86,7 @@ if (response.statusCode != SC_200_Ok) {
 }
 
 // or transform JSON with jackson
+data class Dto(val name: String)
 val dto = http4k.get("/dto", Dto::class)
 ```
 
