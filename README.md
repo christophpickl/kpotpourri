@@ -7,22 +7,52 @@
 [![Issues](https://img.shields.io/github/issues/christophpickl/kpotpourri.svg)](https://github.com/christophpickl/kpotpourri/issues?q=is%3Aopen)
 [![Dependency Versions](https://www.versioneye.com/user/projects/58e51229d6c98d0041747763/badge.svg?style=flat)](https://www.versioneye.com/user/projects/58e51229d6c98d0041747763)
 
-KPotpourri is a "Sammelserium" of common stuff I've come up with for common usage, or something like that...
+## About
 
-* **common4k**: Extensions for the standard library
-* **http4k**: HTTP/ReST client abstraction, inspired by Slf4J
-* **test4k**: Test extensions, using TestNG, hamkrest and mockito-kotlin
-* **github4k**: GitHub API abstraction
-* **swing4k**: Extensions for the good old GUI framework (or use [TornadoFX](https://github.com/edvin/tornadofx) instead)
-* **release4k**: Simple replacement for common release shellscripts
+_KPotpourri_ is a collection of some common, useful _stuff_, mostly introducing a Kotlin-ish API for existing libraries
+Logback, TestNG, Wiremock and others.
 
-## Http4k
 
-The http4k API is an abstraction for writing HTTP clients in a Kotlin-ish fashion.
-It currently only supports Apache's HTTP client and will in future support the major http client 
-implementations like: Spring's ReST template, Kotlin's Fuel, you name it.
+## Setup
 
-### Sample Code
+Register the custom repository in your `build.gradle` file:
+
+```groovy
+repositories { 
+  maven { 
+    url "http://dl.bintray.com/christophpickl/cpickl" 
+  }
+}
+```
+
+Now feel free to add any dependency in its latest version:
+
+```groovy
+dependencies {
+  compile 'com.github.christophpickl.kpotpourri:common4k:1.x'
+}
+```
+
+## Libraries
+
+As stated above, KPotpourri provides a set of libraries covering many different aspects of day-to-day programming.
+The following section contains a short introduction of what and how it achieve this task.
+
+### Common4k
+
+Ordinary extensions for the standard library.
+
+```kotlin
+TODO()
+```
+
+
+### Http4k
+
+Http4k is an abstraction for writing HTTP clients in a Kotlin-ish fashion, similar to what [Slf4j](https://www.slf4j.org/) is doing for logging in Java.
+It supports [Apache's HTTP client](https://hc.apache.org/httpcomponents-client-ga/), [Fuel](https://github.com/kittinunf/Fuel) and maybe will in future support other major HTTP clients like [Spring's ReST template](https://spring.io/guides/gs/consuming-rest/) and others.  
+
+**Sample code:**
 
 ```kotlin
 // setup the http4k instance with some global settings
@@ -45,66 +75,102 @@ if (response.statusCode != SC_200_Ok) {
 val dto = http4k.get("/dto", Dto::class)
 ```
 
-## Setup
+[Read more](http4k/README.md)
 
-### Gradle
 
-Add the following to your `build.gradle`:
+### Jackson4k
 
-```groovy
-repositories { 
-  maven { 
-    url "http://dl.bintray.com/christophpickl/cpickl" 
-  }
-}
+Jackson configured in a nice way using Kotlin language features.
 
-dependencies {
-  compile 'com.github.christophpickl.kpotpourri:common4k:1.x'
-  compile 'com.github.christophpickl.kpotpourri:http4k:1.x'
-  compile 'com.github.christophpickl.kpotpourri:swing4k:1.x'
-  compile 'com.github.christophpickl.kpotpourri:github4k:1.x'
-  compile 'com.github.christophpickl.kpotpourri:release4k:1.x'
-}
+```kotlin
+TODO()
 ```
 
-### Maven
+<!---[Read more](jackson4k/README.md)--->
 
-Add the following to your `settings.xml`:
 
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
-          xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
-    
-    <profiles>
-        <profile>
-            <repositories>
-                <repository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>bintray-christophpickl-cpickl</id>
-                    <name>bintray</name>
-                    <url>http://dl.bintray.com/christophpickl/cpickl</url>
-                </repository>
-            </repositories>
-            <pluginRepositories>
-                <pluginRepository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>bintray-christophpickl-cpickl</id>
-                    <name>bintray-plugins</name>
-                    <url>http://dl.bintray.com/christophpickl/cpickl</url>
-                </pluginRepository>
-            </pluginRepositories>
-            <id>bintray</id>
-        </profile>
-    </profiles>
-    <activeProfiles>
-        <activeProfile>bintray</activeProfile>
-    </activeProfiles>
-</settings>
+### Web4k
+
+Preconfigured Jetty using ReST easy in order to rapidly set-up a Java like ReST API.
+
+```kotlin
+TODO()
 ```
 
-And then the proper Maven dependency to your `pom.xml`.
+<!---[Read more](4k/README.md)--->
+
+
+### Github4k
+
+GitHub API abstraction
+
+```kotlin
+TODO()
+```
+
+<!---[Read more](4k/README.md)--->
+
+
+### Swing4k
+
+Extensions for the good old GUI framework (or use [TornadoFX](https://github.com/edvin/tornadofx) instead)
+
+```kotlin
+TODO()
+```
+
+<!---[Read more](4k/README.md)--->
+
+
+### Release4k
+
+Simple replacement for common release shell scripts.
+
+```kotlin
+TODO()
+```
+
+<!---[Read more](4k/README.md)--->
+
+### Logback4k
+
+Simple way to programmatically configure logback, instead of using static XML files.
+
+```kotlin
+TODO()
+```
+
+<!---[Read more](4k/README.md)--->
+
+
+### Github4k
+
+High level SDK for accessing Github features.
+
+```kotlin
+TODO()
+```
+
+<!---[Read more](4k/README.md)--->
+
+
+### Test4k
+
+Test extensions, using TestNG, hamkrest and mockito-kotlin
+
+```kotlin
+TODO()
+```
+
+<!---[Read more](4k/README.md)--->
+
+
+### Wiremock4k
+
+Simplify the [Wirmock](http://wiremock.org/) API.
+
+```kotlin
+TODO()
+```
+
+<!---[Read more](4k/README.md)--->
