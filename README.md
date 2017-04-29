@@ -15,16 +15,17 @@ It tries to reduce the need of repeating yourself, filling the gaps and simplify
 
 Following libraries are currently available:
 
-* Common4k
-* Github4k
-* Http4k
-* Jackson4k
-* Logback4k
-* Release4k
-* Swing4k
-* Test4k
-* Web4k
-* Wiremock4k
+* Common4k ... Just some common stuff enhancing the standard library.
+* Github4k ... SDK for Github's API.
+* Http4k ... Easy to use HTTP client abstraction.
+* Jackson4k ... Simplify configuration of Jackson Kotlin module.
+* Logback4k ... Programmatic Logback configuration.
+* Markdown4k ... Automatically check if Kotlin code snippets in Markdown files are actually compileable.
+* Release4k ... High level release scripts in Kotlin.
+* Swing4k ... Common Swing extensions.
+* Test4k ... Test extensions for TestNG, Hamkrest and Mockito-Kotlin.
+* Web4k ... Jetty server using ReST easy for rapid setup.
+* Wiremock4k ... Wiremock extensions.
 
 
 ## Setup
@@ -66,6 +67,7 @@ It supports [Apache's HTTP client](https://hc.apache.org/httpcomponents-client-g
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.http4k.Response4k
+import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 
@@ -76,7 +78,7 @@ val http4k = buildHttp4k {
 }
 
 // execute a GET /resource request
-val response = http4k.get("/resource") {
+val response = http4k.get<Response4k>("/resource") {
     addHeader("Accept" to "my/content")
     addQueryParam("sort" to "asc")
 }
@@ -87,7 +89,7 @@ if (response.statusCode != SC_200_Ok) {
 
 // or transform JSON with jackson
 data class Dto(val name: String)
-val dto = http4k.get("/dto", Dto::class)
+val dto = http4k.get<Dto>("/dto")
 ```
 
 [Read more](http4k/README.md)
@@ -174,6 +176,9 @@ TODO()
 Test extensions using TestNG, hamkrest and mockito-kotlin.
 
 ```kotlin
+import com.github.christophpickl.kpotpourri.test4k.skip
+import org.testng.annotations.Test
+
 // instead of throwing a SkipException which leads to a warning about unreachable code ...
 @Test fun `test is still work in progress`() {
     skip("WIP")

@@ -1,16 +1,21 @@
 package com.github.christophpickl.kpotpourri.markdown4k
 
-import com.github.christophpickl.kpotpourri.http4k.Response4k
-import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
-import com.github.christophpickl.kpotpourri.http4k.get
+import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import java.io.File
 
 @Test class KPotpourriMarkdownKotlinCheckerTest {
 
-    fun `check all kpotpourri MD files for valid Kotlin code`() {
-        // TODO would be nicer to create test cases at runtime for each snippet
-        checkMarkdownFilesContainValidKotlinCode(File("../"), ignoreFolders = listOf("src", "build"))
+    private val root = File("../")
+    private val ignoreFolders = listOf("src", "build", ".git")
+
+    @DataProvider
+    fun provideMarkdownKotlinSnippets() =
+            collectMarkdownSnippets(root, ignoreFolders).toDataProvider()
+
+    @Test(dataProvider = "provideMarkdownKotlinSnippets")
+    fun `compilable snippet`(snippet: MarkdownSnippet) {
+        checkCodeIsCompilable(snippet.code)
     }
 
 }

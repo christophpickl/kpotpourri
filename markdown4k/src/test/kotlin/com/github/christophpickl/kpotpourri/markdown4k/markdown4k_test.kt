@@ -30,7 +30,7 @@ some xml
 this is not kotlin
 ```
 """)
-        assertThat(result, equalTo(listOf("this is kotlin\n")))
+        assertThat(result, equalTo(listOf(CodeAndLineNumber(5, "this is kotlin\n"))))
     }
 
     fun `compileKotlin - Given valid code, Should compile`() {
@@ -55,6 +55,7 @@ println(x + y)
 """)
     }
 
+    // TODO test for ignoreFolders
     fun `checkMarkdownFilesContainValidKotlinCode - Given valid code, Should not throw`() {
         checkMarkdownFilesContainValidKotlinCode(File("src/test/resources/correct_kotlin"))
     }
