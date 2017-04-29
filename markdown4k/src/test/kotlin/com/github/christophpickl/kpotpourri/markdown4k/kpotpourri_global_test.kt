@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.markdown4k
 
+import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k.collectSnippets
+import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k.compile
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import java.io.File
@@ -10,12 +12,11 @@ import java.io.File
     private val ignoreFolders = listOf("src", "build", ".git")
 
     @DataProvider
-    fun provideMarkdownKotlinSnippets() =
-            collectMarkdownSnippets(root, ignoreFolders).toDataProvider()
+    fun provideSnippets() = collectSnippets(root, ignoreFolders)
 
-    @Test(dataProvider = "provideMarkdownKotlinSnippets")
-    fun `compilable snippet`(snippet: MarkdownSnippet) {
-        checkCodeIsCompilable(snippet.code)
+    @Test(dataProvider = "provideSnippets")
+    fun `compilable snippet`(snippet: CodeSnippet) {
+        compile(snippet)
     }
 
 }
