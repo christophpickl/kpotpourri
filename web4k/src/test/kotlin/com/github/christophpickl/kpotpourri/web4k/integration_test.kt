@@ -114,7 +114,7 @@ class TestableResource {
                 requestUrl = jetty.fullUrl,
                 statusCode = 400,
                 errorMessage = "Bad Request",
-                message = null,
+                message = "Bad Request",
                 stackTrace = null
         )))
     }

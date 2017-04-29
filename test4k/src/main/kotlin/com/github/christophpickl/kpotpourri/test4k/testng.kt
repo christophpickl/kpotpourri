@@ -15,6 +15,7 @@ fun skip(message: String) {
 }
 
 
+// TODO remove that one from Gadsu, and enable as default TestNG listener in intellij (in gadsu and kpot)
 class LogTestListener : ITestNGListener, ITestListener {
 
     private val log = KotlinLogging.logger {}
