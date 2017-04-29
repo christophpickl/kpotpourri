@@ -13,6 +13,5 @@ import java.io.File
                 containsExactlyInAnyOrder("md1.md", "sub1.md"))
     }
 
-    // TODO test for ignoreFolders
 
 }

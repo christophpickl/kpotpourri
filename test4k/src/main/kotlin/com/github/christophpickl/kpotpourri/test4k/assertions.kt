@@ -20,6 +20,7 @@ fun fail(message: String, cause: Throwable? = null) {
 /**
  * Tests for correct exception type (or supertype).
  */
+// TODO check for throws of hamkrest
 inline fun <reified E : Throwable> assertThrown(code: () -> Unit) {
     assertThrown<E>({ true }, code)
 }

@@ -4,17 +4,20 @@ import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.describe
 
-// TODO test this; should fail if there are additional items in this collection
+/**
+ * Checks if the given collection contains exactly (not more or less) elements in an undefined order.
+ */
 fun <K> containsExactlyInAnyOrder(vararg expected: K): Matcher<Collection<K>> = object : Matcher.Primitive<Collection<K>>() {
     override fun invoke(actual: Collection<K>): MatchResult {
-        return if (expected.all(actual::contains)) {
+        return if (expected.all(actual::contains) && actual.all { it in expected }) {
             MatchResult.Match
         } else {
             MatchResult.Mismatch("was ${describe(actual)}")
         }
     }
 
-    override val description: String get() = "contains ${describe(expected)}"
-    override val negatedDescription: String get() = "does not contain ${describe(expected)}"
+    // TODO describe() should support Arrays.contentToString
+    override val description: String get() = "contains ${expected.contentToString()}"
+    override val negatedDescription: String get() = "does not contain ${expected.contentToString()}"
 }
 
