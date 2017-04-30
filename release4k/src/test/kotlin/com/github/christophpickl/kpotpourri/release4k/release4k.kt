@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.release4k
 
-import com.github.christophpickl.kpotpourri.common.io.readConfirmation
+import com.github.christophpickl.kpotpourri.common.io.Keyboard
 import com.github.christophpickl.kpotpourri.release4k.Version.VersionParts2.Companion.readVersion2FromStdin
 import java.io.File
 
@@ -35,7 +35,7 @@ fun main(args: Array<String>) = release4k {
     printHeader("VERIFY NO CHANGES")
     execute("/usr/bin/git", "status", File("./"))
     println()
-    if (!readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
+    if (!Keyboard.readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
     }
 
@@ -46,7 +46,7 @@ fun main(args: Array<String>) = release4k {
     println("Versions: ${currentVersion.niceString} => $nextVersionString")
 
     // =================================================================================================================
-    if (!readConfirmation(prompt = "Do you wanna release this?")) {
+    if (!Keyboard.readConfirmation(prompt = "Do you wanna release this?")) {
         return
     }
 

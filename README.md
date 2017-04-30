@@ -48,6 +48,8 @@ dependencies {
 }
 ```
 
+For everyone else not using Gradle, please visit the [Maven setup](doc/maven_setup.md) page.
+
 ## Common4k
 
 Ordinary extensions for the standard library which I felt like missing.

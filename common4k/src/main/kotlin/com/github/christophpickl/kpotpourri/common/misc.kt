@@ -12,11 +12,14 @@ package com.github.christophpickl.kpotpourri.common
  */
 annotation class KotlinNoArg
 
-// Nothing is final, therefor cant add as <A : Nothing>
-// MINOR pseudo-test me
-val Nothing.enforceAllBranchesCovered2: Unit get() = Unit
-// MINOR maybe can use Any?
-val <A> A.enforceAllBranchesCovered: Unit get() = Unit
+/**
+ * Kotlin workaround to enforce the compiler to check all branches even when not using the when as a statement rather an expression.
+ */
+@Suppress("unused")
+val Any.enforceAllBranchesCovered: Unit get() = Unit
 
+/**
+ * Let the thread sleep some random time between 0.5 and 1.0 seconds.
+ */
 @Suppress("unused")
 fun sleepRand() = Thread.sleep((Math.random() * 500.0).toLong() + 500)

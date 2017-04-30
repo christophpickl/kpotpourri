@@ -1,26 +1,23 @@
 package com.github.christophpickl.kpotpourri.common.io
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.io.DefaultBehaviour.*
+import com.github.christophpickl.kpotpourri.common.io.ReadOptionsDefaultBehaviour.*
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsSubstrings
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test
 
-@Test class UserInputTest {
+@Test class KeyboardTest {
 
     private val PROMPT = "testPrompt"
     private val INVALID = "testInvalid"
 
-    // readConfirmation()
-    // =================================================================================================================
-
     fun `readConfirmation - Given no default confirm, When enter y, Then confirmed true`() {
         var actualConfirmation: Boolean? = null
 
-        val actualOut = readStdoutAndWriteStdin("y\n") {
-            actualConfirmation = readConfirmation(PROMPT, defaultConfirm = null)
+        val actualOut = Io.readStdoutAndWriteStdin("y\n") {
+            actualConfirmation = Keyboard.readConfirmation(PROMPT, defaultConfirm = null)
         }
         assertThat(actualOut, equalTo("$PROMPT\n[y/n] >> "))
         assertThat(actualConfirmation, equalTo(true))
@@ -28,8 +25,8 @@ import org.testng.annotations.Test
 
     fun `readConfirmation - Given no default confirm, When enter n, Then confirmed false`() {
         var actualConfirmation: Boolean? = null
-        val actualOut = readStdoutAndWriteStdin("n\n") {
-            actualConfirmation = readConfirmation(PROMPT, defaultConfirm = null)
+        val actualOut = Io.readStdoutAndWriteStdin("n\n") {
+            actualConfirmation = Keyboard.readConfirmation(PROMPT, defaultConfirm = null)
         }
         assertThat(actualOut, equalTo("$PROMPT\n[y/n] >> "))
         assertThat(actualConfirmation, equalTo(false))
@@ -38,8 +35,8 @@ import org.testng.annotations.Test
     fun `readConfirmation - Given no default confirm, When enter invalid, Then confirmed false`() {
         println("Invalid input 'testinvalid'. Please enter".contains("testInvalid"))
 
-        val actualOut = readStdoutAndWriteStdin("$INVALID\ny\n") {
-            readConfirmation(PROMPT, defaultConfirm = null)
+        val actualOut = Io.readStdoutAndWriteStdin("$INVALID\ny\n") {
+            Keyboard.readConfirmation(PROMPT, defaultConfirm = null)
         }
         assertThat(actualOut, containsSubstrings(PROMPT, INVALID))
     }
@@ -47,14 +44,11 @@ import org.testng.annotations.Test
     fun `readConfirmation - Given default true confirm, When hit enter, Then confirmed true`() {
         var actualConfirmation: Boolean? = null
 
-        hitEnterAndReadStdout {
-            actualConfirmation = readConfirmation(PROMPT, defaultConfirm = true)
+        Io.hitEnterAndReadStdout {
+            actualConfirmation = Keyboard.readConfirmation(PROMPT, defaultConfirm = true)
         }
         assertThat(actualConfirmation, equalTo(true))
     }
-
-    // readOptions() stringed
-    // =================================================================================================================
 
     private val firstOption = "a"
     private val secondOption = "b"
@@ -63,51 +57,48 @@ import org.testng.annotations.Test
     fun `readOptions stringed - Given default option disabled, When enter 2, Then second item is returned`() {
         var actualInput: String? = null
 
-        readStdoutAndWriteStdin("2\n") {
-            actualInput = readOptions(PROMPT, optionsString, defaultOption = Disabled())
+        Io.readStdoutAndWriteStdin("2\n") {
+            actualInput = Keyboard.readOptions(PROMPT, optionsString, defaultBehaviour = Disabled())
         }
         assertThat(actualInput, equalTo(secondOption))
     }
 
     fun `readOptions stringed - Given default select first, When hit enter, Then first item is returned`() {
         var actualInput: String? = null
-        hitEnterAndReadStdout {
-            actualInput = readOptions(PROMPT, optionsString, defaultOption = SelectFirst())
+        Io.hitEnterAndReadStdout {
+            actualInput = Keyboard.readOptions(PROMPT, optionsString, defaultBehaviour = SelectFirst())
         }
         assertThat(actualInput, equalTo(firstOption))
     }
 
     fun `readOptions stringed - Given default value of second option, When hit enter, Then second item is returned`() {
         var actualInput: String? = null
-        hitEnterAndReadStdout {
-            actualInput = readOptions(PROMPT, optionsString, defaultOption = DefaultValue(secondOption))
+        Io.hitEnterAndReadStdout {
+            actualInput = Keyboard.readOptions(PROMPT, optionsString, defaultBehaviour = DefaultValue(secondOption))
         }
         assertThat(actualInput, equalTo(secondOption))
     }
 
     fun `readOptions stringed - Given empty options, Then throw`() {
         assertThrown<KPotpourriException> {
-            readOptions(PROMPT, emptyList())
+            Keyboard.readOptions(PROMPT, emptyList())
         }
     }
 
     fun `readOptions stringed - Given default option which is not in options list, Then throw`() {
         assertThrown<KPotpourriException> {
-            readOptions(PROMPT, listOf("a"), defaultOption = DefaultValue("not existing"))
+            Keyboard.readOptions(PROMPT, listOf("a"), defaultBehaviour = DefaultValue("not existing"))
         }
     }
 
-    // readOptions() typed
-    // =================================================================================================================
+    fun `readTypedOptions - Given default value of second item, When hit enter, Then second item is returned`() {
+        val person1 = Person("p1")
+        val person2 = Person("p2")
+        val optionsPerson = listOf(person1, person2)
 
-    private val person1 = Person("p1")
-    private val person2 = Person("p2")
-    private val optionsPerson = listOf(person1, person2)
-
-    fun `readOptions typed - Given default value of second item, When hit enter, Then second item is returned`() {
         var actualInput: Person? = null
-        hitEnterAndReadStdout {
-            actualInput = readOptions(PROMPT, optionsPerson, defaultOption = DefaultValue(person2))
+        Io.hitEnterAndReadStdout {
+            actualInput = Keyboard.readTypedOptions(PROMPT, optionsPerson, defaultBehaviour = DefaultValue(person2))
         }
         assertThat(actualInput, equalTo(person2))
     }

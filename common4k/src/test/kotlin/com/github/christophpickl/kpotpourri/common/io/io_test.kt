@@ -1,31 +1,29 @@
 package com.github.christophpickl.kpotpourri.common.io
 
+
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test
-import java.io.Closeable
 
 @Test class IoTest {
 
     private val ANY_VALUE = "testValue"
 
-    fun `readFromStdOut sunshine`() {
-        val sentToSysOut = readFromStdOut {
+    fun `readFromStdOut - sunshine`() {
+        val sentToSysOut = Io.readFromStdOut {
             print(ANY_VALUE)
         }
         assertThat(sentToSysOut, equalTo(ANY_VALUE))
     }
 
-    fun `writeToStdIn sunshine`() {
+    fun `writeToStdIn - sunshine`() {
         var actual: String? = null
-        writeToStdIn(ANY_VALUE) {
+        Io.writeToStdIn(ANY_VALUE) {
             actual = readLine()
         }
         assertThat(actual, equalTo(ANY_VALUE))
     }
 
-    fun `Closeable closeSilently - When thrown, Then nothing thrown`() {
-        Closeable { throw Exception() }.closeSilently()
-    }
+    // MINOR test readStdoutAndWriteStdin + hitEnterAndReadStdout
 
 }

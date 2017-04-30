@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.common.collection
 
-import com.github.christophpickl.kpotpourri.common.io.readFromStdOut
+import com.github.christophpickl.kpotpourri.common.io.Io
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isEmpty
@@ -39,7 +39,7 @@ import org.testng.annotations.Test
 
     @Test(dataProvider = "providePrettyPrintWithoutOptions")
     fun `prettyPrint - sunshine`(given: List<String>, expected: String) {
-        assertThat(readFromStdOut { given.prettyPrint() },
+        assertThat(Io.readFromStdOut { given.prettyPrint() },
                 equalTo(expected))
     }
 

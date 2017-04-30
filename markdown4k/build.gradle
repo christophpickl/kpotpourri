@@ -8,10 +8,8 @@ repositories {
 dependencies {
     compile project(':common4k')
 
-    compile('org.jetbrains.kotlin:kotlin-jsr223-local-example:1.1-SNAPSHOT') {
-        // get rid of: warning: library has Kotlin runtime bundled into it
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-runtime'
-    }
+    // unfortunately this good a dependency on kotlin-compiler:1.1-SNAPSHOT which got the runtime library bundled into it :-/
+    compile "org.jetbrains.kotlin:kotlin-jsr223-local-example:1.1-SNAPSHOT"
 
     testRuntime project(':george4k')
     testRuntime project(':github4k')

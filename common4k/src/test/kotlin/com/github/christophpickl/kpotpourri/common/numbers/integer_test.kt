@@ -13,7 +13,8 @@ import org.testng.annotations.Test
             arrayOf(1, 1, 1, true),
             arrayOf(1, 1, 2, true),
             arrayOf(1, 2, 2, false)
-            )
+    )
+
     @Test(dataProvider = "provideBetweens")
     fun `isBetween`(pivot: Int, lower: Int, upper: Int, expected: Boolean) {
         assertThat(pivot.isBetweenInclusive(lower, upper), equalTo(expected))

@@ -37,11 +37,11 @@ import org.testng.annotations.Test
     )
 
     @Test(dataProvider = "provideDoubleToSeconds")
-    fun `double toSeconds`(number: Double, digits: Int, suffix: String, expected: String) {
+    fun `Double toSeconds`(number: Double, digits: Int, suffix: String, expected: String) {
         assertThat(number.toSeconds(digits, suffix), equalTo(expected))
     }
 
-    fun `double toSeconds with defaults`() {
+    fun `Double toSeconds with defaults`() {
         assertThat((1234.5678).toSeconds(), equalTo("1.235 secs"))
     }
 
