@@ -4,6 +4,7 @@ import com.github.christophpickl.kpotpourri.common.KPotpourriException
 
 /** Default pretty print item prefix. */
 val KPOT_DEFAULT_PREFIX = "- "
+
 /** Default pretty print item joiner. */
 val KPOT_DEFAULT_JOINER = "\n"
 
@@ -19,7 +20,6 @@ fun Array<out Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: 
 /**
  * Prints the output of `toPrettyString` to std out.
  */
-// MINOR test me
 fun Array<out Any>.prettyPrint(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) {
     println(toPrettyString(prefix, joiner))
 }
@@ -37,7 +37,6 @@ fun List<Any>.toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: Strin
 /**
  * Prints the output of `toPrettyString` to std out.
  */
-// MINOR test me
 fun List<Any>.prettyPrint(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) {
     println(toPrettyString(prefix, joiner))
 }
@@ -77,8 +76,8 @@ fun <K, V> Map<K, V>.verifyNoIntersection(that: Map<K, V>) {
  *
  * Sample: put(1, "1") => put(1 to "1")
  */
-//fun <K, V> MutableMap<K, V>.put(pair: Pair<K, V>) =
-//        put(pair.first, pair.second)
+fun <K, V> MutableMap<K, V>.put(pair: Pair<K, V>) =
+        put(pair.first, pair.second)
 
 // ITERABLE
 // =====================================================================================================================
@@ -87,9 +86,3 @@ fun <K, V> Map<K, V>.verifyNoIntersection(that: Map<K, V>) {
  * listOf(1 to "einz").toMutableMap() == mapOf(1 to "einz")
  */
 fun <K, V> Iterable<Pair<K, V>>.toMutableMap() = toMap().toMutableMap()
-
-// ENUM
-// =====================================================================================================================
-
-inline fun <reified T : Enum<T>> toPrettyString(prefix: String = KPOT_DEFAULT_PREFIX, joiner: String = KPOT_DEFAULT_JOINER) =
-        enumValues<T>().toList().toPrettyString(prefix, joiner)
