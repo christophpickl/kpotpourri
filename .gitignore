@@ -1,12 +1,15 @@
 
 /build/
 /common4k/build/
+/george4k/build/
 /github4k/build/
 /http4k/build/
 /http4k-apache/build/
 /http4k-fuel/build/
 /http4k-tests/build/
+/logback4k/build/
 /jackson4k/build/
+/markdown4k/build/
 /release4k/build/
 /swing4k/build/
 /test4k/build/
