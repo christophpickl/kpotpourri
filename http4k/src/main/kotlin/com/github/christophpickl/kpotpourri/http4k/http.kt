@@ -2,20 +2,44 @@ package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 
-
+/**
+ * Reusable interface to configure HTTP headers.
+ */
 interface HeadersConfig {
+
+    /**
+     * Actual container data class storing all headers.
+     */
     val headers: HeadersMap
 
-    // TODO add "accept", ... and other common stuff
+    /**
+     * Shortcut to add the `Accept` header.
+     */
+    fun acceptHeader(value: String) {
+        addHeader("Accept" to value)
+    }
+
+    /**
+     * Add (or override) given header.
+     */
     fun addHeader(header: Pair<String, String>) {
         headers += header
     }
 }
 
+/**
+ * Supported protocols as part of an URL.
+ */
 enum class HttpProtocol(val urlPrefix: String) {
-    Http("http"), Https("https")
+    /** Unsecure. */
+    Http("http"),
+    /** Secure. */
+    Https("https")
 }
 
+/**
+ * Abstraction of a full URL split into its separate components.
+ */
 data class UrlConfig(
         // defaults to: "http://localhost:80"
         val protocol: HttpProtocol = HttpProtocol.Http,
@@ -24,25 +48,28 @@ data class UrlConfig(
         val path: String = "" // e.g.: "/rest"
 )
 
-//enum class HttpBodyfullMethod4k {
-//    POST,
-//    PUT,
-//    PATCH
-//}
-
-// see com.github.tomakehurst.wiremock.http.RequestMethod
-// GET("GET"),
-// POST("POST"),
-// PUT("PUT"),
-// DELETE("DELETE"),
-// PATCH("PATCH"),
-// HEAD("HEAD")
+/**
+ * Supported HTTP methods by Http4k.
+ *
+ * See for example: com.github.tomakehurst.wiremock.http.RequestMethod
+ */
 enum class HttpMethod4k(val isRequestBodySupported: Boolean = false) {
+
+    /** Idempontent request. */
     GET(),
+
+    /** Create a new entity. */
     POST(isRequestBodySupported = true),
+
+    /** Update an existing entity, idempotent. */
     PUT(isRequestBodySupported = true),
+
+    /** Delete an existing entity. */
     DELETE(),
-     PATCH(isRequestBodySupported = true)
+
+    /** Update parts of an existing entity, idempotent. */
+    PATCH(isRequestBodySupported = true)
+
     // OPTIONS(),
     // HEAD(),
     // TRACE(),

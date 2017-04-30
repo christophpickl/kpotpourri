@@ -5,6 +5,9 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
+import java.io.File
+
+
 
 @Test class StringExtensionsTest {
 
@@ -101,4 +104,12 @@ import org.testng.annotations.Test
         sb += 'c'
         sb.toString() shouldMatchValue "c"
     }
+
+    fun `saveToFile - sunshine`() {
+        val temp = File.createTempFile("temp", ".txt")
+        "some content".saveToFile(temp)
+
+        assertThat(temp.readText(), equalTo("some content"))
+    }
+
 }

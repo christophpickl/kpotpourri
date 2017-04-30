@@ -7,23 +7,42 @@ import org.testng.annotations.Test
 
 @Test class IoTest {
 
-    private val ANY_VALUE = "testValue"
-
-    fun `readFromStdOut - sunshine`() {
+    fun `readFromStdOut - When print a string, Then that string should have been captured`() {
         val sentToSysOut = Io.readFromStdOut {
-            print(ANY_VALUE)
+            print("out")
         }
-        assertThat(sentToSysOut, equalTo(ANY_VALUE))
+        assertThat(sentToSysOut, equalTo("out"))
     }
 
-    fun `writeToStdIn - sunshine`() {
+    fun `writeToStdIn - When a string is written to stdin, Then that string should have been read`() {
         var actual: String? = null
-        Io.writeToStdIn(ANY_VALUE) {
+        Io.writeToStdIn("in") {
             actual = readLine()
         }
-        assertThat(actual, equalTo(ANY_VALUE))
+
+        assertThat(actual, equalTo("in"))
     }
 
-    // MINOR test readStdoutAndWriteStdin + hitEnterAndReadStdout
+    fun `readStdoutAndWriteStdin - sunshine`() {
+        var actualIn: String? = null
+        val actualOut = Io.readStdoutAndWriteStdin("in") {
+            actualIn = readLine()
+            print("out")
+        }
+
+        assertThat(actualIn, equalTo("in"))
+        assertThat(actualOut, equalTo("out"))
+    }
+
+    fun `hitEnterAndReadStdout - sunshine`() {
+        var actualIn: String? = null
+        val actualOut = Io.hitEnterAndReadStdout {
+            actualIn = readLine()
+            print("out")
+        }
+
+        assertThat(actualIn, equalTo(""))
+        assertThat(actualOut, equalTo("out"))
+    }
 
 }

@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.common.io
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
@@ -10,8 +9,6 @@ import java.io.PrintStream
  * Deals with System input/output redirecting.
  */
 object Io {
-
-    private val log = LOG {}
 
     /**
      * Get printed output written to System.out as String.

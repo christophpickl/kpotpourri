@@ -194,7 +194,7 @@ import org.testng.annotations.Test
 
 ## Wiremock4k
 
-Simplify the [Wirmock](http://wiremock.org/) API.
+Simplify the [Wiremock](http://wiremock.org/) API.
 
 ```kotlin
 TODO()

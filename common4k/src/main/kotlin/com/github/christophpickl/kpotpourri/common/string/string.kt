@@ -47,7 +47,6 @@ fun String.htmlize() =
 /**
  * Save the string to the given file using Guava. No validation at all.
  */
-// MINOR test me
 fun String.saveToFile(target: File) {
     Files.write(this, target, Charsets.UTF_8)
 }
@@ -57,12 +56,10 @@ fun String.saveToFile(target: File) {
  */
 fun combineUrlParts(vararg parts: String) = concatUrlParts(*parts)
 
-
 /**
  * Synonym for concatUrlParts().
  */
 fun joinUrlParts(vararg parts: String) = concatUrlParts(*parts)
-
 
 /**
  * Get sure of leading/trailing slashes.

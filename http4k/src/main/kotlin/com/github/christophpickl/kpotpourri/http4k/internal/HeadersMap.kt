@@ -1,6 +1,8 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-
+/**
+ * Abstraction of a regular [Map] supporting specifics for a HTTP header (e.g. case-insensitive keys).
+ */
 class HeadersMap {
 
     private val _map = HashMap<String, String>()
@@ -23,7 +25,7 @@ class HeadersMap {
         map.keys.firstOrNull { it.toLowerCase() == key.toLowerCase() }?.let {
             _map -= it
         }
-        // dont print header value as it could contain Authorization secret
+        // ATTENTION: dont print header value as it could contain Authorization secret
         _map += key to value
     }
 

@@ -10,7 +10,9 @@ import com.github.christophpickl.kpotpourri.http4k.internal.MutableMetaMap
 import com.github.christophpickl.kpotpourri.http4k.internal.mapper
 import kotlin.reflect.KClass
 
-
+/**
+ * Core entry point to build a [Http4k] instance in a DSL falvour.
+ */
 fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit = {}): Http4k {
     val builder = Http4kBuilder()
     withBuilder.invoke(builder)
@@ -38,17 +40,6 @@ class Http4kBuilder : GlobalHttp4kConfig {
     }
 }
 
-//class Http4k2(val http4k: Http4k) : Http4k by http4k {
-//    inline fun <reified R : Any> anyBodyfull(method: HttpBodyfullMethod4k, url: String, body: Any? = null, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) {
-//        when (method) {
-//            HttpBodyfullMethod4k.POST -> if (body == null) http4k.post(url, R::class, withOpts) else http4k.post(url, body, R::class, withOpts)
-//            HttpBodyfullMethod4k.PUT -> if (body == null) http4k.put(url, R::class, withOpts) else http4k.put(url, body, R::class, withOpts)
-//            HttpBodyfullMethod4k.PATCH -> if (body == null) http4k.patch(url, R::class, withOpts) else http4k.patch(url, body, R::class, withOpts)
-//        }.let { }
-//    }
-//}
-
-
 // in order to reifie generic type, must not be in an interface
 inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getX(url, R::class, withOpts)
 inline fun <reified R : Any> Http4k.post(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postX(url, body, R::class, withOpts)
@@ -56,7 +47,6 @@ inline fun <reified R : Any> Http4k.put(url: String, body: Any = Unit, noinline 
 inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteX(url, R::class, withOpts)
 inline fun <reified R : Any> Http4k.patch(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchX(url, body, R::class, withOpts)
 
-@Suppress("unused")
 /**
  * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.
  *
@@ -137,7 +127,6 @@ data class Response4k(
 ) {
     companion object // test extensions
 
-    // TODO TEST this
     fun <T : Any> readJson(targetType: KClass<T>): T {
         return mapper.readValue(bodyAsString, targetType.java)
     }

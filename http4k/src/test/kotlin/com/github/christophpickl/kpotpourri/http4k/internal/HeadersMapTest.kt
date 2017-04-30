@@ -1,6 +1,9 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
+import com.github.christophpickl.kpotpourri.common.io.Io
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsSubstrings
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContainsExactly
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.not
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
 
@@ -48,6 +51,15 @@ import org.testng.annotations.Test
         assertThat(map.map, mapContainsExactly(KEY_CAPITAL to VAL2))
         map += KEY_UPPER to VAL3
         assertThat(map.map, mapContainsExactly(KEY_UPPER to VAL3))
+    }
+
+    fun `Adding authorization secret gets not printed to stdout`() {
+        val map = HeadersMap()
+        val stdout = Io.readFromStdOut {
+            map += "Authorization" to "secret"
+        }
+        // MINOR could also check if was not logged. but rather do that in an integration test ;)
+        assertThat(stdout, not(containsSubstrings("secret")))
     }
 
 }

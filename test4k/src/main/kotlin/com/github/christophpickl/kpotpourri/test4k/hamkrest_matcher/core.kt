@@ -29,9 +29,14 @@ fun <T> allOf(matchers: Collection<Matcher<T>>): Matcher<T> {
 }
 
 /**
+ * Hamcrest matcher to negate a matcher for nullables.
+ */
+fun <T> notMaybeNull(negated: Matcher<T?>): Matcher<T?> = Matcher.Negation(negated)
+
+/**
  * Hamcrest matcher to negate a matcher.
  */
-fun <T> not(negated: Matcher<T?>): Matcher<T?> = Matcher.Negation(negated)
+fun <T> not(negated: Matcher<T>): Matcher<T> = Matcher.Negation(negated)
 
 /**
  * Hamcrest shortcut matcher to check for non-equality.
