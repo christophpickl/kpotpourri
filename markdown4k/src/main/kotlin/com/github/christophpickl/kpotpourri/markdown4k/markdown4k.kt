@@ -13,12 +13,18 @@ private val log = LOG {}
 
 // FIXME get rid of warning about Kotlin runtime library
 
+/**
+ * Collects and verifies Kotlin code snippets within Markdown files.
+ */
 object Markdown4k {
 
+    /**
+     * Scan the given directory recursively for MD files containing Kotlin code snippets.
+     */
     fun collectSnippets(
             root: File,
             ignoreFolders: List<String> = emptyList()
-    ): Array<Array<out Any>> {
+    ): List<CodeSnippet> {
         val result = mutableListOf<CodeSnippet>()
         root.scanForFilesRecursively("md", ignoreFolders).forEach { file ->
             MarkdownParser.extractKotlinCode(file.readText()).forEach { (lineNumber, code) ->
@@ -30,11 +36,13 @@ object Markdown4k {
                 )
             }
         }
-        return result.map { arrayOf(it) }.toTypedArray()
+        return result
     }
 
     /**
-     * @throws ScriptException if code is not compileable
+     * Suppress compilation by prefixing the code with "/// unsafe".
+     *
+     * @throws ScriptException if code is not compilable.
      */
     fun compile(snippet: CodeSnippet) {
         if (snippet.isMarkedAsUnsafeCode) {
@@ -46,6 +54,9 @@ object Markdown4k {
 
 }
 
+/**
+ * A single Kotlin code snippet found in a Markdown file.
+ */
 data class CodeSnippet(
         val relativePath: String,
         val markdown: File,
@@ -56,8 +67,9 @@ data class CodeSnippet(
         private val unsafeEscapeSequence = "/// unsafe"
     }
 
-    val isMarkedAsUnsafeCode = code.startsWith(unsafeEscapeSequence)
+    internal val isMarkedAsUnsafeCode = code.startsWith(unsafeEscapeSequence)
 
+    @Suppress("KDocMissingDocumentation")
     override fun toString() = MoreObjects.toStringHelper(this)
             .add("relativePath", relativePath)
             .add("lineNumber", lineNumber)

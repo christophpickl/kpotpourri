@@ -7,11 +7,21 @@ import java.io.File
 
 @Test class Markdown4kTest {
 
-    // TODO move to common4k along with the scanForFilesRecursively
-    fun `scanForMdFiles - dir1`() {
-        assertThat(scanForFilesRecursively(File("src/test/resources/dir1"), "md").map { it.name },
-                containsExactlyInAnyOrder("md1.md", "sub1.md"))
+    fun `collectSnippets - Sunshine integration test`() {
+        assertThat(Markdown4k.collectSnippets(File("src/test/resources/dir1")),
+                containsExactlyInAnyOrder(CodeSnippet(
+                        relativePath = "/dir1/file1.md",
+                        markdown = File("file1.md"),
+                        lineNumber = 5,
+                        code = "\nvar x = 2\n"
+                )))
     }
 
+    fun `compile - Given unsafed instruction, Then ignores uncompilable code`() {
+        Markdown4k.compile(CodeSnippet.testee.copy(code =
+        """/// unsafe
+this wont be compiled ;)
+"""))
+    }
 
 }

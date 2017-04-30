@@ -14,6 +14,13 @@ fun skip(message: String) {
     throw SkipException(message)
 }
 
+/**
+ * Convert any list of objects to a proper array of arrays to be used for TestNG data providers.
+ */
+@Suppress("UNCHECKED_CAST")
+inline fun <reified T> List<T>.toDataProviding() =
+        map { arrayOf(it) }.toTypedArray() as Array<Array<out Any>>
+
 
 // TODO remove that one from Gadsu, and enable as default TestNG listener in intellij (in gadsu and kpot)
 class LogTestListener : ITestNGListener, ITestListener {

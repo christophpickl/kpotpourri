@@ -12,10 +12,10 @@ internal object KotlinCompiler {
     /**
      * @throws ScriptException if code is not compileable
      */
-    fun compile(code: String) {
+    internal fun compile(code: String) {
         val engine = ScriptEngineManager().getEngineByExtension("kts") ?: throw Exception("kts not supported by script engine :(")
         log.trace { "Compiling Kotlin code:\n>>>\n$code\n<<<" }
-        (engine as Compilable).compile(code)
+        (engine as Compilable).compile(code) // no need to eval ;)
     }
 
 }

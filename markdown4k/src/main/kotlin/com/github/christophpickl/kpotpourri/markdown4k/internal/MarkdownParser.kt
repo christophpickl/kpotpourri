@@ -1,12 +1,11 @@
 package com.github.christophpickl.kpotpourri.markdown4k.internal
 
-
 internal object MarkdownParser {
 
     private val snippetStart = "```kotlin"
     private val snippetEnd = "```"
 
-    fun extractKotlinCode(mdContent: String): List<CodeAndLineNumber> {
+    internal fun extractKotlinCode(mdContent: String): List<CodeAndLineNumber> {
         var kotlinFlag = false
         val result = mutableListOf<CodeAndLineNumber>()
         var tempLines = StringBuilder()
@@ -29,6 +28,9 @@ internal object MarkdownParser {
 
 }
 
+/**
+ * Avoid non-informative Pair<String, Int> only :)
+ */
 internal data class CodeAndLineNumber(
         val lineNumber: Int,
         val code: String
