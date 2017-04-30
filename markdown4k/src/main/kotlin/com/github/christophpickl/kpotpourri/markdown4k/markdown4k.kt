@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.markdown4k
 
+import com.github.christophpickl.kpotpourri.common.file.nameStartingFrom
+import com.github.christophpickl.kpotpourri.common.file.scanForFilesRecursively
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.markdown4k.internal.KotlinCompiler
 import com.github.christophpickl.kpotpourri.markdown4k.internal.MarkdownParser
@@ -18,7 +20,7 @@ object Markdown4k {
             ignoreFolders: List<String> = emptyList()
     ): Array<Array<out Any>> {
         val result = mutableListOf<CodeSnippet>()
-        scanForFilesRecursively(root, "md", ignoreFolders).forEach { file ->
+        root.scanForFilesRecursively("md", ignoreFolders).forEach { file ->
             MarkdownParser.extractKotlinCode(file.readText()).forEach { (lineNumber, code) ->
                 result += CodeSnippet(
                         relativePath = file.nameStartingFrom(root),
