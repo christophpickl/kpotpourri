@@ -7,14 +7,17 @@ import java.io.File
 
 @Test class Markdown4kTest {
 
+    private val resources = "src/test/resources"
+
     fun `collectSnippets - Sunshine integration test`() {
-        assertThat(Markdown4k.collectSnippets(File("src/test/resources/dir1")),
+        assertThat(Markdown4k.collectSnippets(File("$resources/dir1")),
                 containsExactlyInAnyOrder(CodeSnippet(
-                        relativePath = "/dir1/file1.md",
-                        markdown = File("file1.md"),
+                        relativePath = "/file1.md",
+                        markdown = File("$resources/dir1/file1.md"),
                         lineNumber = 5,
-                        code = "\nvar x = 2\n"
+                        code = "var x = 2\n"
                 )))
+
     }
 
     fun `compile - Given unsafed instruction, Then ignores uncompilable code`() {

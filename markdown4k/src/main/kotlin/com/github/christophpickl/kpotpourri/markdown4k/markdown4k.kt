@@ -69,7 +69,9 @@ data class CodeSnippet(
 
     internal val isMarkedAsUnsafeCode = code.startsWith(unsafeEscapeSequence)
 
-    @Suppress("KDocMissingDocumentation")
+    /**
+     * Used by TestNG to construct the test name as it is used by a data provider.
+     */
     override fun toString() = MoreObjects.toStringHelper(this)
             .add("relativePath", relativePath)
             .add("lineNumber", lineNumber)
