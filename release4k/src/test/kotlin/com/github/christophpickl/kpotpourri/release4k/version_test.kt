@@ -2,8 +2,8 @@
 
 package com.github.christophpickl.kpotpourri.release4k
 
-import com.github.christophpickl.kpotpourri.common.io.hitEnter
-import com.github.christophpickl.kpotpourri.common.io.type
+import com.github.christophpickl.kpotpourri.common.io.hitEnterAndReadStdout
+import com.github.christophpickl.kpotpourri.common.io.readStdoutAndWriteStdin
 import com.github.christophpickl.kpotpourri.release4k.Version.*
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsSubstrings
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
@@ -54,7 +54,7 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
 
     @Test(dataProvider = "provideVersionSampleAndReadExecution")
     fun `read versionX - When type X, Then Version vX is returned`(version: Version, readVersion: () -> Any, @Suppress("UNUSED_PARAMETER") ignoreDefault: (Any) -> Any) {
-        type(version.niceString) {
+        readStdoutAndWriteStdin(version.niceString) {
             readVersion() shouldMatchValue version
         }
     }
@@ -63,7 +63,7 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
     fun `read versionX - When invalid and then valid entered, Then output contains invalid input`(anyValid: Version, readVersion: () -> Any, @Suppress("UNUSED_PARAMETER") ignoreDefault: (Any) -> Any) {
         val invalidInput = "invalidTestInput"
         // any correct version nr is ok
-        val stdout = type("$invalidInput\n${anyValid.niceString}") {
+        val stdout = readStdoutAndWriteStdin("$invalidInput\n${anyValid.niceString}") {
             readVersion() // dont check for return value as already done in other test
         }
         assertThat(stdout, containsSubstrings(invalidInput))
@@ -71,7 +71,7 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
 
     @Test(dataProvider = "provideVersionSampleAndReadExecution")
     fun `read versionX - Given default version, When hit enter, Then default version is returned and output contains default`(defaultVersion: Version, @Suppress("UNUSED_PARAMETER") ignore: () -> Any, readWithDefault: (Any) -> Any) {
-        val stdout = hitEnter {
+        val stdout = hitEnterAndReadStdout {
             readWithDefault(defaultVersion) shouldMatchValue defaultVersion
         }
         assertThat(stdout, containsSubstrings(defaultVersion.niceString))

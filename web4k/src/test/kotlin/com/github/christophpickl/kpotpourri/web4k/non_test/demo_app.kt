@@ -24,6 +24,7 @@ class DemoSpringConfig {
 
 @Path("/")
 class DemoResource {
+
     @GET @Produces("text/plain")
     fun getRoot() = "this is root"
 

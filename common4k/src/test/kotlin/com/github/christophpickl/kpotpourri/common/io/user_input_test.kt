@@ -19,7 +19,7 @@ import org.testng.annotations.Test
     fun `readConfirmation - Given no default confirm, When enter y, Then confirmed true`() {
         var actualConfirmation: Boolean? = null
 
-        val actualOut = type("y\n") {
+        val actualOut = readStdoutAndWriteStdin("y\n") {
             actualConfirmation = readConfirmation(PROMPT, defaultConfirm = null)
         }
         assertThat(actualOut, equalTo("$PROMPT\n[y/n] >> "))
@@ -28,7 +28,7 @@ import org.testng.annotations.Test
 
     fun `readConfirmation - Given no default confirm, When enter n, Then confirmed false`() {
         var actualConfirmation: Boolean? = null
-        val actualOut = type("n\n") {
+        val actualOut = readStdoutAndWriteStdin("n\n") {
             actualConfirmation = readConfirmation(PROMPT, defaultConfirm = null)
         }
         assertThat(actualOut, equalTo("$PROMPT\n[y/n] >> "))
@@ -38,7 +38,7 @@ import org.testng.annotations.Test
     fun `readConfirmation - Given no default confirm, When enter invalid, Then confirmed false`() {
         println("Invalid input 'testinvalid'. Please enter".contains("testInvalid"))
 
-        val actualOut = type("$INVALID\ny\n") {
+        val actualOut = readStdoutAndWriteStdin("$INVALID\ny\n") {
             readConfirmation(PROMPT, defaultConfirm = null)
         }
         assertThat(actualOut, containsSubstrings(PROMPT, INVALID))
@@ -47,7 +47,7 @@ import org.testng.annotations.Test
     fun `readConfirmation - Given default true confirm, When hit enter, Then confirmed true`() {
         var actualConfirmation: Boolean? = null
 
-        hitEnter {
+        hitEnterAndReadStdout {
             actualConfirmation = readConfirmation(PROMPT, defaultConfirm = true)
         }
         assertThat(actualConfirmation, equalTo(true))
@@ -63,7 +63,7 @@ import org.testng.annotations.Test
     fun `readOptions stringed - Given default option disabled, When enter 2, Then second item is returned`() {
         var actualInput: String? = null
 
-        type("2\n") {
+        readStdoutAndWriteStdin("2\n") {
             actualInput = readOptions(PROMPT, optionsString, defaultOption = Disabled())
         }
         assertThat(actualInput, equalTo(secondOption))
@@ -71,7 +71,7 @@ import org.testng.annotations.Test
 
     fun `readOptions stringed - Given default select first, When hit enter, Then first item is returned`() {
         var actualInput: String? = null
-        hitEnter {
+        hitEnterAndReadStdout {
             actualInput = readOptions(PROMPT, optionsString, defaultOption = SelectFirst())
         }
         assertThat(actualInput, equalTo(firstOption))
@@ -79,7 +79,7 @@ import org.testng.annotations.Test
 
     fun `readOptions stringed - Given default value of second option, When hit enter, Then second item is returned`() {
         var actualInput: String? = null
-        hitEnter {
+        hitEnterAndReadStdout {
             actualInput = readOptions(PROMPT, optionsString, defaultOption = DefaultValue(secondOption))
         }
         assertThat(actualInput, equalTo(secondOption))
@@ -106,7 +106,7 @@ import org.testng.annotations.Test
 
     fun `readOptions typed - Given default value of second item, When hit enter, Then second item is returned`() {
         var actualInput: Person? = null
-        hitEnter {
+        hitEnterAndReadStdout {
             actualInput = readOptions(PROMPT, optionsPerson, defaultOption = DefaultValue(person2))
         }
         assertThat(actualInput, equalTo(person2))

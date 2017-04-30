@@ -44,11 +44,19 @@ fun File.nameStartingFrom(other: File) =
 /**
  * Move a file by using JDK7's [Files] class.
  */
-// MINOR test me
 fun File.move(target: File) {
     log.debug { "move() ... from ${this.absolutePath} to ${target.absolutePath}" }
     Files.move(this.toPath(), target.toPath())
 }
+
+/**
+ * Create file if not existing and all of its directory structure.
+ */
+fun File.touch() {
+    parentFile.mkdirs()
+    createNewFile()
+}
+
 
 /**
  * Delete the directory recursively and recreate the directory structure.

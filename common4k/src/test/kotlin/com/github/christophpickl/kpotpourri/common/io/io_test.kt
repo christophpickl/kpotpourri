@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.common.io
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test
+import java.io.Closeable
 
 @Test class IoTest {
 
@@ -21,6 +22,10 @@ import org.testng.annotations.Test
             actual = readLine()
         }
         assertThat(actual, equalTo(ANY_VALUE))
+    }
+
+    fun `Closeable closeSilently - When thrown, Then nothing thrown`() {
+        Closeable { throw Exception() }.closeSilently()
     }
 
 }

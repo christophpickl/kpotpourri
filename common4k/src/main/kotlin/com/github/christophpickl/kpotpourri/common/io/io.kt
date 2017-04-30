@@ -9,9 +9,8 @@ import java.io.PrintStream
 private val log = LOG {}
 
 /**
- * Ignores the thrown exception when invoking `Closeable.close()`.
+ * Ignores (logs) the thrown exception when invoking `Closeable.close()`.
  */
-// MINOR test me
 fun Closeable.closeSilently() {
     try {
         close()
@@ -20,20 +19,26 @@ fun Closeable.closeSilently() {
     }
 }
 
-fun type(enter: String, action: () -> Unit): String =
-        readAndWriteStdOutIn(enter, action)
-
-fun hitEnter(action: () -> Unit): String {
-    return readAndWriteStdOutIn("\n", action)
+/**
+ * Simulates pressing ENTER and return output from stdout.
+ */
+fun hitEnterAndReadStdout(action: () -> Unit): String {
+    return readStdoutAndWriteStdin("\n", action)
 }
 
-fun readAndWriteStdOutIn(enter: String, action: () -> Unit): String =
+/**
+ * Write given text to stdin, invoke action and return output from stdout.
+ */
+fun readStdoutAndWriteStdin(text: String, action: () -> Unit): String =
         readFromStdOut {
-            writeToStdIn(enter) {
+            writeToStdIn(text) {
                 action()
             }
         }
 
+/**
+ * Get printed output written to System.out as String.
+ */
 fun readFromStdOut(actionWhichWritesToStdOut: () -> Unit): String {
     val old = System.out
     val byteStream = ByteArrayOutputStream()
@@ -50,10 +55,13 @@ fun readFromStdOut(actionWhichWritesToStdOut: () -> Unit): String {
     return printed
 }
 
-fun writeToStdIn(data: String, actionWhichReadsFromStdIn: () -> Unit) {
+/**
+ * Writes given text to System.in and invokes the action so it can read that text.
+ */
+fun writeToStdIn(text: String, actionWhichReadsFromStdIn: () -> Unit) {
     val old = System.`in`
     try {
-        System.setIn(ByteArrayInputStream(data.toByteArray()))
+        System.setIn(ByteArrayInputStream(text.toByteArray()))
         actionWhichReadsFromStdIn()
     } finally {
         System.setIn(old)

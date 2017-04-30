@@ -3,13 +3,14 @@ package com.github.christophpickl.kpotpourri.common.file
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsExactlyInAnyOrder
-import com.github.christophpickl.kpotpourri.test4k.skip
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test
 import java.io.File
 
 @Test class FileExtensionsTest {
+
+    private val resources = "src/test/resources"
 
     fun `verifyExists - Given existing file, Should not throw`() {
         File(".").verifyExists()
@@ -21,9 +22,17 @@ import java.io.File
         }
     }
 
-    fun `move`() {
-        // MINOR how to test File.move?
-        skip("how to test File.move()?")
+    fun `move - sunshine`() {
+        val original = File("$resources/playground/original.txt")
+        val target = File("$resources/playground/moved.txt")
+        original.touch()
+        original.move(target)
+
+        assertThat(original.exists(), equalTo(false))
+        assertThat(target.exists(), equalTo(true))
+
+        // cleanup ;)
+        target.delete()
     }
 
     fun `nameStartingFrom sunshine`() {
