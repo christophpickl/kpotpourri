@@ -2,6 +2,8 @@ package com.github.christophpickl.kpotpourri.wiremock4k
 
 import com.github.tomakehurst.wiremock.http.Request
 
-// MINOR test me
+/**
+ * Checks if the the given header is present (multiple header values supported).
+ */
 fun Request.hasHeader(pair: Pair<String, String>) =
-        header(pair.first).values().firstOrNull()?.equals(pair.second) ?: false
+        headers.getHeader(pair.first).containsValue(pair.second)
