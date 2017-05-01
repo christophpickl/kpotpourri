@@ -66,15 +66,14 @@ project.ext.version_kotlin_logging = "1.4.4"
 project.ext.version_spring = "4.3.8.RELEASE"
 // web
 project.ext.version_servlet = "3.1.0"
-project.ext.version_jackson = "2.0.1"
 project.ext.version_jackson_kotlin = "2.8.8"
 project.ext.version_apache_httpclient = "4.5.3"
 project.ext.version_fuel = "1.5.0"
 project.ext.version_jetty = "9.4.4.v20170414"
 project.ext.version_resteasy = "3.1.2.Final"
 project.ext.version_resteasy_jackson = "3.1.2.Final"
-project.ext.version_jackson = "2.8.5"
-project.ext.version_jackson_kotlin = "2.8.7"
+project.ext.version_jackson = "2.8.8" // jackson-databind is actually 2.8.8.1
+project.ext.version_jackson_kotlin = "2.8.8"
 // misc
 project.ext.version_asm = "5.2"
 // test
