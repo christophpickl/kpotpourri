@@ -2,10 +2,16 @@ package com.github.christophpickl.kpotpourri.common.io
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 
+/**
+ * Provide user interaction via keyboard for different ways of prompting for input.
+ */
 object Keyboard {
 
     private val INPUT_SIGN = ">>"
 
+    /**
+     * Reads a confirmation boolean from stdin by y/n input, and an optional default value if hit enter immediately.
+     */
     fun readConfirmation(prompt: String, defaultConfirm: Boolean? = null): Boolean {
         println(prompt)
         val preprompt = when (defaultConfirm) {
@@ -36,6 +42,9 @@ object Keyboard {
         } while (true)
     }
 
+    /**
+     * Read input based on a predefined set of answers indexed by 1-based numbers.
+     */
     fun readOptions(prompt: String, options: List<String>, defaultBehaviour: ReadOptionsDefaultBehaviour<String> = ReadOptionsDefaultBehaviour.Disabled()): String {
         if (options.isEmpty()) {
             throw KPotpourriException("Must provide at least one option!")
@@ -79,6 +88,9 @@ object Keyboard {
         } while (true)
     }
 
+    /**
+     * Read input based on a predefined set of typed answers indexed by 1-based numbers.
+     */
     fun <T : ToPrintStringable> readTypedOptions(prompt: String, options: List<T>, defaultBehaviour: ReadOptionsDefaultBehaviour<T> = ReadOptionsDefaultBehaviour.Disabled()): T {
         if (options.map { it.toPrintString() }.distinct().size != options.size) throw KPotpourriException("Options contain duplicate entries!")
         val optionsByPrintString = options.associateBy { it.toPrintString() }
@@ -95,12 +107,28 @@ object Keyboard {
 
 }
 
+/**
+ * Predefined typed options need to be stringifyable.
+ */
 interface ToPrintStringable {
+    /**
+     * Representation to the user of an option.
+     */
     fun toPrintString(): String
 }
 
+/**
+ * Default behavioiur when reading predefined typed options.
+ */
 sealed class ReadOptionsDefaultBehaviour<T> {
+
+    /** No default option available. */
     class Disabled<T> : ReadOptionsDefaultBehaviour<T>()
+
+    /** Select the very first option if hit enter. */
     class SelectFirst<T> : ReadOptionsDefaultBehaviour<T>()
+
+    /** Select a predefined option if hit enter. */
     data class DefaultValue<T>(val value: T) : ReadOptionsDefaultBehaviour<T>()
+
 }

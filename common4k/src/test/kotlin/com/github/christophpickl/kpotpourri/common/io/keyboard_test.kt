@@ -10,45 +10,82 @@ import org.testng.annotations.Test
 
 @Test class KeyboardTest {
 
+    //<editor-fold desc="readConfirmation">
+
     private val PROMPT = "testPrompt"
-    private val INVALID = "testInvalid"
+    private val ANY_OPTION = "y"
 
     fun `readConfirmation - Given no default confirm, When enter y, Then confirmed true`() {
-        var actualConfirmation: Boolean? = null
-
-        val actualOut = Io.readStdoutAndWriteStdin("y\n") {
-            actualConfirmation = Keyboard.readConfirmation(PROMPT, defaultConfirm = null)
-        }
-        assertThat(actualOut, equalTo("$PROMPT\n[y/n] >> "))
-        assertThat(actualConfirmation, equalTo(true))
+        assertReadConfirmation(
+                input = "y\n",
+                defaultConfirm = null,
+                expectedOutput = "$PROMPT\n[y/n] >> ",
+                expectedResult = true
+        )
     }
+
 
     fun `readConfirmation - Given no default confirm, When enter n, Then confirmed false`() {
-        var actualConfirmation: Boolean? = null
-        val actualOut = Io.readStdoutAndWriteStdin("n\n") {
-            actualConfirmation = Keyboard.readConfirmation(PROMPT, defaultConfirm = null)
-        }
-        assertThat(actualOut, equalTo("$PROMPT\n[y/n] >> "))
-        assertThat(actualConfirmation, equalTo(false))
+        assertReadConfirmation(
+                input = "n\n",
+                defaultConfirm = null,
+                expectedOutput = "$PROMPT\n[y/n] >> ",
+                expectedResult = false
+        )
     }
 
-    fun `readConfirmation - Given no default confirm, When enter invalid, Then confirmed false`() {
-        println("Invalid input 'testinvalid'. Please enter".contains("testInvalid"))
-
-        val actualOut = Io.readStdoutAndWriteStdin("$INVALID\ny\n") {
+    fun `readConfirmation - Given no default confirm, When enter invalid, Then invalid input is printed`() {
+        val actualOut = Io.readStdoutAndWriteStdin("invalid\n$ANY_OPTION\n") {
             Keyboard.readConfirmation(PROMPT, defaultConfirm = null)
         }
-        assertThat(actualOut, containsSubstrings(PROMPT, INVALID))
+        assertThat(actualOut, containsSubstrings("invalid"))
+    }
+
+    fun `readConfirmation - Given default true confirm, When hit enter, Then hint is printed`() {
+        val actualOut = Io.readStdoutAndWriteStdin("invalid\n$ANY_OPTION\n") {
+            Keyboard.readConfirmation(PROMPT, defaultConfirm = true)
+        }
+        assertThat(actualOut, containsSubstrings("(or hit Enter for 'y')"))
+    }
+
+    fun `readConfirmation - Given default false confirm, When hit enter, Then hint is printed`() {
+        val actualOut = Io.readStdoutAndWriteStdin("invalid\ny\n") {
+            Keyboard.readConfirmation(PROMPT, defaultConfirm = false)
+        }
+        assertThat(actualOut, containsSubstrings("(or hit Enter for 'n')"))
     }
 
     fun `readConfirmation - Given default true confirm, When hit enter, Then confirmed true`() {
+        assertReadConfirmation(
+                input = "\n",
+                defaultConfirm = true,
+                expectedOutput = "$PROMPT\n[Y/n] >> ",
+                expectedResult = true
+        )
+    }
+
+    fun `readConfirmation - Given default false confirm, When hit enter, Then confirmed false`() {
+        assertReadConfirmation(
+                input = "\n",
+                defaultConfirm = false,
+                expectedOutput = "$PROMPT\n[y/N] >> ",
+                expectedResult = false
+        )
+    }
+
+    private fun assertReadConfirmation(input: String, defaultConfirm: Boolean?, expectedOutput: String, expectedResult: Boolean) {
         var actualConfirmation: Boolean? = null
 
-        Io.hitEnterAndReadStdout {
-            actualConfirmation = Keyboard.readConfirmation(PROMPT, defaultConfirm = true)
+        val actualOut = Io.readStdoutAndWriteStdin(input) {
+            actualConfirmation = Keyboard.readConfirmation(PROMPT, defaultConfirm = defaultConfirm)
         }
-        assertThat(actualConfirmation, equalTo(true))
+        assertThat(actualOut, equalTo(expectedOutput))
+        assertThat(actualConfirmation, equalTo(expectedResult))
     }
+
+    //</editor-fold>
+
+    //<editor-fold desc="readOptions">
 
     private val firstOption = "a"
     private val secondOption = "b"
@@ -106,5 +143,7 @@ import org.testng.annotations.Test
     private data class Person(val name: String) : ToPrintStringable {
         override fun toPrintString() = name
     }
+
+    //</editor-fold>
 
 }
