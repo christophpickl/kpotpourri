@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.release4k
 
+import com.github.christophpickl.kpotpourri.common.io.Keyboard
+
 
 fun main(args: Array<String>) {
     println("\nRead version: ${Version.VersionParts1.readVersion1FromStdin(
@@ -52,7 +54,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
             else ""
             while (true) {
                 print("$prompt$defaultPrompt: ")
-                val input = readLine()!!.trim()
+                val input = Keyboard.readLine().trim()
                 if (input.isEmpty()) {
                     if (defaultVersion != null) {
                         return defaultVersion

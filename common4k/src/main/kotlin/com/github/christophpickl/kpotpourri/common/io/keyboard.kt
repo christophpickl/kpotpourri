@@ -10,6 +10,11 @@ object Keyboard {
     private val INPUT_SIGN = ">>"
 
     /**
+     * Read user input line in a null safe way.
+     */
+    fun readLine() = kotlin.io.readLine() ?: throw KPotpourriException("readLine() returned null (must likely you've redirected System.in)")
+
+    /**
      * Reads a confirmation boolean from stdin by y/n input, and an optional default value if hit enter immediately.
      */
     fun readConfirmation(prompt: String, defaultConfirm: Boolean? = null): Boolean {
@@ -21,7 +26,7 @@ object Keyboard {
         }
         do {
             print("[$preprompt] $INPUT_SIGN ")
-            val input = readLine()!!.trim()
+            val input = readLine().trim()
             if (input.toLowerCase() == "y") {
                 return true
             }
@@ -64,7 +69,7 @@ object Keyboard {
         }
         do {
             print("$INPUT_SIGN ")
-            val rawInput = readLine()!!.trim()
+            val rawInput = readLine().trim()
             if (rawInput == "") {
                 if (defaultBehaviour is ReadOptionsDefaultBehaviour.DefaultValue<String>) {
                     return defaultBehaviour.value
@@ -103,7 +108,6 @@ object Keyboard {
         return optionsByPrintString[input]!!
 
     }
-
 
 }
 

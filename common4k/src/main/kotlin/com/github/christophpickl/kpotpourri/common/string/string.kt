@@ -118,3 +118,9 @@ fun String.splitAsArguments(): List<String> {
 operator fun StringBuilder.plusAssign(char: Char) {
     append(char)
 }
+
+/**
+ * Enhance the `contains` method receiving multiple substrings instead only of a single.
+ */
+fun String.containsAll(vararg substrings: String, ignoreCase: Boolean = false) =
+        substrings.all { this.contains(it, ignoreCase) }

@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.release4k.internal
 
 import com.github.christophpickl.kpotpourri.common.file.resetDirectory
 import com.github.christophpickl.kpotpourri.common.file.verifyExists
+import com.github.christophpickl.kpotpourri.common.io.Keyboard
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.string.splitAsArguments
 import com.github.christophpickl.kpotpourri.github.GithubApi
@@ -37,7 +38,7 @@ class Release4kImpl : Release4k {
     override fun promptUser(prompt: String): String {
         println(prompt)
         println(">> ")
-        return readLine()!!
+        return Keyboard.readLine()
     }
 
     override fun readVersionFromTxt(relativeFilePath: String): Version {

@@ -12,7 +12,7 @@ import org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
 import org.jboss.resteasy.plugins.spring.SpringContextLoaderListener
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext
 import java.net.BindException
-import java.util.*
+import java.util.EventListener
 import javax.servlet.Filter
 import kotlin.reflect.KClass
 

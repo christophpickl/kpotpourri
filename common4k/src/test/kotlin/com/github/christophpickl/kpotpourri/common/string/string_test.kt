@@ -8,7 +8,6 @@ import org.testng.annotations.Test
 import java.io.File
 
 
-
 @Test class StringExtensionsTest {
 
     @DataProvider
@@ -110,6 +109,15 @@ import java.io.File
         "some content".saveToFile(temp)
 
         assertThat(temp.readText(), equalTo("some content"))
+    }
+
+    fun `containsAll - sunshine`() {
+        "ab".containsAll("a") shouldMatchValue true
+        "ab".containsAll("a", "b") shouldMatchValue true
+        "ab".containsAll("a", "b", "c") shouldMatchValue false
+
+        "a".containsAll("A", ignoreCase = false) shouldMatchValue false
+        "a".containsAll("A", ignoreCase = true) shouldMatchValue true
     }
 
 }
