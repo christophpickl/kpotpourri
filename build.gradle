@@ -257,6 +257,7 @@ subprojects { subproject ->
     publications = ['MyPublication']
 
 //        dryRun = false //Whether to run this as dry-run, without deploying
+        //noinspection GroovyAssignabilityCheck
         publish = true //If version should be auto published after an upload
 
         pkg {
