@@ -17,9 +17,3 @@ annotation class KotlinNoArg
  */
 @Suppress("unused")
 val Any.enforceAllBranchesCovered: Unit get() = Unit
-
-/**
- * Let the thread sleep some random time between 0.5 and 1.0 seconds.
- */
-@Suppress("unused")
-fun sleepRand() = Thread.sleep((Math.random() * 500.0).toLong() + 500)

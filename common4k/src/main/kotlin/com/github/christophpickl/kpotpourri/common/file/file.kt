@@ -8,6 +8,60 @@ import java.nio.file.Files
 private val log = LOG {}
 
 /**
+ * Data structure containing the filename and the suffix (without leading dot).
+ */
+data class FileName(
+        val name: String,
+        val suffix: String?
+) {
+    companion object {
+        /**
+         * Factory method.
+         */
+        fun by(fullName: String): FileName {
+            if (!fullName.contains(".")) {
+                return withoutSuffix(fullName)
+            }
+            if (fullName.startsWith(".")) {
+                val secondLastDot = fullName.removePrefix(".").lastIndexOf(".")
+                if (secondLastDot == -1) {
+                    return withoutSuffix(fullName)
+                }
+                return extract(fullName, secondLastDot + 1)
+            }
+            if (fullName.endsWith(".")) {
+                val secondLastDot = fullName.removeSuffix(".").lastIndexOf(".")
+                if (secondLastDot == -1) {
+                    return withoutSuffix(fullName)
+                }
+                return FileName(fullName.substring(0, secondLastDot + 1), fullName.substring(secondLastDot + 1))
+            }
+            return extract(fullName, fullName.lastIndexOf("."))
+        }
+
+        private fun extract(fullName: String, lastDot: Int) =
+                if (lastDot == fullName.length - 1) {
+                    withoutSuffix(fullName)
+                } else {
+                    FileName(fullName.substring(0, lastDot), fullName.substring(lastDot + 1))
+                }
+
+        private fun withoutSuffix(fullName: String) = FileName(fullName, null)
+
+    }
+}
+
+/**
+ * Create a temporary file which deletes itself when the JVM exits.
+ */
+fun tempFile(name: String): File {
+    val fileName = FileName.by(name)
+    val temp = File.createTempFile(fileName.name, fileName.suffix?.let { ".$it" })
+    temp.deleteOnExit()
+    return temp
+}
+
+/**
  * Checks if the File exists or throws a [KPotpourriException].
  *
  * Formerly known as `ensureExists()`.
@@ -23,7 +77,7 @@ fun File.verifyExists() = this.apply {
  */
 fun File.verifyIsFile() = this.apply {
     if (!isFile) {
-        throw KPotpourriException("Expected to be a file: $absolutePath")
+        throw KPotpourriException("Expected to be a file: $canonicalPath")
     }
 }
 

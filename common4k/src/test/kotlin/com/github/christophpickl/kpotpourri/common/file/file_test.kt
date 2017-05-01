@@ -3,14 +3,39 @@ package com.github.christophpickl.kpotpourri.common.file
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsExactlyInAnyOrder
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import java.io.File
 
 @Test class FileExtensionsTest {
 
     private val resources = "src/test/resources"
+
+    @DataProvider
+    fun provideFileNames(): Array<Array<out Any?>> = arrayOf(
+            arrayOf("foo.bar", "foo", "bar"),
+            arrayOf("foobar", "foobar", null),
+            arrayOf("foo.bar.baz", "foo.bar", "baz"),
+            arrayOf("foo.", "foo.", null),
+            arrayOf("foo.bar.", "foo.", "bar."),
+            arrayOf(".foo.bar", ".foo", "bar"),
+            arrayOf(".foo", ".foo", null)
+    )
+
+    @Test(dataProvider = "provideFileNames")
+    fun `FileName by`(fullname: String, name: String, suffix: String?) {
+        FileName.by(fullname) shouldMatchValue FileName(name, suffix)
+    }
+
+    fun `tempFile - sunshine`() {
+        val file = tempFile("foo")
+
+        file.exists() shouldMatchValue true
+        file.isFile shouldMatchValue true
+    }
 
     fun `verifyExists - Given existing file, Should not throw`() {
         File(".").verifyExists()
@@ -19,6 +44,35 @@ import java.io.File
     fun `verifyExists - Given non-existing file, Should throw`() {
         assertThrown<KPotpourriException> {
             File("./this/is/not/existing").verifyExists()
+        }
+    }
+
+    fun `verifyIsFile - Given existing file, Should not throw`() {
+        File.createTempFile("existing", ".txt").verifyIsFile()
+    }
+
+    fun `verifyIsFile - Given non existing file, Should throw`() {
+        val file = File("not_existing.txt")
+        assertThrown<KPotpourriException>({ it.message!!.contains(file.canonicalPath) }) {
+            file.verifyIsFile()
+        }
+    }
+
+    fun `verifyExistsAndIsFile - Given existing file, Should not throw`() {
+        File.createTempFile("existing", ".txt").verifyExistsAndIsFile()
+    }
+
+    fun `verifyExistsAndIsFile - Given existing directory, Should throw`() {
+        val file = File(".")
+        assertThrown<KPotpourriException>({ it.message!!.contains(file.canonicalPath) }) {
+            file.verifyExistsAndIsFile()
+        }
+    }
+
+    fun `verifyExistsAndIsFile - Given non existing file, Should throw`() {
+        val file = File("not_existing.txt")
+        assertThrown<KPotpourriException>({ it.message!!.contains(file.canonicalPath) }) {
+            file.verifyExistsAndIsFile()
         }
     }
 

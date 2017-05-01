@@ -6,7 +6,7 @@ package com.github.christophpickl.kpotpourri.common.numbers
  *
  * Example: (0.1234).format(2) => 0.12
  */
-fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)!!
+fun Double.format(digits: Int): String = java.lang.String.format("%.${digits}f", this)
 
 /**
  * This == milliseconds

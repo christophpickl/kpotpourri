@@ -2,8 +2,6 @@ package com.github.christophpickl.kpotpourri.common.enum
 
 import com.github.christophpickl.kpotpourri.common.io.Io
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test
 
 @Test class EnumTest {
@@ -12,14 +10,16 @@ import org.testng.annotations.Test
         toPrettyString<TestableEnum>() shouldMatchValue "- A\n- B"
     }
 
-    fun `printAllValues as extension - sunshine`() {
-        assertThat(Io.readFromStdOut { TestableEnum::class.printAllValues() },
-                equalTo("A, B\n"))
+    fun `toPrettyString - Given TestableEnum with custom prefix and joiner, Should format elements properly`() {
+        toPrettyString<TestableEnum>(prefix = "x", joiner = "y") shouldMatchValue "xAyxB"
     }
 
-    fun `printAllValues - sunshine`() {
-        assertThat(Io.readFromStdOut { printAllValues<TestableEnum>() },
-                equalTo("A, B\n"))
+    fun `printAllValues - Given TestableEnum, Should listify output`() {
+        Io.readFromStdOut { printAllValues<TestableEnum>() } shouldMatchValue "A, B\n"
+    }
+
+    fun `printAllValues as extension - Given TestableEnum, Should listify output`() {
+        Io.readFromStdOut { TestableEnum::class.printAllValues() } shouldMatchValue "A, B\n"
     }
 
 }

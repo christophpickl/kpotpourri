@@ -85,12 +85,14 @@ import java.io.File
 
     @DataProvider
     fun provideSplitAsArguments(): Array<Array<out Any>> = arrayOf(
+            arrayOf("", emptyList<String>()),
+            arrayOf(" ", emptyList<String>()),
+            arrayOf("\t\n ", emptyList<String>()),
             arrayOf("a", listOf("a")),
             arrayOf(" a ", listOf("a")),
             arrayOf(" a   b ", listOf("a", "b")),
             arrayOf("a b", listOf("a", "b")),
             arrayOf("a b \"c d\"", listOf("a", "b", "c d"))
-
     )
 
     @Test(dataProvider = "provideSplitAsArguments")

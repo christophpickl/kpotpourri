@@ -7,7 +7,8 @@ fun Int.isBetweenInclusive(lower: Int, upper: Int): Boolean {
     if (lower > upper) {
         throw IllegalArgumentException("lower $lower must be <= upper $upper")
     }
-    return this in lower..upper
+    @Suppress("ConvertTwoComparisonsToRangeCheck") // this in lower..upper; not as readable to me and f*cks up coverage report :-/
+    return this >= lower && this <= upper
 }
 
 /**
@@ -17,7 +18,7 @@ fun Int.forEach(code: () -> Unit) {
     if (this <= 0) {
         throw IllegalArgumentException("Count must be at >= 1 but was: $this")
     }
-    for (i in 1..this) {
+    (1..this).forEach {
         code()
     }
 }
