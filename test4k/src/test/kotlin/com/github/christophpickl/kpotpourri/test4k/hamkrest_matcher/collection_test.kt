@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher
 
+import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
@@ -25,6 +26,12 @@ import org.testng.annotations.Test
     private fun assertContainsExactlyInAnyOrder(given: List<String>, contains: List<String>, shouldMatch: Boolean) {
         val expected = if (shouldMatch) MatchResult.Match::class else MatchResult.Mismatch::class
         assertThat(containsExactlyInAnyOrder(*contains.toTypedArray())(given), isA(expected))
+    }
+
+    fun `containsExactlyInAnyOrder - Given invalid match, Then should contain array contents in description`() {
+        assertThrown<AssertionError>({ e -> listOf("a", "b", "x", "y").all { e.message!!.contains(it) } }) {
+            assertThat(listOf("a", "b"), containsExactlyInAnyOrder("x", "y"))
+        }
     }
 
 }

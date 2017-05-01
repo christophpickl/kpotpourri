@@ -1,5 +1,4 @@
-
-// enhanced test capabilities for wiremock.
+// wiremock4k
 
 dependencies {
     compile project(':common4k')

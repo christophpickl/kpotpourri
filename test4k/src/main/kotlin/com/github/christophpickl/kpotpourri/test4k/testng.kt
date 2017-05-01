@@ -8,7 +8,7 @@ import org.testng.ITestResult
 import org.testng.SkipException
 
 /**
- * Simplify skiping a TestNG test.
+ * Simplify skiping a TestNG test, as otherwise have to throw a custom exception which makes the code below unreachable generating a nasty warning.
  */
 fun skip(message: String) {
     throw SkipException(message)
@@ -19,31 +19,32 @@ fun skip(message: String) {
  */
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T> List<T>.toDataProviding() =
-        map { arrayOf(it) }.toTypedArray() as Array<Array<out Any>>
+        map { arrayOf(it) }.toTypedArray() as Array<Array<out Any?>>
 
 
-// TODO remove that one from Gadsu, and enable as default TestNG listener in intellij (in gadsu and kpot)
+/**
+ * Better to declare this listener as a default listener in IntelliJ's default configuration.
+ */
+@Suppress("unused", "KDocMissingDocumentation")
 class LogTestListener : ITestNGListener, ITestListener {
 
     private val log = KotlinLogging.logger {}
 
     override fun onTestStart(result: ITestResult) {
-        logTest("START", result)
+        log.info(buildMessage("START", result))
     }
 
     override fun onTestSuccess(result: ITestResult) {
-        logTest("SUCCESS", result)
+        log.info(buildMessage("SUCCESS", result))
     }
 
     override fun onTestSkipped(result: ITestResult) {
-        // copy and paste ;)
-        log.warn("======> {} - {}#{}()", "SKIP", result.testClass.realClass.simpleName, result.method.methodName)
+        log.warn(buildMessage("SKIP", result))
     }
 
     override fun onTestFailure(result: ITestResult) {
-        logTest("FAIL", result)
+        log.info(buildMessage("FAIL", result))
     }
-
 
     override fun onStart(context: ITestContext) {
         log.info("Test Suite STARTED")
@@ -55,8 +56,8 @@ class LogTestListener : ITestNGListener, ITestListener {
 
     override fun onTestFailedButWithinSuccessPercentage(result: ITestResult) {}
 
-    private fun logTest(label: String, result: ITestResult) {
-        log.info("======> {} - {}#{}()", label, result.testClass.realClass.simpleName, result.method.methodName)
+    private fun buildMessage(label: String, result: ITestResult) = {
+        "======> $label - ${result.testClass?.realClass?.simpleName}#${result.method?.methodName}()"
     }
 
 }

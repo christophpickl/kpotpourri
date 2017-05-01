@@ -35,7 +35,7 @@
     * need to define artifactId, needs to be automated
     * other artifacts need to be able to easily include this
 * @release4k: dryRun() option
-
+* enhance kdoc https://github.com/Kotlin/dokka
 
 
 # TODOs HTTP4K

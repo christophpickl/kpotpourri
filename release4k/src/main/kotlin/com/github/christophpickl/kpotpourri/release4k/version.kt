@@ -2,32 +2,41 @@ package com.github.christophpickl.kpotpourri.release4k
 
 import com.github.christophpickl.kpotpourri.common.io.Keyboard
 
-
-fun main(args: Array<String>) {
-    println("\nRead version: ${Version.VersionParts1.readVersion1FromStdin(
-            defaultVersion = Version.VersionParts1(VersionType.Release, 42)
-    )}")
-}
-
+/**
+ * Distinction between snapshots and releases.
+ */
 enum class VersionType {
+    /** Identifies a regular Maven snapshot version. */
     Snapshot,
-    Release
+    /** Indentifies a stable, released version. */
+    Release // not yet used...
 }
 
 private val pattern2 = "^(\\d+)\\.(\\d+)$".toRegex()
 private val pattern3 = "^(\\d+)\\.(\\d+)\\.(\\d+)$".toRegex()
 private val pattern4 = "^(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)$".toRegex()
 
+/**
+ * Parse an input like "42" or return null.
+ */
 fun parseVersion1(input: String): Version.VersionParts1? {
     val entered = input.toIntOrNull() ?: return null
     return Version.VersionParts1(VersionType.Release, entered)
 }
+
+/**
+ * Parse an input like "1.2" or return null.
+ */
 fun parseVersion2(input: String): Version.VersionParts2? {
     val match = pattern2.matchEntire(input) ?: return null
     return Version.VersionParts2(VersionType.Release,
             match.groupValues[1].toInt(),
             match.groupValues[2].toInt())
 }
+
+/**
+ * Parse an input like "1.2.3" or return null.
+ */
 fun parseVersion3(input: String): Version.VersionParts3? {
     val match = pattern3.matchEntire(input) ?: return null
     return Version.VersionParts3(VersionType.Release,
@@ -35,6 +44,10 @@ fun parseVersion3(input: String): Version.VersionParts3? {
             match.groupValues[2].toInt(),
             match.groupValues[3].toInt())
 }
+
+/**
+ * Parse an input like "1.2.3.4" or return null.
+ */
 fun parseVersion4(input: String): Version.VersionParts4? {
     val match = pattern4.matchEntire(input) ?: return null
     return Version.VersionParts4(VersionType.Release,
@@ -45,6 +58,10 @@ fun parseVersion4(input: String): Version.VersionParts4? {
 }
 
 private val DEFAULT_PROMPT = "Enter version"
+
+/**
+ * Core type representing different version structures.
+ */
 sealed class Version(open val type: VersionType, private val numbers: List<Int>) {
 
     companion object {
@@ -69,12 +86,19 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
                 }
             }
         }
+
     }
 
+    /**
+     * Format as readable string, like "1.2.3-SNAPSHOT" or "1.2".
+     */
     val niceString: String by lazy {
         numbers.joinToString(".") + if (type == VersionType.Snapshot) "-SNAPSHOT" else ""
     }
-    // MINOR test readXyz
+
+    /**
+     * Single part version declaration like "1".
+     */
     data class VersionParts1(override val type: VersionType, val version: Int) :
             Version(type, listOf(version)) {
 
@@ -89,6 +113,9 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
         fun increment1() = VersionParts1(type, version + 1)
     }
 
+    /**
+     * Two part version declaration like "1.2" (major, minor).
+     */
     data class VersionParts2(override val type: VersionType, val version1: Int, val version2: Int) :
             Version(type, listOf(version1, version2)) {
 
@@ -105,6 +132,9 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
         fun incrementMinor() = increment2()
     }
 
+    /**
+     * Three part version declaration like "1.2.3" (major, minor, patch).
+     */
     data class VersionParts3(override val type: VersionType, val version1: Int, val version2: Int, val version3: Int) :
             Version(type, listOf(version1, version2, version3)) {
 
@@ -124,6 +154,9 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
 
     }
 
+    /**
+     * Four part version declaration like "1.2.3.4" (major, minor, patch, buidl).
+     */
     data class VersionParts4(override val type: VersionType, val version1: Int, val version2: Int, val version3: Int, val version4: Int) :
             Version(type, listOf(version1, version2, version3, version4)) {
 
@@ -135,8 +168,12 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
 
         override fun toVersion4() = this
 
+        /** Synonym for `incrementMajor`. */
         fun increment1() = VersionParts4(type, version1 + 1, version2, version3, version4)
+
+        /** Synonym for `increment`. */
         fun incrementMajor() = increment1()
+
         fun increment2() = VersionParts4(type, version1, version2 + 1, version3, version4)
         fun incrementMinor() = increment2()
         fun increment3() = VersionParts4(type, version1, version2, version3 + 1, version4)
@@ -146,20 +183,24 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
 
     }
 
+    /** Override in order to enable version part conversion. */
     open fun toVersion1(): VersionParts1 {
-        throw Release4kException("Version '$niceString' must contain of 1 part.")
+        throw Release4kException("Version '$niceString' must consist of 1 part.")
     }
 
+    /** Override in order to enable version part conversion. */
     open fun toVersion2(): VersionParts2 {
-        throw Release4kException("Version '$niceString' must contain of 2 parts.")
+        throw Release4kException("Version '$niceString' must consist of 2 parts.")
     }
 
+    /** Override in order to enable version part conversion. */
     open fun toVersion3(): VersionParts3 {
-        throw Release4kException("Version '$niceString' must contain of 3 parts.")
+        throw Release4kException("Version '$niceString' must consist of 3 parts.")
     }
 
+    /** Override in order to enable version part conversion. */
     open fun toVersion4(): VersionParts4 {
-        throw Release4kException("Version '$niceString' must contain of 4 parts.")
+        throw Release4kException("Version '$niceString' must consist of 4 parts.")
     }
 
 }

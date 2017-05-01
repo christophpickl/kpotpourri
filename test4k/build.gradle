@@ -7,4 +7,7 @@ dependencies {
     compile "com.nhaarman:mockito-kotlin:" + rootProject.version_mockito_kotlin
 
     runtime "ch.qos.logback:logback-core:" + rootProject.version_logback
+
+    testRuntime "com.google.inject:guice:" + rootProject.version_guice
+
 }

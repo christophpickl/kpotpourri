@@ -56,32 +56,26 @@ allprojects {
 }
 
 // VERSIONS
-project.ext.version_guava = "21.0"
-project.ext.version_jacoco = "0.7.9"
-// logging
-project.ext.version_logback = "1.2.3"
-project.ext.version_jcl = "1.7.25"
-project.ext.version_kotlin_logging = "1.4.4"
-// spring
-project.ext.version_spring = "4.3.8.RELEASE"
-// web
-project.ext.version_servlet = "3.1.0"
-project.ext.version_jackson_kotlin = "2.8.8"
 project.ext.version_apache_httpclient = "4.5.3"
+project.ext.version_asm = "5.2"
 project.ext.version_fuel = "1.5.0"
-project.ext.version_jetty = "9.4.4.v20170414"
-project.ext.version_resteasy = "3.1.2.Final"
-project.ext.version_resteasy_jackson = "3.1.2.Final"
+project.ext.version_guava = "21.0"
+project.ext.version_guice = "3.0"
+project.ext.version_hamkrest = "1.4.0.0"
 project.ext.version_jackson = "2.8.8" // jackson-databind is actually 2.8.8.1
 project.ext.version_jackson_kotlin = "2.8.8"
-// misc
-project.ext.version_asm = "5.2"
-// test
-project.ext.version_testng = "6.11"
-project.ext.version_hamkrest = "1.4.0.0"
+project.ext.version_jacoco = "0.7.9"
+project.ext.version_jcl = "1.7.25"
+project.ext.version_jetty = "9.4.4.v20170414"
+project.ext.version_kotlin_logging = "1.4.4"
+project.ext.version_logback = "1.2.3"
 project.ext.version_mockito_kotlin = "1.4.0"
+project.ext.version_resteasy = "3.1.2.Final"
+project.ext.version_resteasy_jackson = "3.1.2.Final"
+project.ext.version_servlet = "3.1.0"
+project.ext.version_spring = "4.3.8.RELEASE"
+project.ext.version_testng = "6.11"
 project.ext.version_wiremock = "2.6.0"
-
 
 subprojects { subproject ->
 
@@ -296,17 +290,7 @@ subprojects { subproject ->
 
     dokka {
 //        moduleName = 'data'
-        outputFormat = 'javadoc'
-//        outputDirectory = "$buildDir/javadoc"
-//        processConfigurations = ['compile', 'extra']
-//        includes = ['packages.md', 'extra.md']
-//        samples = ['samples/basic.kt', 'samples/advanced.kt']
-//        linkMapping {
-//            dir = "src/main/kotlin"
-//            url = "https://github.com/cy6erGn0m/vertx3-lang-kotlin/blob/master/src/main/kotlin"
-//            suffix = "#L"
-//        }
-//        sourceDirs = files('src/main/kotlin')
+        outputFormat = 'html'
     }
 
 //    signing {

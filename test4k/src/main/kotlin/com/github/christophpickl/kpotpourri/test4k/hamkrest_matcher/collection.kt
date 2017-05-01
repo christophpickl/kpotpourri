@@ -7,6 +7,7 @@ import com.natpryce.hamkrest.describe
 /**
  * Checks if the given collection contains exactly (not more or less) elements in an undefined order.
  */
+@Suppress("KDocMissingDocumentation")
 fun <K> containsExactlyInAnyOrder(vararg expected: K): Matcher<Collection<K>> = object : Matcher.Primitive<Collection<K>>() {
     override fun invoke(actual: Collection<K>): MatchResult {
         return if (expected.all(actual::contains) && actual.all { it in expected }) {
@@ -16,7 +17,6 @@ fun <K> containsExactlyInAnyOrder(vararg expected: K): Matcher<Collection<K>> = 
         }
     }
 
-    // TODO describe() should support Arrays.contentToString
     override val description: String get() = "contains ${expected.contentToString()}"
     override val negatedDescription: String get() = "does not contain ${expected.contentToString()}"
 }
