@@ -88,28 +88,31 @@ class RootErrorHandler(
 /**
  * Renders proper JSON.
  */
-private object JsonErrorHandler : CustomErrorHandler {
+internal object JsonErrorHandler : CustomErrorHandler {
 
     private val SERVLET_ATTRIBUTE_EXCEPTION = "javax.servlet.error.exception"
     private val SERVLET_ATTRIBUTE_ERROR_MESSAGE = "javax.servlet.error.message"
 
-    private val mapper = buildJackson4k() // TODO dont render NULLs => use jackson4k (easier configuration)
+    private val mapper = buildJackson4k {
+        renderNulls = false
+    }
 
+    /**
+     * Transforms and writes JSON to writer of given [ErrorObject].
+     */
     override fun handle(error: ErrorObject) {
         error.response.contentType = "application/json"
-        // maybe display request headers...?
-
-        val json = mapper.asString(ErrorResponse(
+        val errorResponse = ErrorResponse(
                 message = if (error.response is Response) error.response.reason else null,
                 statusCode = error.response.status,
-                // TODO if wrong media type is sent, this only contains "Bad Request",
+                // MINOR if wrong media type is sent, this only contains "Bad Request",
                 // but this is available: java.lang.IllegalArgumentException: RESTEASY003340: Failure parsing MediaType string: asdf
                 errorMessage = error.request.getAttribute(SERVLET_ATTRIBUTE_ERROR_MESSAGE) as String,
                 requestMethod = error.request.method,
                 requestUrl = error.request.requestURL.toString(),
                 stackTrace = buildStackTrace(error)
-        ))
-        error.writer.write(json)
+        )
+        error.writer.write(mapper.asString(errorResponse))
     }
 
     private fun buildStackTrace(error: ErrorObject): StackTrace? {
