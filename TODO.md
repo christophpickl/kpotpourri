@@ -18,6 +18,7 @@
 * get rid of: MockRequest instance
 
 ## Med
+* deploy dokka HTML to github (github.io?)
 * go through yobu (random stuff)
 * go through gadsu (swing as well) and harvest stuff
     * BaseLogConfigurator
@@ -35,7 +36,7 @@
     * need to define artifactId, needs to be automated
     * other artifacts need to be able to easily include this
 * @release4k: dryRun() option
-* enhance kdoc https://github.com/Kotlin/dokka
+* enhance kdoc https://github.com/Kotlin/dokka (samples and stuff)
 
 
 # TODOs HTTP4K
