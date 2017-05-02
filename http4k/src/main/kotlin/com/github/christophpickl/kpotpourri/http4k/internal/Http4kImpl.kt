@@ -37,6 +37,8 @@ internal class Http4kImpl(
 
     /**
      * GET, POST, ... or any other. Preparing a [Request4k] instance and passing it to the specific implementation.
+     *
+     * @param url may or may not have already query params set
      */
     private inline fun <R : Any, reified OPT : AnyRequestOpts> any(
             method: HttpMethod4k,
@@ -60,7 +62,7 @@ internal class Http4kImpl(
 
         val request4k = Request4k(
                 method = method,
-                url = UrlBuilder.build2(url, globals, requestOpts),
+                url = buildUrl(url, globals, requestOpts),
                 headers = headers.map,
                 requestBody = requestTypeAndBody?.requestBody
         )

@@ -26,3 +26,11 @@ fun <K, V> Map<K, V>.verifyNoIntersection(that: Map<K, V>) {
  */
 fun <K, V> MutableMap<K, V>.put(pair: Pair<K, V>) =
         put(pair.first, pair.second)
+
+/**
+ * Constructs a map of a combination of all given maps.
+ */
+fun <K, V> mapsOf(vararg maps: Map<K, V>): Map<K, V> =
+        LinkedHashMap<K, V>().also { mapOfMaps ->
+            maps.forEach(mapOfMaps::putAll)
+        }
