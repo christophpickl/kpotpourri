@@ -2,70 +2,132 @@ package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.common.file.verifyExistsAndIsFile
 import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
-import com.google.common.io.ByteSource
-import com.google.common.io.Files
 import java.io.File
+import java.util.Objects
 
+internal val DEFAULT_CONTENT_TYPE: String = "*/*"
 
+/**
+ * Options object for setting the request body.
+ */
 interface RequestWithEntityOpts {
+
+    /** Assign the request body yourself. */
     var requestBody: RequestBody
 
+    /** Shortcut method to disable request boyd. */
     fun requestBodyDisabled() {
         requestBody = None
     }
 
-    fun requestBody(body: String) {
-        requestBody = StringBody(body)
-    }
-
-    fun requestBody(body: Any) {
+    /**
+     * Depending on passed body runtime type, determines the proper request body or defaults to a JSON object.
+     *
+     * @param contentType override default content type (if body is not of type Unit).
+     */
+    fun requestBody(body: Any, contentType: String? = null) {
         if (body is Unit) {
             requestBodyDisabled()
         } else if (body is String) {
-            requestBody = StringBody(body)
+            requestBody = StringBody(body, contentType ?: "text/plain")
         } else if (body is File) {
-            requestFileBody("*/*", body)
+            requestFileBody(body, contentType ?: DEFAULT_CONTENT_TYPE)
         } else if (body is ByteArray) {
-            requestBytesBody("*/*", body)
+            requestBytesBody(body, contentType ?: DEFAULT_CONTENT_TYPE)
         } else if (body is Number) {
-            requestBody = StringBody(body.toString())
+            requestBody = StringBody(body.toString(), contentType ?: "text/plain")
         } else {
-            requestBody = JsonBody(body)
+            // MINOR support more restrict mode, where any marshalled JSON object has to be annotated.
+            requestBody = JsonBody(body, contentType ?: "application/json")
         }
     }
 
-    fun requestBytesBody(contentType: String, bytes: ByteSource) {
-        requestBody = BytesBody(contentType, bytes)
-    }
-
-    fun requestBytesBody(contentType: String, bytes: ByteArray) {
-        requestBody = BytesBody(contentType, ByteSource.wrap(bytes))
-    }
-
-    fun requestFileBody(contentType: String, file: File) {
+    /**
+     * Read contents of file.
+     */
+    fun requestFileBody(file: File, contentType: String = DEFAULT_CONTENT_TYPE) {
         file.verifyExistsAndIsFile()
-        requestBody = BytesBody(contentType, Files.asByteSource(file))
+        requestBody = BytesBody(file.readBytes(), contentType)
+    }
+
+    /**
+     * Provide raw binary data via request.
+     */
+    fun requestBytesBody(bytes: ByteArray, contentType: String = DEFAULT_CONTENT_TYPE) {
+        requestBody = BytesBody(bytes, contentType)
     }
 
 }
 
-
+/**
+ * External representation of a configured request body.
+ */
 sealed class RequestBody {
 
+    /**
+     * By default no body is set.
+     */
     object None : RequestBody()
 
-    data class StringBody(val stringEntity: String) : RequestBody()
+    /**
+     * Plain text.
+     */
+    data class StringBody(val stringEntity: String, val contentType: String = "text/plain") : RequestBody()
 
-    data class JsonBody(val jacksonEntity: Any) : RequestBody()
+    /**
+     * Any passed JSON object will be marshalled internally via Jackson.
+     */
+    data class JsonBody(val jacksonEntity: Any, val contentType: String = "application/json") : RequestBody()
 
-    data class BytesBody(val contentType: String, val bytes: ByteSource) : RequestBody()
+    /**
+     * Raw binary request with custom content type.
+     */
+    data class BytesBody(val bytes: ByteArray, val contentType: String) : RequestBody() {
+
+        /** Check bytes array manually. */
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+            if (other !is BytesBody) {
+                return false
+            }
+            return contentType == other.contentType && bytes.contentEquals(other.bytes)
+        }
+
+        /** Check bytes array manually. */
+        override fun hashCode() = Objects.hash(contentType, bytes)
+    }
 }
 
-
+/**
+ * Internal representation of a configured request body (got no representation for disabled request body).
+ */
 sealed class DefiniteRequestBody {
 
+    /**
+     * String payload.
+     */
     data class DefiniteStringBody(val string: String) : DefiniteRequestBody()
 
-    data class DefiniteBytesBody(val bytes: ByteSource) : DefiniteRequestBody()
+    /**
+     * Raw binary payload.
+     */
+    data class DefiniteBytesBody(val bytes: ByteArray) : DefiniteRequestBody() {
+
+        /** Check bytes array manually. */
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+            if (other !is DefiniteBytesBody) {
+                return false
+            }
+            return bytes.contentEquals(other.bytes)
+        }
+
+        /** Check bytes array manually. */
+        override fun hashCode() = bytes.hashCode()
+    }
 
 }

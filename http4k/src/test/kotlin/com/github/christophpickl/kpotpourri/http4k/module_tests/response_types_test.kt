@@ -46,7 +46,7 @@ import kotlin.reflect.KClass
 
     private fun <R : Any> assertResponse(returnType: KClass<R>, body: String, expected: Any) {
         wheneverExecuteHttpMockReturnResponse(bodyAsString = body)
-        val response = http4kWithMock().getX(testUrl, returnType)
+        val response = http4kWithMock().getReturning(testUrl, returnType)
         response shouldMatchValue expected
     }
 

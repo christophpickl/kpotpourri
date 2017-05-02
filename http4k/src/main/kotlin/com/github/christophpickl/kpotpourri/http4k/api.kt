@@ -19,16 +19,43 @@ fun buildHttp4k(withBuilder: Http4kBuilder.() -> Unit = {}): Http4k {
     return builder.end()
 }
 
-class Http4kBuilder : GlobalHttp4kConfig {
+/**
+ * Http4k can be globally configured consisting of the following interfaces.
+ */
+interface GlobalHttp4kConfigurable :
+        BaseUrlConfigurable,
+        BasicAuthConfigurable,
+        HeadersConfigurable,
+        StatusCheckConfigurable,
+        QueryParamConfigurable
+
+/**
+ * Core DSL class to prepare a http4k instance, configuring global options (which can be overridden per request).
+ */
+class Http4kBuilder : GlobalHttp4kConfigurable {
+
+    /** Global URL query parameters for each request. */
     override val queryParams: MutableMap<String, String> = HashMap()
+
+    /** Global HTTP headers. */
     override val headers: HeadersMap = HeadersMap()
+
+    /** By default the base URL is not defined/used and reach request must be an absolute URL. */
     override var baseUrl: BaseUrl = NoBaseUrl
+
+    /** By default basic authentication is disabled. */
     override var basicAuth: BasicAuthMode = BasicAuthDisabled
+
+    /** By default any HTTP status code is ok and will not throw an exception (depending on concrete HTTP implementation). */
     override var statusCheck: StatusCheckMode = Anything
 
     internal var overrideHttpClient: HttpClient? = null
+    /** Actually not visible to the outside, but still must be public for per-implementation extensions. */
     val _implMetaMap = MutableMetaMap()
 
+    /**
+     * Detects (or using overridden) HTTP client implementation based on classpath availability.
+     */
     fun end(): Http4k {
         val restClient = if (overrideHttpClient != null) {
             overrideHttpClient!!
@@ -41,11 +68,20 @@ class Http4kBuilder : GlobalHttp4kConfig {
 }
 
 // in order to reifie generic type, must not be in an interface
-inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getX(url, R::class, withOpts)
-inline fun <reified R : Any> Http4k.post(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postX(url, body, R::class, withOpts)
-inline fun <reified R : Any> Http4k.put(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putX(url, body, R::class, withOpts)
-inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteX(url, R::class, withOpts)
-inline fun <reified R : Any> Http4k.patch(url: String, body: Any = Unit, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchX(url, body, R::class, withOpts)
+/** Reified version of GET. */
+inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getReturning(url, R::class, withOpts)
+
+/** Reified version of POST. */
+inline fun <reified R : Any> Http4k.post(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postReturning(url, R::class, withOpts)
+
+/** Reified version of PUT. */
+inline fun <reified R : Any> Http4k.put(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putReturning(url, R::class, withOpts)
+
+/** Reified version of DELETE. */
+inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteReturning(url, R::class, withOpts)
+
+/** Reified version of PATCH. */
+inline fun <reified R : Any> Http4k.patch(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchReturning(url, R::class, withOpts)
 
 /**
  * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.
@@ -55,54 +91,44 @@ inline fun <reified R : Any> Http4k.patch(url: String, body: Any = Unit, noinlin
  * body: something which will be marshalled by jackson
  */
 interface Http4k {
-    // *X methods ... internal, requiring explicit return type
-    // *R methods ... returning a [Response4k] object by default
 
-//    fun get(url: String, withOpts: BodylessRequestOpts.() -> Unit = {}) = get(url, Response4k::class, withOpts)
-    fun <R : Any> getX(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
+    /** GET response with explicity return type. */
+    fun <R : Any> getReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
 
-//    fun post(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = post(url, Response4k::class, withOpts)
-    fun <R : Any> postR(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = postX(url, Response4k::class, { requestBody(body); withOpts(this) })
-    fun <R : Any> postX(url: String, body: Any, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}) = postX(url, returnType, { requestBody(body); withOpts(this) })
-    fun <R : Any> postX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
+    /** POST response with return type set to [Response4k]. */
+    fun <R : Any> postAndReturnResponse(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = postReturning(url, Response4k::class, { withOpts(this) })
 
-//    fun put(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = put(url, Response4k::class, withOpts)
-    fun <R : Any> putR(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = putX(url, Response4k::class, { requestBody(body); withOpts(this) })
-    fun <R : Any> putX(url: String, body: Any, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}) = putX(url, returnType, { requestBody(body); withOpts(this) })
-    fun <R : Any> putX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
+    /** POST response with explicity return type. */
+    fun <R : Any> postReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
 
-//    fun delete(url: String, withOpts: BodylessRequestOpts.() -> Unit = {}) = delete(url, Response4k::class, withOpts)
-    fun <R : Any> deleteX(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
+    /** PUT response with return type set to [Response4k]. */
+    fun <R : Any> putAndReturnResponse(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = putReturning(url, Response4k::class, { requestBody(body); withOpts(this) })
 
-//    fun patch(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patch(url, Response4k::class, withOpts)
-    fun <R : Any> patchR(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchX(url, Response4k::class, { requestBody(body); withOpts(this) })
-    fun <R : Any> patchX(url: String, body: Any, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchX(url, returnType, { requestBody(body); withOpts(this) })
-    fun <R : Any> patchX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
+    /** PUT response with explicity return type. */
+    fun <R : Any> putReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
 
-    // OPTION
-    // HEAD
+    /** DELETE response with explicity return type. */
+    fun <R : Any> deleteReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
+
+    /** PATCH response with return type set to [Response4k]. */
+    fun <R : Any> patchAndReturnResponse(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchReturning(url, Response4k::class, { withOpts(this) })
+
+    /** PATCH response with explicity return type. */
+    fun <R : Any> patchReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
+
 }
 
+/**
+ * Core request object abstraction.
+ */
 data class Request4k(
         val method: HttpMethod4k,
         val url: String,
         val headers: Map<String, String> = emptyMap(),
-        // cookies
         val requestBody: DefiniteRequestBody? = null
 ) {
-    companion object {
-        private fun filterAuthorizationHeader(headers: Map<String, String>): Map<String, String> {
-            val newHeaders = HashMap<String, String>()
-            headers.forEach { (k, v) ->
-                if ("authorization" == k.toLowerCase()) {
-                    newHeaders += k to "xxxxx"
-                } else {
-                    newHeaders += k to v
-                }
-            }
-            return newHeaders
-        }
-    }
+
+    companion object {}// for extensions
 
     init {
         // for simplicity sake no perfectly clean design but lazy check for data integrity
@@ -111,15 +137,32 @@ data class Request4k(
         }
     }
 
+    /**
+     * Don't render authorization header.
+     */
     override fun toString() = "Request4k(" +
             "method=$method, " +
             "url=$url, " +
-            "headers=${filterAuthorizationHeader(headers)}, " +
-            //            "cookies=$cookies, " +
+            "headers=${headerWithoutAuthorizationSecret()}, " +
             "requestBody=<<$requestBody>>" +
             ")"
+
+    private fun headerWithoutAuthorizationSecret(): Map<String, String> {
+        val newHeaders = HashMap<String, String>(headers.size)
+        headers.forEach { (k, v) ->
+            if ("authorization" == k.toLowerCase()) {
+                newHeaders += k to "xxxxx"
+            } else {
+                newHeaders += k to v
+            }
+        }
+        return newHeaders
+    }
 }
 
+/**
+ * Core response object abstraction.
+ */
 data class Response4k(
         val statusCode: StatusCode,
         val bodyAsString: String,
@@ -127,17 +170,15 @@ data class Response4k(
 ) {
     companion object // test extensions
 
-    fun <T : Any> readJson(targetType: KClass<T>): T {
+    /**
+     * Transform the response body to a custom JSON object.
+     */
+    fun <T : Any> readJson(targetType: KClass<T>): T { // MINOR could do also here an annotation check (if option is enabled to do so)
         return mapper.readValue(bodyAsString, targetType.java)
     }
 }
 
-
+/**
+ * Global custom exception type.
+ */
 open class Http4kException(message: String, cause: Exception? = null) : KPotpourriException(message, cause)
-
-interface GlobalHttp4kConfig :
-        BaseUrlConfig,
-        BasicAuthConfig,
-        HeadersConfig,
-        StatusCheckConfig,
-        QueryParamConfig

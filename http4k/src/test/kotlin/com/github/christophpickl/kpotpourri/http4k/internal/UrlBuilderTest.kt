@@ -3,7 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k.internal
 import com.github.christophpickl.kpotpourri.common.web.QueryParams
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.BaseUrlByString
-import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfig
+import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfigurable
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
@@ -35,7 +35,7 @@ import org.testng.annotations.Test
         whenever(requestOpts.disableBaseUrl).thenReturn(givenBaseUrl == null)
         whenever(requestOpts.queryParams).thenReturn(requestParams.toMutableMap())
 
-        val globalConfig = mock<GlobalHttp4kConfig>()
+        val globalConfig = mock<GlobalHttp4kConfigurable>()
         if (givenBaseUrl != null) whenever(globalConfig.baseUrl).thenReturn(BaseUrlByString(givenBaseUrl))
         whenever(globalConfig.queryParams).thenReturn(globalParams.toMutableMap())
 

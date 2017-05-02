@@ -5,7 +5,7 @@ import com.github.christophpickl.kpotpourri.common.string.toBooleanLenient2
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.BodyfullRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.BodylessRequestOpts
-import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfig
+import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfigurable
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
@@ -15,24 +15,24 @@ import kotlin.reflect.KClass
 
 internal class Http4kImpl(
         private val httpClient: HttpClient,
-        private val globals: GlobalHttp4kConfig
+        private val globals: GlobalHttp4kConfigurable
 ) : Http4k {
 
     private val log = LOG {}
 
-    override fun <R : Any> getX(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
+    override fun <R : Any> getReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
             any(HttpMethod4k.GET, BodylessRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> postX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+    override fun <R : Any> postReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
             any(HttpMethod4k.POST, BodyfullRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> putX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+    override fun <R : Any> putReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
             any(HttpMethod4k.PUT, BodyfullRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> deleteX(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
+    override fun <R : Any> deleteReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
             any(HttpMethod4k.DELETE, BodylessRequestOpts(), url, returnType, withOpts)
 
-    override fun <R : Any> patchX(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
+    override fun <R : Any> patchReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
             any(HttpMethod4k.PATCH, BodyfullRequestOpts(), url, returnType, withOpts)
 
     /**

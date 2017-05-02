@@ -3,7 +3,7 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 
-interface StatusCheckConfig {
+interface StatusCheckConfigurable {
 
     var statusCheck: StatusCheckMode
 
