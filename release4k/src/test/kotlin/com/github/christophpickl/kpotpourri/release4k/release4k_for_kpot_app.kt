@@ -24,8 +24,6 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
 
-    // initGithub(GithubConfig.testRepository)
-
     val currentVersion = readVersionFromTxt(versionTxt).toVersion2()
     val nextVersion = readVersion2FromStdin(prompt = "Enter next release version", defaultVersion = currentVersion.incrementMinor())
     val nextVersionString = nextVersion.niceString
