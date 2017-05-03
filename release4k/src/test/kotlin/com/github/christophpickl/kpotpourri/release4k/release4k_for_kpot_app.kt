@@ -19,13 +19,13 @@ fun main(args: Array<String>) = release4k {
         throw RuntimeException("Invalid CWD! Execute this main class from 'kpotpourri' root directory, instead of submodule 'release4k' ;)")
     }
 
-    val relativeKpotPath = "../github2/kpotpourri"
-    val versionTxt = "$relativeKpotPath/version.txt" // navigate to proper checkout location :)
+    val relativeKpotPath = "../github2/kpotpourri" // navigate to proper checkout location :)
+    val versionTxtFilename = "version.txt"
     val gitUrl = "https://github.com/christophpickl/kpotpourri.git"
 
     // =================================================================================================================
 
-    val currentVersion = readVersionFromTxt(versionTxt).toVersion2()
+    val currentVersion = readVersionFromTxt("$relativeKpotPath/$versionTxtFilename").toVersion2()
     val nextVersion = readVersion2FromStdin(prompt = "Enter next release version", defaultVersion = currentVersion.incrementMinor())
     val nextVersionString = nextVersion.niceString
     val syspropNextVersion = "-Dkpotpourri.version=$nextVersionString"
@@ -42,7 +42,7 @@ fun main(args: Array<String>) = release4k {
     printHeader("RELEASE NOTES")
     println("Base release directory: ${release4kDirectory.canonicalPath}")
     println("GitHub URL: $gitUrl")
-    println("Version file: ${File(versionTxt).canonicalPath}")
+    println("Version file: ${File(versionTxtFilename).canonicalPath}")
     println("Versions: ${currentVersion.niceString} => $nextVersionString")
     println()
 
@@ -61,7 +61,7 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")
-    File(gitCheckoutDirectory, versionTxt).writeText(nextVersionString)
+    File(gitCheckoutDirectory, versionTxtFilename).writeText(nextVersionString)
 
     git("status")
     git("add .")
