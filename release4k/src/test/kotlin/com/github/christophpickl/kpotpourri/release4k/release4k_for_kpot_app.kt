@@ -41,8 +41,10 @@ fun main(args: Array<String>) = release4k {
     // =================================================================================================================
     printHeader("RELEASE NOTES")
     println("Base release directory: ${release4kDirectory.canonicalPath}")
+    println("GitHub URL: $gitUrl")
     println("Version file: ${File(versionTxt).canonicalPath}")
     println("Versions: ${currentVersion.niceString} => $nextVersionString")
+    println()
 
     // =================================================================================================================
     if (!Keyboard.readConfirmation(prompt = "Do you wanna release this?")) {
