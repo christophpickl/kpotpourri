@@ -20,6 +20,11 @@ internal data class InternalLogbackConfig(
     internal val appenders = mutableListOf<Appender<ILoggingEvent>>()
 
     @Suppress("KDocMissingDocumentation")
+    override fun packageLevel(level: Level, vararg packageNames: String) {
+        packageNames.forEach { packageLevels += it to level }
+    }
+
+    @Suppress("KDocMissingDocumentation")
     override fun packageLevel(level: Level, packageNames: List<String>) {
         packageNames.forEach { packageLevels += it to level }
     }
@@ -39,6 +44,7 @@ internal class ThresholdFilter(private val level: Level) : Filter<ILoggingEvent>
         start()
     }
 
+    /** Strangely has to be implemented yourself... */
     override fun decide(event: ILoggingEvent): FilterReply {
         if (event.level.isGreaterOrEqual(level)) {
             return FilterReply.ACCEPT

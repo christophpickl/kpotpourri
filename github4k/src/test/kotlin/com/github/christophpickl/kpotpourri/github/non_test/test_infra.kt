@@ -15,7 +15,6 @@ import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
-import com.google.common.io.ByteSource
 import java.io.File
 
 private val log = LOG {}
@@ -120,7 +119,7 @@ val AssetUpload.Companion.testInstance get() = AssetUpload(
         releaseId = 1,
         fileName = "testFileName.txt",
         contentType = "content/type",
-        bytes = ByteSource.wrap(byteArrayOf(0, 1, 1, 0))
+        bytes = byteArrayOf(0, 1, 1, 0)
 )
 
 @Suppress("unused")

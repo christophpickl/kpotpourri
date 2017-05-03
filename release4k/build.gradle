@@ -1,4 +1,4 @@
-// release4k build.gradle
+// release4k
 
 dependencies {
     compile project(':common4k')

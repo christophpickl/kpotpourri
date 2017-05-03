@@ -2,8 +2,10 @@ package com.github.christophpickl.kpotpourri.common.collection
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContainsExactly
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 
@@ -30,6 +32,19 @@ import org.testng.annotations.Test
     fun `put a Pair`() {
         assertThat(mutableMapOf<String, String>().apply { put("a" to "b") },
                 mapContainsExactly("a" to "b"))
+    }
+
+    @DataProvider
+    fun provideMapsOfMaps(): Array<Array<out Any>> = arrayOf(
+            arrayOf(arrayOf(emptyMap<Any, Any>()), emptyMap<Any, Any>()),
+            arrayOf(arrayOf(mapOf(1 to 2)), mapOf(1 to 2)),
+            arrayOf(arrayOf(mapOf(1 to 2), mapOf("a" to "b")), mapOf(1 to 2, "a" to "b")),
+            arrayOf(arrayOf(mapOf("x" to 1), mapOf("x" to 2)), mapOf("x" to 2))
+    )
+
+    @Test(dataProvider = "provideMapsOfMaps")
+    fun `mapsOf - sunshine`(givenMaps: Array<Map<Any, Any>>, expected: Map<Any, Any>) {
+        mapsOf(*givenMaps) shouldMatchValue expected
     }
 
 }

@@ -9,7 +9,6 @@ import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
 import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.google.common.io.ByteSource
 import org.testng.annotations.Test
 
 @Test class RequestBodyTest {
@@ -57,9 +56,9 @@ import org.testng.annotations.Test
     }
 
     fun `prepareBodyAndContentType - When prepare sub-RequestWithEntityOpts with body bytes, Then return bytes and content type`() {
-        val bytes = ByteSource.wrap(byteArrayOf(0, 1, 1, 0))
+        val bytes = byteArrayOf(0, 1, 1, 0)
         val contentType = "application/jar"
-        val request = BodyfullRequestOpts(requestBody = BytesBody(contentType, bytes))
+        val request = BodyfullRequestOpts(requestBody = BytesBody(bytes, contentType))
 
         val actual = prepareBodyAndContentType(request)
 

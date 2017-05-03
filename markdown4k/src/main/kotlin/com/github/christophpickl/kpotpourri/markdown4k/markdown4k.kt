@@ -11,8 +11,6 @@ import javax.script.ScriptException
 
 private val log = LOG {}
 
-// FIXME get rid of warning about Kotlin runtime library
-
 /**
  * Collects and verifies Kotlin code snippets within Markdown files.
  */
@@ -75,6 +73,6 @@ data class CodeSnippet(
     override fun toString() = MoreObjects.toStringHelper(this)
             .add("relativePath", relativePath)
             .add("lineNumber", lineNumber)
-            .add("code", code.substring(0, Math.min(code.length, 10))) // TODO add in common4k to cut with " ..." at the end
+            .add("code", code.substring(0, Math.min(code.length, 10))) // MINOR add in common4k to cut with " ..." at the end
             .toString()
 }

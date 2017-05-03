@@ -3,7 +3,7 @@ package com.github.christophpickl.kpotpourri.http4k
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
 
 
-interface BaseUrlConfig {
+interface BaseUrlConfigurable {
 
     var baseUrl: BaseUrl
 

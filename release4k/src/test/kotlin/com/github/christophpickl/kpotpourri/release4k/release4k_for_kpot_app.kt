@@ -19,21 +19,21 @@ fun main(args: Array<String>) = release4k {
         throw RuntimeException("Invalid CWD! Execute this main class from 'kpotpourri' root directory, instead of submodule 'release4k' ;)")
     }
 
-    val versionTxt = "version.txt"
+    val relativeKpotPath = "../github2/kpotpourri" // navigate to proper checkout location :)
+    val liveKpotFolder = File(relativeKpotPath)
+    val versionTxtFilename = "version.txt"
     val gitUrl = "https://github.com/christophpickl/kpotpourri.git"
 
     // =================================================================================================================
 
-    // initGithub(GithubConfig.testRepository)
-
-    val currentVersion = readVersionFromTxt(versionTxt).toVersion2()
+    val currentVersion = readVersionFromTxt("$relativeKpotPath/$versionTxtFilename").toVersion2()
     val nextVersion = readVersion2FromStdin(prompt = "Enter next release version", defaultVersion = currentVersion.incrementMinor())
     val nextVersionString = nextVersion.niceString
     val syspropNextVersion = "-Dkpotpourri.version=$nextVersionString"
 
     // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
-    execute("/usr/bin/git", "status", File("./"))
+    execute("/usr/bin/git", "status", liveKpotFolder)
     println()
     if (!Keyboard.readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
@@ -42,8 +42,10 @@ fun main(args: Array<String>) = release4k {
     // =================================================================================================================
     printHeader("RELEASE NOTES")
     println("Base release directory: ${release4kDirectory.canonicalPath}")
-    println("Version file: ${File(versionTxt).canonicalPath}")
+    println("GitHub URL: $gitUrl")
+    println("Version file: ${File(versionTxtFilename).canonicalPath}")
     println("Versions: ${currentVersion.niceString} => $nextVersionString")
+    println()
 
     // =================================================================================================================
     if (!Keyboard.readConfirmation(prompt = "Do you wanna release this?")) {
@@ -60,7 +62,7 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")
-    File(gitCheckoutDirectory, versionTxt).writeText(nextVersionString)
+    File(gitCheckoutDirectory, versionTxtFilename).writeText(nextVersionString)
 
     git("status")
     git("add .")
@@ -74,6 +76,6 @@ fun main(args: Array<String>) = release4k {
     git("push origin --tags")
 
 
-    execute("/usr/bin/git", "pull", File("./"))
-    execute("/usr/bin/git", "fetch -p", File("./"))
+    execute("/usr/bin/git", "pull", liveKpotFolder)
+    execute("/usr/bin/git", "fetch -p", liveKpotFolder)
 }

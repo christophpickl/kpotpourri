@@ -9,6 +9,8 @@ import org.testng.annotations.Test
 
 @Test class CustomMatchersTest {
 
+    //<editor-fold desc="allOf">
+
     fun `allOf - Given vararg which mathes, Should not throw`() {
         assertThat("foobar", allOf(startsWith("f"), endsWith("r")))
     }
@@ -24,7 +26,7 @@ import org.testng.annotations.Test
     }
 
     fun `allOf - Given list which empty matchers, Should throw`() {
-        assertThrown<IllegalArgumentException>({ e -> e.message!!.contains("empty")}) {
+        assertThrown<IllegalArgumentException>({ e -> e.message!!.contains("empty") }) {
             assertThat("", allOf(emptyList()))
         }
     }
@@ -34,6 +36,10 @@ import org.testng.annotations.Test
             assertThat("fooxxx", allOf(listOf(startsWith("f"), endsWith("r"))))
         }
     }
+
+    //</editor-fold>
+
+    //<editor-fold desc="not">
 
     fun `not - Given non-equal objects should match`() {
         assertThat("x", not(equalTo("y")))
@@ -45,6 +51,10 @@ import org.testng.annotations.Test
         }
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="notEqualTo">
+
     fun `notEqualTo - Given non-equal objects should match`() {
         assertThat("x", notEqualTo("y"))
     }
@@ -54,6 +64,10 @@ import org.testng.annotations.Test
             assertThat("x", notEqualTo("x"))
         }
     }
+
+    //</editor-fold>
+
+    //<editor-fold desc="nullValue">
 
     fun `nullValue - Given null string, Should not throw`() {
         assertThat(null as String?, nullValue())
@@ -75,4 +89,46 @@ import org.testng.annotations.Test
         }
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="isA">
+
+    fun `isA - Given isA String, When give a String, Then matches`() {
+        assertThat("", isA(String::class))
+    }
+
+    fun `isA - Given isA Any, When give a String, Then matches`() {
+        assertThat("", isA(Any::class))
+    }
+
+    fun `isA - Given isA String, When give an Int, Then not matches`() {
+        assertThrown<AssertionError> {
+            assertThat(1, isA(String::class))
+        }
+    }
+
+    fun `isA - Given isA Any, When give an Int, Then matches`() {
+        assertThrown<AssertionError> {
+            assertThat(1, isA(Number::class))
+        }
+    }
+
+    open class SuperType
+    class SubType : SuperType()
+
+    fun `isA - Given isA supertype, When give a subtype, Then not matches`() {
+        assertThrown<AssertionError> {
+            assertThat(SubType(), isA(SuperType::class))
+        }
+    }
+
+    fun `isA - Given isA supertype, When give a supertype, Then matches`() {
+        assertThrown<AssertionError> {
+            assertThat(SuperType(), isA(SuperType::class))
+        }
+    }
+
+    //</editor-fold>
+
 }
+

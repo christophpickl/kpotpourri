@@ -57,7 +57,7 @@ fun <T> nullValue() = equalTo(null as T)
 /**
  * Same as Hamkrest's, but not using reified parameters (necessary for increased readbililty, AAA).
  */
-// TODO test me
+@Suppress("KDocMissingDocumentation")
 fun <T : Any> isA(expected: KClass<T>) =
         object : Matcher<Any> {
             override fun invoke(actual: Any) =

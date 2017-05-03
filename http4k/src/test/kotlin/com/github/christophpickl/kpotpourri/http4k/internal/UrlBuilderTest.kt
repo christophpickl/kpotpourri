@@ -1,48 +1,44 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import com.github.christophpickl.kpotpourri.common.web.QueryParams
+import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
+import com.github.christophpickl.kpotpourri.http4k.BaseUrlByString
+import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfigurable
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
+import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 @Test class UrlBuilderTest {
 
-    companion object {
-        private val URL = "http://http4k.org"
-    }
+    private val emptyParams = emptyMap<String, String>()
 
-    fun `When no query params, Then return original URL`() {
-        assertThat(
-                UrlBuilder.build(URL, emptyMap()),
-                equalTo(URL))
-    }
+    @DataProvider
+    fun provideUrlBuildings(): Array<Array<out Any?>> = arrayOf(
+            arrayOf("", null, mapOf("request" to "1"), emptyParams, "?request=1"),
+            arrayOf("", null, emptyParams, mapOf("global" to "1"), "?global=1"),
+            arrayOf("", null, mapOf("request" to "1"), mapOf("global" to "2"), "?global=2&request=1"),
+            arrayOf("", null, mapOf("key" to "request"), mapOf("key" to "global"), "?key=request"),
 
-    fun `When single query param set, Then append question mark and param`() {
-        assertThat(
-                UrlBuilder.build(URL, mapOf("k" to "v")),
-                equalTo("$URL?k=v"))
-    }
+            arrayOf("url?u=0", null, mapOf("r" to "1"), mapOf("g" to "2"), "url?u=0&g=2&r=1"),
+            arrayOf("url?key=inUrl", null, mapOf("key" to "request"), mapOf("key" to "global"), "url?key=request"),
+            arrayOf("url?key=inUrl", null, emptyParams, mapOf("key" to "global"), "url?key=global"),
+            arrayOf("url?key=inUrl", null, mapOf("key" to "request"), emptyParams, "url?key=request"),
 
-    fun `When two query params set, Then concat params with ampersand symbol`() {
-        assertThat(
-                UrlBuilder.build(URL, mapOf("k1" to "v1", "k2" to "v2")),
-                equalTo("$URL?k1=v1&k2=v2"))
-    }
+            arrayOf("relativeUrl", "globalBaseUrl", emptyParams, emptyParams, "globalBaseUrl/relativeUrl")
+    )
 
-    fun `When query param set with ugly symbol, Then value should have been URL encoded`() {
-        assertThat(
-                UrlBuilder.build(URL, mapOf("key\"key" to "val=&val")),
-                equalTo("$URL?key%22key=val%3D%26val"))
-    }
+    @Test(dataProvider = "provideUrlBuildings")
+    fun `buildUrl - sunshine`(url: String, givenBaseUrl: String?, requestParams: QueryParams, globalParams: QueryParams, expected: String) {
+        val requestOpts = mock<AnyRequestOpts>()
+        whenever(requestOpts.disableBaseUrl).thenReturn(givenBaseUrl == null)
+        whenever(requestOpts.queryParams).thenReturn(requestParams.toMutableMap())
 
-    fun `Given URL already got one query param set, When query param is set as well, Then combine both properly`() {
-        assertThat(
-                UrlBuilder.build(URL + "?k1=v1", mapOf("k2" to "v2")),
-                equalTo("$URL?k1=v1&k2=v2"))
-    }
+        val globalConfig = mock<GlobalHttp4kConfigurable>()
+        if (givenBaseUrl != null) whenever(globalConfig.baseUrl).thenReturn(BaseUrlByString(givenBaseUrl))
+        whenever(globalConfig.queryParams).thenReturn(globalParams.toMutableMap())
 
-    fun `Given URL already got two query param set, When two query params are set as well, Then combine all properly`() {
-        assertThat(
-                UrlBuilder.build(URL + "?k1=v1&k1b=v1b", mapOf("k2" to "v2", "k2b" to "v2b")),
-                equalTo("$URL?k1=v1&k1b=v1b&k2=v2&k2b=v2b"))
+        buildUrl(url, globalConfig, requestOpts) shouldMatchValue expected
     }
 }

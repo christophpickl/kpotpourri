@@ -51,7 +51,6 @@ data class ErrorObject(
 /**
  * Will be registered when setting up jetty.
  */
-// TODO does not catch 404s
 class RootErrorHandler(
         private val handlerType: ErrorHandlerType,
         private val exposeExceptions: Boolean

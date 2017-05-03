@@ -1,4 +1,4 @@
-// swing build.gradle
+// swing4k
 
 dependencies {
     compile project(':common4k')

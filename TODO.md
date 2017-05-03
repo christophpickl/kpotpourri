@@ -18,10 +18,13 @@
 * get rid of: MockRequest instance
 
 ## Med
+* ad web4k: RootErrorHandler does not catch 404s
+* ad markdown4k: get rid of warning about Kotlin runtime library
 * go through yobu (random stuff)
 * go through gadsu (swing as well) and harvest stuff
     * BaseLogConfigurator
     * LogTestListener
+* deploy dokka HTML to github (github.io?)
 * dokka generates nasty warnings in build console: `Can't find node by signature com.github.christophpickl.kpotpourri.common$toPrettyString(kotlin.collections.List((kotlin.Any)))`
 
 ## Low
@@ -35,7 +38,7 @@
     * need to define artifactId, needs to be automated
     * other artifacts need to be able to easily include this
 * @release4k: dryRun() option
-
+* enhance kdoc https://github.com/Kotlin/dokka (samples and stuff)
 * enable CORS easily 
     * Access-Control-Allow-Origin = "*"
     * Access-Control-Allow-Methods = "POST, GET, PUT, DELETE, OPTIONS"
@@ -51,7 +54,6 @@
 
 * support cookies for request/response
 * make headers (request/response) a multi valued map
-* get rid of ByteSource in (public) API
 * do not distinguish between bodyfull and bodyless :)
 
 ## TODOs Med

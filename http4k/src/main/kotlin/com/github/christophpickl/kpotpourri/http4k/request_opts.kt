@@ -7,7 +7,7 @@ val DEFAULT_STATUS_CHECK_MODE = StatusCheckMode.NotSetAtAll
 val DEFAULT_AUTH_MODE = BasicAuthDisabled
 
 
-interface QueryParamConfig {
+interface QueryParamConfigurable {
     val queryParams: MutableMap<String, String>
 
     fun addQueryParam(param: Pair<String, Any>) {
@@ -18,7 +18,7 @@ interface QueryParamConfig {
 /**
  * Common settings for GET/POST/PUT/...
  */
-interface AnyRequestOpts : StatusCheckConfig, HeadersConfig, QueryParamConfig {
+interface AnyRequestOpts : StatusCheckConfigurable, HeadersConfigurable, QueryParamConfigurable {
     override val queryParams: MutableMap<String, String>
     // queryParams
     // cookies

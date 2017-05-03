@@ -26,6 +26,7 @@ interface Release4k {
     // - project name
     // - git URL
     // - working directory (default: CWD/build/release4k)
+
     val release4kDirectory: File
     val gitCheckoutDirectory: File
 

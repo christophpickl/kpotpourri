@@ -5,7 +5,7 @@ import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 /**
  * Reusable interface to configure HTTP headers.
  */
-interface HeadersConfig {
+interface HeadersConfigurable {
 
     /**
      * Actual container data class storing all headers.

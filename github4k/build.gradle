@@ -1,4 +1,4 @@
-// github build.gradle
+// github4k
 
 dependencies {
     compile project(':common4k')

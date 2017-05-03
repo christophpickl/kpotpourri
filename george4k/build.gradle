@@ -1,5 +1,4 @@
-
-// This is a Kotlin SDK for the George API.
+// george4k
 
 dependencies {
     compile project(':common4k')

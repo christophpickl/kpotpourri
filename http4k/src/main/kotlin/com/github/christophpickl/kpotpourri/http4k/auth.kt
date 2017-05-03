@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 
-interface BasicAuthConfig {
+interface BasicAuthConfigurable {
 
     var basicAuth: BasicAuthMode
 

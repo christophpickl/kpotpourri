@@ -6,9 +6,9 @@ import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
-@Test class HeadersConfigTest {
+@Test class HeadersConfigurableTest {
 
-    private lateinit var headers: HeadersConfig
+    private lateinit var headers: HeadersConfigurable
 
     @BeforeMethod fun initHeaders() {
         headers = TestableHeadersConfig()
@@ -25,6 +25,6 @@ import org.testng.annotations.Test
     }
 }
 
-class TestableHeadersConfig : HeadersConfig {
+class TestableHeadersConfig : HeadersConfigurable {
     override val headers = HeadersMap()
 }
