@@ -20,6 +20,7 @@ fun main(args: Array<String>) = release4k {
     }
 
     val relativeKpotPath = "../github2/kpotpourri" // navigate to proper checkout location :)
+    val liveKpotFolder = File(relativeKpotPath)
     val versionTxtFilename = "version.txt"
     val gitUrl = "https://github.com/christophpickl/kpotpourri.git"
 
@@ -32,7 +33,7 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
-    execute("/usr/bin/git", "status", File(relativeKpotPath))
+    execute("/usr/bin/git", "status", liveKpotFolder)
     println()
     if (!Keyboard.readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
@@ -75,6 +76,6 @@ fun main(args: Array<String>) = release4k {
     git("push origin --tags")
 
 
-    execute("/usr/bin/git", "pull", File("./"))
-    execute("/usr/bin/git", "fetch -p", File("./"))
+    execute("/usr/bin/git", "pull", liveKpotFolder)
+    execute("/usr/bin/git", "fetch -p", liveKpotFolder)
 }
