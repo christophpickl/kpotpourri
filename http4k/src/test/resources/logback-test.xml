@@ -6,6 +6,7 @@
     </appender>
 
     <logger name="org.eclipse.jetty" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
     <logger name="/__admin" level="WARN"/>
     <logger name="/" level="WARN"/>
 

@@ -111,7 +111,9 @@ class GithubApiImpl(
      * https://developer.github.com/v3/repos/releases/#create-a-release
      */
     override fun createNewRelease(createRequest: CreateReleaseRequest) =
-            http4k.post<CreateReleaseResponse>("/releases", createRequest)
+            http4k.post<CreateReleaseResponse>("/releases") {
+                requestBody(createRequest)
+            }
 
     /**
      * GET /repos/:owner/:repo/releases
@@ -138,7 +140,7 @@ class GithubApiImpl(
         val response = http4k.post<AssetUploadResponse>(uploadUrl) {
             addHeader("Content-Type" to upload.contentType)
             addQueryParam("name" to upload.fileName)
-            requestBytesBody(upload.contentType, upload.bytes)
+            requestBytesBody(upload.bytes, upload.contentType)
             disableBaseUrl()
         }
 

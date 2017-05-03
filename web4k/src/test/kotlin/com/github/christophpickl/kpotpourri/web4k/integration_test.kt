@@ -119,10 +119,10 @@ class TestableResource {
         )))
     }
 
-    // TODO test for stack trace enabled
+    // MINOR test for stack trace enabled
 
 
-    // TOD test for default error handler
+    // MINOR test for default error handler
 
     private fun anyInvalidHttpRequest() =
             http4k().get<Response4k>("/") {

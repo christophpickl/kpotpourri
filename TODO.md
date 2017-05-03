@@ -18,11 +18,13 @@
 * get rid of: MockRequest instance
 
 ## Med
-* deploy dokka HTML to github (github.io?)
+* ad web4k: RootErrorHandler does not catch 404s
+* ad markdown4k: get rid of warning about Kotlin runtime library
 * go through yobu (random stuff)
 * go through gadsu (swing as well) and harvest stuff
     * BaseLogConfigurator
     * LogTestListener
+* deploy dokka HTML to github (github.io?)
 * dokka generates nasty warnings in build console: `Can't find node by signature com.github.christophpickl.kpotpourri.common$toPrettyString(kotlin.collections.List((kotlin.Any)))`
 
 ## Low
@@ -45,7 +47,6 @@
 
 * support cookies for request/response
 * make headers (request/response) a multi valued map
-* get rid of ByteSource in (public) API
 * do not distinguish between bodyfull and bodyless :)
 
 ## TODOs Med

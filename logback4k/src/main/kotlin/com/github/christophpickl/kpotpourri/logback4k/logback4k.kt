@@ -6,19 +6,9 @@ import com.github.christophpickl.kpotpourri.logback4k.internal.InternalLogbackCo
 import com.github.christophpickl.kpotpourri.logback4k.internal.context
 import org.slf4j.Logger
 
-interface LogbackConfig {
-    var rootLevel: Level
-
-    fun packageLevel(level: Level, packageNames: List<String>)
-    fun addConsoleAppender(withBuilder: ConsoleAppenderBuilder.() -> Unit = {})
-}
-
-interface ConsoleAppenderBuilder {
-    var appenderName: String
-    var pattern: String
-    var level: Level
-}
-
+/**
+ * Core API object to configure logback programmatically with a nice DSL.
+ */
 object Logback4k {
 
     fun reconfigure(withConfig: LogbackConfig.() -> Unit) { // vararg appenders: Appender<ILoggingEvent>
@@ -37,4 +27,23 @@ object Logback4k {
     private fun LoggerContext.changeLevel(packageName: String, level: Level) {
         getLogger(packageName).level = level
     }
+}
+
+/**
+ * Supported logback configuration options.
+ */
+interface LogbackConfig {
+    /** Change the global log level for all appenders and packages. */
+    var rootLevel: Level
+
+    /** Change the log level for specific package names*/
+    fun packageLevel(level: Level, vararg packageNames: String)
+
+    /** Change the log level for specific package names*/
+    fun packageLevel(level: Level, packageNames: List<String>)
+
+    /**
+     * Enter nested DSL to create a new appender logging to std out.
+     */
+    fun addConsoleAppender(withBuilder: ConsoleAppenderBuilder.() -> Unit = {})
 }

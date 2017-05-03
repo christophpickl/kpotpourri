@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.methods.HttpPut
 import org.apache.http.client.methods.HttpRequestBase
 import org.apache.http.entity.ByteArrayEntity
+import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.message.BasicHeader
 import java.io.ByteArrayOutputStream
@@ -86,12 +87,10 @@ class ApacheHttpClient(private val metaMap: MetaMap) : HttpClient {
         }
 
         request.requestBody?.let { body ->
-            val requestByteArray = when (body) {
-            // or use StringEntity (better charset and content type support)
-                is DefiniteRequestBody.DefiniteStringBody -> body.string.toByteArray()
-                is DefiniteRequestBody.DefiniteBytesBody -> body.bytes.read()
+            this.entity = when (body) {
+                is DefiniteRequestBody.DefiniteStringBody -> StringEntity(body.string) // MINOR could set content-type here as well
+                is DefiniteRequestBody.DefiniteBytesBody -> ByteArrayEntity(body.bytes)
             }
-            this.entity = ByteArrayEntity(requestByteArray)
         }
     }
 

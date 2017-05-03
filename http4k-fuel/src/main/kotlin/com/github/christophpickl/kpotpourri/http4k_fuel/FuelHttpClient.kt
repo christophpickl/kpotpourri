@@ -48,6 +48,7 @@ class FuelHttpClient(private val metaMap: MetaMap) : HttpClient {
                 .apply {
                     header(request4k.headers)
                     if (request4k.method == HttpMethod4k.PATCH) {
+                        // workaround for fuel as it does not support PATCH method
                         header("X-HTTP-Method-Override" to "PATCH")
                     }
                     request4k.requestBody?.let {
@@ -55,7 +56,7 @@ class FuelHttpClient(private val metaMap: MetaMap) : HttpClient {
                             is DefiniteRequestBody.DefiniteStringBody ->
                                 body(it.string)
                             is DefiniteRequestBody.DefiniteBytesBody->
-                                body(it.bytes.read())
+                                body(it.bytes)
                         }
                     }
                 }

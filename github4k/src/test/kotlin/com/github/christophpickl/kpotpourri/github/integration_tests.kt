@@ -164,7 +164,7 @@ private val testPort = 8082
         verifyWiremockGet(MockRequest(requestPath1))
         verifyPostRequest(MockRequest(requestPath2, {
             withHeader("Content-Type", equalTo(uploadRequest.contentType))
-            withRequestBody(equalTo(String(uploadRequest.bytes.read())))
+            withRequestBody(equalTo(String(uploadRequest.bytes)))
         }))
     }
 

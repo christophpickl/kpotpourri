@@ -6,6 +6,8 @@ import java.io.File
 import java.util.Objects
 
 internal val DEFAULT_CONTENT_TYPE: String = "*/*"
+internal val DEFAULT_TEXT_CONTENT_TYPE: String = "text/plain"
+internal val DEFAULT_JSON_CONTENT_TYPE: String = "application/json"
 
 /**
  * Options object for setting the request body.
@@ -29,16 +31,16 @@ interface RequestWithEntityOpts {
         if (body is Unit) {
             requestBodyDisabled()
         } else if (body is String) {
-            requestBody = StringBody(body, contentType ?: "text/plain")
+            requestBody = StringBody(body, contentType ?: DEFAULT_TEXT_CONTENT_TYPE)
         } else if (body is File) {
             requestFileBody(body, contentType ?: DEFAULT_CONTENT_TYPE)
         } else if (body is ByteArray) {
             requestBytesBody(body, contentType ?: DEFAULT_CONTENT_TYPE)
         } else if (body is Number) {
-            requestBody = StringBody(body.toString(), contentType ?: "text/plain")
+            requestBody = StringBody(body.toString(), contentType ?: DEFAULT_TEXT_CONTENT_TYPE)
         } else {
             // MINOR support more restrict mode, where any marshalled JSON object has to be annotated.
-            requestBody = JsonBody(body, contentType ?: "application/json")
+            requestBody = JsonBody(body, contentType ?: DEFAULT_JSON_CONTENT_TYPE)
         }
     }
 
@@ -72,12 +74,12 @@ sealed class RequestBody {
     /**
      * Plain text.
      */
-    data class StringBody(val stringEntity: String, val contentType: String = "text/plain") : RequestBody()
+    data class StringBody(val stringEntity: String, val contentType: String = DEFAULT_TEXT_CONTENT_TYPE) : RequestBody()
 
     /**
      * Any passed JSON object will be marshalled internally via Jackson.
      */
-    data class JsonBody(val jacksonEntity: Any, val contentType: String = "application/json") : RequestBody()
+    data class JsonBody(val jacksonEntity: Any, val contentType: String = DEFAULT_JSON_CONTENT_TYPE) : RequestBody()
 
     /**
      * Raw binary request with custom content type.
@@ -102,6 +104,8 @@ sealed class RequestBody {
 
 /**
  * Internal representation of a configured request body (got no representation for disabled request body).
+ *
+ * Does not define the content type as it already has been set on a higher abstraction level.
  */
 sealed class DefiniteRequestBody {
 

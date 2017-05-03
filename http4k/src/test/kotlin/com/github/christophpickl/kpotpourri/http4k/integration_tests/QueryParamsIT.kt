@@ -38,8 +38,8 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
 
 
     fun `When query param is set in globals and request, Then request overrides`() {
-        val queryParamUrlSuffix = "?k=request"
-        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+        val expectedQueryParamUrlSuffix = "?k=request"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + expectedQueryParamUrlSuffix)
 
         http4k = buildCustomHttp4k {
             queryParams += "k" to "global"
@@ -49,12 +49,12 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k" to "request"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
     }
 
     fun `Given query params in baseUrl, When query param is set, Then params are concatenated properly`() {
-        val queryParamUrlSuffix = "?k1=v1&k2=v2"
-        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+        val expectedQueryParamUrlSuffix = "?k1=v1&k2=v2"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + expectedQueryParamUrlSuffix)
 
         http4k = buildCustomHttp4k {
             baseUrlBy("$wiremockBaseUrl$mockEndpointUrl?k1=v1")
@@ -63,12 +63,12 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k2" to "v2"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
     }
 
     fun `Given query params in baseUrl and globals, When query param is set too, Then params are concatenated properly`() {
-        val queryParamUrlSuffix = "?k1=v1&k2=v2&k3=v3"
-        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+        val expectedQueryParamUrlSuffix = "?k1=v1&k2=v2&k3=v3"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + expectedQueryParamUrlSuffix)
 
         http4k = buildCustomHttp4k {
             baseUrlBy("$wiremockBaseUrl$mockEndpointUrl?k1=v1")
@@ -78,7 +78,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k3" to "v3"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
     }
 
     fun `Given same query param in baseUrl, globals and request, Then request param should have precedence`() {
@@ -97,8 +97,8 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
     }
 
     fun `Given same query param in baseUrl and globals, Then globals param should have precedence`() {
-        val queryParamUrlSuffix = "?k=request"
-        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+        val expectedQueryParamUrlSuffix = "?k=global"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + expectedQueryParamUrlSuffix)
 
         http4k = buildCustomHttp4k {
             baseUrlBy("$wiremockBaseUrl$mockEndpointUrl?k=base")
@@ -106,12 +106,12 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
         }
         http4k.get<Any>("")
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
     }
 
     fun `Given same query param in baseUrl and request, Then request param should have precedence`() {
-        val queryParamUrlSuffix = "?k=request"
-        givenGetMockEndpointUrl(path = mockEndpointUrl + queryParamUrlSuffix)
+        val expectedQueryParamUrlSuffix = "?k=request"
+        givenGetMockEndpointUrl(path = mockEndpointUrl + expectedQueryParamUrlSuffix)
 
         http4k = buildCustomHttp4k {
             baseUrlBy("$wiremockBaseUrl$mockEndpointUrl?k=base")
@@ -120,7 +120,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k" to "request"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
     }
 
 }
