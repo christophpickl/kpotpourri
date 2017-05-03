@@ -117,10 +117,10 @@ fun File.touch() {
  */
 fun File.resetDirectory(): File {
     log.debug { "Delete and recreate directory: $canonicalPath" }
-    if (!isDirectory) {
+    if (exists() && !isDirectory) {
         throw KPotpourriException("Expected to be a directory: $canonicalPath")
     }
-    if (!deleteRecursively()) {
+    if (exists() && !deleteRecursively()) {
         throw KPotpourriException("Could not delete directory: $canonicalPath")
     }
     mkdirsIfNecessary()
