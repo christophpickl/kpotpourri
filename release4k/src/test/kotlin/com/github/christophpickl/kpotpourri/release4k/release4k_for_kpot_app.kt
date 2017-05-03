@@ -19,7 +19,8 @@ fun main(args: Array<String>) = release4k {
         throw RuntimeException("Invalid CWD! Execute this main class from 'kpotpourri' root directory, instead of submodule 'release4k' ;)")
     }
 
-    val versionTxt = "version.txt"
+    val relativeKpotPath = "../github2/kpotpourri"
+    val versionTxt = "$relativeKpotPath/version.txt" // navigate to proper checkout location :)
     val gitUrl = "https://github.com/christophpickl/kpotpourri.git"
 
     // =================================================================================================================
@@ -31,7 +32,7 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
-    execute("/usr/bin/git", "status", File("./"))
+    execute("/usr/bin/git", "status", File(relativeKpotPath))
     println()
     if (!Keyboard.readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
