@@ -13,13 +13,24 @@ import org.testng.annotations.Test
         assertThat(result, isEmpty)
     }
 
-    fun `Given Kotlin snippet only, Should extract Kotlin code`() {
+    fun `Given Kotlin snippet without linebreak, Should return empty as not detected line`() {
+        val result = MarkdownParser.extractKotlinCode("""```kotlin```""")
+        assertThat(result, isEmpty)
+    }
+
+    fun `Given empty Kotlin snippet, Should extract Kotlin code`() {
+        val result = MarkdownParser.extractKotlinCode("""```kotlin
+```""")
+        assertThat(result, equalTo(listOf(CodeAndLineNumber(1, ""))))
+    }
+
+    fun `Given Kotlin snippet with leading newline, Should extract Kotlin code`() {
         val result = MarkdownParser.extractKotlinCode("""
 ```kotlin
 single snippet
 ```
 """)
-        assertThat(result, equalTo(listOf(CodeAndLineNumber(6, "single snippet\n"))))
+        assertThat(result, equalTo(listOf(CodeAndLineNumber(2, "single snippet\n"))))
     }
 
     fun `Given XML snippet, Should return empty`() {

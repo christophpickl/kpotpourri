@@ -74,7 +74,7 @@ data class CodeSnippet(
     internal val isMarkedAsUnsafeCode = code.startsWith(unsafeEscapeSequence)
 
     /**
-     * Used by TestNG to construct the test name as it is used by a data provider.
+     * Used by TestNG and JUnit to construct the test name as it is used by a data provider, so watch out.
      */
     override fun toString() = MoreObjects.toStringHelper(this)
             .add("relativePath", relativePath)

@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.markdown4k
 
+import com.github.christophpickl.kpotpourri.markdown4k.non_test.testee
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsExactlyInAnyOrder
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
