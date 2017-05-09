@@ -15,12 +15,12 @@ Gradle suite > Gradle test > com.package.MyMakrdown4kTest.testMethodName[2](Code
                    ^
 ```
 
-## Usage Samples
+## Usage
 
 Basically you setup a data providing method which returns the collected snippets,
 afterwards consume all of them and try to compile them.
 
-We assume in the following examples, that the `root` folder is the same as the current working directory which contains all relevant markdown files.
+The following examples assume all relevant markdown files reside in the current working directory.
 
 ### TestNG
 
@@ -38,7 +38,8 @@ import java.io.File
 @Test class UsageTestngTest {
 
     @DataProvider
-    fun provideSnippets() = Markdown4k.collectSnippets(root = File(".")).toDataProviding()
+    fun provideSnippets() = 
+        Markdown4k.collectSnippets(root = File(".")).toDataProviding()
 
     @Test(dataProvider = "provideSnippets")
     fun `compiling markdown should not throw exception`(snippet: CodeSnippet) {
@@ -48,7 +49,7 @@ import java.io.File
 }
 ```
 
-![Markdown4k Screenshot](https://github.com/christophpickl/kpotpourri/tree/master/doc/images/markdown4k-screenshot_intellij_run.png)
+![Markdown4k Screenshot](https://github.com/christophpickl/kpotpourri/raw/master/doc/images/markdown4k-screenshot_intellij_run.png)
 
 ## JUnit
 
@@ -70,7 +71,8 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{index}: compile {0}")
-        fun data() = Markdown4k.collectSnippets(root = File(".")).toParamterized()
+        fun data() =
+            Markdown4k.collectSnippets(root = File(".")).toParamterized()
     }
 
     @Test
