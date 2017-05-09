@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.markdown4k
 import com.github.christophpickl.kpotpourri.common.file.nameStartingFrom
 import com.github.christophpickl.kpotpourri.common.file.scanForFilesRecursively
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.common.string.cutOffAt
 import com.github.christophpickl.kpotpourri.markdown4k.internal.KotlinCompiler
 import com.github.christophpickl.kpotpourri.markdown4k.internal.MarkdownParser
 import com.google.common.base.MoreObjects
@@ -79,6 +80,6 @@ data class CodeSnippet(
     override fun toString() = MoreObjects.toStringHelper(this)
             .add("relativePath", relativePath)
             .add("lineNumber", lineNumber)
-            .add("code", code.substring(0, Math.min(code.length, 10))) // MINOR add in common4k to cut with " ..." at the end
+            .add("code", code.cutOffAt(10))
             .toString()
 }
