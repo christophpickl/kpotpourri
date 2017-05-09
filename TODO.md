@@ -39,6 +39,13 @@
     * other artifacts need to be able to easily include this
 * @release4k: dryRun() option
 * enhance kdoc https://github.com/Kotlin/dokka (samples and stuff)
+* enable CORS easily 
+    * Access-Control-Allow-Origin = "*"
+    * Access-Control-Allow-Methods = "POST, GET, PUT, DELETE, OPTIONS"
+    * Access-Control-Allow-Credentials = true
+    * Access-Control-Max-Age = '86400'; // 24 hours
+    * Access-Control-Allow-Headers = "X-Requested-With, Access-Control-Allow-Origin, X-HTTP-Method-Override, Content-Type, Authorization, Accept"
+
 
 
 # TODOs HTTP4K
