@@ -14,7 +14,7 @@ import java.io.File
 
     @DataProvider
     fun provideSnippets() = Markdown4k.collectSnippets(
-            root = File("../"),
+            root = File("."), // assume the current working directory contains the MD files
             ignoreFolders = listOf("src", "build", ".git")
     ).toDataProviding()
 

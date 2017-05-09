@@ -19,7 +19,7 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
         @Parameterized.Parameters(name = "{index}: compile {0}")
         fun data() =
                 Markdown4k.collectSnippets(
-                        root = File("../"),
+                        root = File("."), // assume the current working directory contains the MD files
                         ignoreFolders = listOf("src", "build", ".git")
                 ).toParamterized()
     }

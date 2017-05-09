@@ -20,7 +20,7 @@ Following libraries are currently available:
 * Http4k ... Easy to use HTTP client abstraction.
 * Jackson4k ... Simplify configuration of Jackson Kotlin module.
 * Logback4k ... Programmatic Logback configuration.
-* Markdown4k ... Automatically check if Kotlin code snippets in Markdown files are actually compileable.
+* Markdown4k ... Automatically check if Kotlin code snippets in Markdown files are actually compileable. ([Read more](markdown4k/README.md))
 * Release4k ... High level release scripts in Kotlin.
 * Swing4k ... Common Swing extensions.
 * Test4k ... Test extensions for TestNG, Hamkrest and Mockito-Kotlin.
@@ -205,10 +205,19 @@ TODO()
 
 ## Markdown4k
 
-Automatically test Kotlin code snippets in Markdown files.
+Automatically check if Kotlin code snippets in Markdown files are compilable.
+
+The quickest way to trigger a compilation cycle is by collecting and compiling:
 
 ```kotlin
-TODO()
+import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
+import java.io.File
+
+Markdown4k.collectSnippets(File("root_directory")).forEach { 
+    Markdown4k.compile(it)
+}
 ```
 
-<!---[Read more](markdown4k/README.md)--->
+The suggested approach is to integrate these steps into the testing framework (TestNG, JUnit).
+
+[Read more](markdown4k/README.md)

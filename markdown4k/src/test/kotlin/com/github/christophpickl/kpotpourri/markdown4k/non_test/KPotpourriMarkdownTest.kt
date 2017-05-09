@@ -19,7 +19,7 @@ import java.io.File
     ).toDataProviding()
 
     @Test(dataProvider = "provideSnippets")
-    fun `compiling markdown should not throw exception`(snippet: CodeSnippet) {
+    fun `markdown`(snippet: CodeSnippet) {
         Markdown4k.compile(snippet)
     }
 

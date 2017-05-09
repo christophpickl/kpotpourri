@@ -27,7 +27,7 @@ object Markdown4k {
             root: File,
             ignoreFolders: List<String> = emptyList()
     ): List<CodeSnippet> {
-        log.debug { "collectSnippets(root=${root.canonicalPath}, ignoreFolders=$ignoreFolders)" }
+        log.info { "collectSnippets(root=${root.canonicalPath}, ignoreFolders=$ignoreFolders)" }
         val result = mutableListOf<CodeSnippet>()
         root.scanForFilesRecursively("md", ignoreFolders).forEach { file ->
             MarkdownParser.extractKotlinCode(file.readText()).forEach { (lineNumber, code) ->
@@ -80,6 +80,6 @@ data class CodeSnippet(
     override fun toString() = MoreObjects.toStringHelper(this)
             .add("relativePath", relativePath)
             .add("lineNumber", lineNumber)
-            .add("code", code.cutOffAt(10))
+            .add("code", ">>>${code.cutOffAt(20)}<<<")
             .toString()
 }

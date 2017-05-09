@@ -47,6 +47,9 @@
     * Access-Control-Allow-Headers = "X-Requested-With, Access-Control-Allow-Origin, X-HTTP-Method-Override, Content-Type, Authorization, Accept"
 
 
+# TODOs Markdown4k
+
+* right now, a failing test makes the test errornous (instead failing), as the thrown ScriptException should actually be replaced by returning a value which can be asserted on (sealed class)
 
 # TODOs HTTP4K
 
