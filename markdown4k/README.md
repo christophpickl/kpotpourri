@@ -2,30 +2,28 @@
 
 Writing documentation is a good idea, right, we agree on that? So you end up having tons of markdown files with tons of kotlin code snippets.
 After a while they get outdated, because writing documentation is good, but who cares about updating them?!
-This is where __Markdown4k__ gets handy, as it tries to compile all of your code snippets and reports an error if something wrent wrong. 
+This is where Markdown4k gets handy, as it tries to compile all of your code snippets and reports an error if something wrent wrong. 
  
-The suggested approach is to integrate the check into a testing framework like TestNG or JUnit or whatever you prefer.
-
-The output on failure is fine tuned to expose enough information to immediately figure out what's going on (using TestNG and Gradle):
-
-```
-Gradle suite > Gradle test > com.package.MyMakrdown4kTest.testMethodName[2](CodeSnippet{relativePath=/README.md, lineNumber=78, code=val root = ...}) FAILED
-    javax.script.ScriptException: Error: error: unresolved reference: File
-        val root = File("./")
-                   ^
-```
+The suggested approach is to integrate the check into a **testing framework** like TestNG or JUnit or whatever you prefer.
 
 ## Usage
 
-Basically you setup a data providing method which returns the collected snippets,
-afterwards consume all of them and try to compile them.
+First of all you need to declare a new dependency:
+
+```groovy
+dependencies {
+  testCompile 'com.github.christophpickl.kpotpourri:markdown4k:1.x'
+}
+```
+
+Afterwards you only need to feed the test framework with code snippets and try to compile them.
 
 The following examples assume all relevant markdown files reside in the current working directory.
 
 ### TestNG
 
-Use TestNG's `@DataProvider` mechanism in combination with a handy `toDataProviding()` 
-extension method in order to convert the returned `List` into something TestNG can actually use.
+This sample is using TestNG's `@DataProvider` mechanism in combination with a custom `toDataProviding()` 
+extension method in order to convert the returned `List` into something TestNG can actually use:
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.CodeSnippet
@@ -49,12 +47,12 @@ import java.io.File
 }
 ```
 
-![Markdown4k Screenshot](https://github.com/christophpickl/kpotpourri/raw/master/doc/images/markdown4k-screenshot_intellij_run.png)
+![IntelliJ Screenshot using TestNG](https://github.com/christophpickl/kpotpourri/raw/master/doc/images/markdown4k-screenshot_intellij_run.png)
 
 ## JUnit
 
-Use JUnit's parameterized tests in combination with a handy `toParamterized()` 
-extension method in order to convert the returned `List` into something JUnit can actually use.
+This sample is using JUnit's parameterized tests in combination with a custom `toParamterized()` 
+extension method in order to convert the returned `List` into something JUnit can actually use:
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.CodeSnippet
@@ -85,9 +83,9 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
 
 ## Hints
 
-### Ignore folders from scan
+### Ignore folders
 
-The `collectSnippets()` provides a default argument which enables you to ignore certain directories by their name:
+The `collectSnippets()` method provides a default argument which enables you to ignore certain directories by their name called `ignoreFolders`:
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
@@ -99,9 +97,9 @@ Markdown4k.collectSnippets(
 )
 ```
     
-### Declare a code snippet to be ignored
+### Ignore code snippets
 
-Start a line with `/// unsafe` in order to ignore this code snippet for compilation:
+Start a line with `/// unsafe` in order to exclude this code snippet from compilation:
 
     ```kotlin
     /// unsafe
@@ -111,7 +109,8 @@ Start a line with `/// unsafe` in order to ignore this code snippet for compilat
 ## Troubleshooting
 
 * Remember to add all **import statements** which are not included by default.
-* The markdown4k executing test has to reference ANY **dependency** which is required by the imported types along ALL markdown files.
+* Whenever you import a type in your code snippet, this type has to be made available by adding a proper `testRuntime` **dependency**.
+    * Using multi module builds and outsourcing the markdown check into its own submodule, requires you to add additional `:project` dependencies.
 * In order to be picked up as a valid Kotlin snippet, the line must not have leading or trailing **whitespace**.
     * This enables you to indent your markdown snippet by 4 spaces which is another approach to ignore a specific snippet ;)
 * As the code gets compiled via using a script engine, executing many tests could **slow**  down the build drastically.
