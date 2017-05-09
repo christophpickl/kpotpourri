@@ -9,26 +9,30 @@ import com.google.common.base.MoreObjects
 import java.io.File
 import javax.script.ScriptException
 
-private val log = LOG {}
 
 /**
  * Collects and verifies Kotlin code snippets within Markdown files.
  */
 object Markdown4k {
 
+    private val log = LOG {}
+
     /**
      * Scan the given directory recursively for MD files containing Kotlin code snippets.
+     *
+     * @param ignoreFolders specify list of directory names which should be skipped in recursive file scan.
      */
     fun collectSnippets(
             root: File,
             ignoreFolders: List<String> = emptyList()
     ): List<CodeSnippet> {
+        log.debug { "collectSnippets(root=${root.canonicalPath}, ignoreFolders=$ignoreFolders)" }
         val result = mutableListOf<CodeSnippet>()
         root.scanForFilesRecursively("md", ignoreFolders).forEach { file ->
             MarkdownParser.extractKotlinCode(file.readText()).forEach { (lineNumber, code) ->
                 result += CodeSnippet(
-                        relativePath = file.nameStartingFrom(root),
                         markdown = file,
+                        relativePath = file.nameStartingFrom(root),
                         lineNumber = lineNumber,
                         code = code
                 )
@@ -56,8 +60,10 @@ object Markdown4k {
  * A single Kotlin code snippet found in a Markdown file.
  */
 data class CodeSnippet(
-        val relativePath: String,
+        /** File which contains the code snippet. */
         val markdown: File,
+        /** Path parth relative to the root scan folder. */
+        val relativePath: String,
         val lineNumber: Int,
         val code: String
 ) {
