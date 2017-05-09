@@ -1,14 +1,16 @@
 # Markdown4k
 
-Writing documentation is a good idea, right, we agree on that? So you end up having tons of markdown files with tons of kotlin code snippets.
+Writing documentation is a good idea, right, we agree on that?
+
+So you end up having tons of markdown files with tons of kotlin code snippets.
 After a while they get outdated, because writing documentation is good, but who cares about updating them?!
+
 This is where Markdown4k gets handy, as it tries to compile all of your code snippets and reports an error if something wrent wrong. 
- 
-The suggested approach is to integrate the check into a **testing framework** like TestNG or JUnit or whatever you prefer.
 
 ## Usage
 
-First of all you need to declare a new dependency:
+The suggested approach is to integrate the check into a **testing framework** like TestNG or JUnit or whatever you prefer,
+but first of all you need to declare a new dependency:
 
 ```groovy
 dependencies {
@@ -16,13 +18,14 @@ dependencies {
 }
 ```
 
-Afterwards you only need to feed the test framework with code snippets and try to compile them.
+Afterwards you only need to feed the test framework with your code snippets by passing a `root` directory which will be scanned for `*.md` files recursively,
+and then try to compile them or throw an exception if there was an error, making the test fail.
 
-The following examples assume all relevant markdown files reside in the current working directory.
+(The following examples assume all relevant markdown files reside in the current working directory.)
 
 ### TestNG
 
-This sample is using TestNG's `@DataProvider` mechanism in combination with a custom `toDataProviding()` 
+The following sample is using TestNG's `@DataProvider` mechanism in combination with a custom `toDataProviding()` 
 extension method in order to convert the returned `List` into something TestNG can actually use:
 
 ```kotlin
@@ -51,7 +54,7 @@ import java.io.File
 
 ## JUnit
 
-This sample is using JUnit's parameterized tests in combination with a custom `toParamterized()` 
+The following sample is using JUnit's parameterized tests in combination with a custom `toParamterized()` 
 extension method in order to convert the returned `List` into something JUnit can actually use:
 
 ```kotlin
@@ -99,7 +102,7 @@ Markdown4k.collectSnippets(
     
 ### Ignore code snippets
 
-Start a line with `/// unsafe` in order to exclude this code snippet from compilation:
+Start a line with `/// unsafe` in your markdown files, in order to exclude this specific code snippet from compilation:
 
     ```kotlin
     /// unsafe
