@@ -25,30 +25,17 @@ and then try to compile them and check for a proper `KompilationResult`.
 
 ### TestNG
 
-Here we are using TestNG's `@DataProvider` mechanism in combination with a custom `toDataProviding()` 
-extension method in order to convert the returned `List` into something TestNG can actually use:
+For sake of simplicity there is a ready to use base class which only requires you to pass
+a root file (behind the scenes the base class is using TestNG's `@DataProvider` mechanism):
 
 ```kotlin
-import com.github.christophpickl.kpotpourri.markdown4k.CodeSnippet
-import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
-import com.github.christophpickl.kpotpourri.markdown4k.assertKompileSuccessOrIgnored
-import com.github.christophpickl.kpotpourri.test4k.toDataProviding
-import org.testng.annotations.DataProvider
+import com.github.christophpickl.kpotpourri.markdown4k.MarkdownTestngTest
 import org.testng.annotations.Test
 import java.io.File
 
-@Test class UsageTestngTest {
-
-    @DataProvider
-    fun provideSnippets() = 
-        Markdown4k.kollect(root = File(".")).toDataProviding()
-
-    @Test(dataProvider = "provideSnippets")
-    fun `compiling markdown should not throw exception`(snippet: CodeSnippet) {
-        assertKompileSuccessOrIgnored(snippet)
-    }
-
-}
+@Test class UsageTestngTest : MarkdownTestngTest(
+    root = File(".")
+)
 ```
 
 ![IntelliJ Screenshot using TestNG](https://github.com/christophpickl/kpotpourri/raw/master/doc/images/markdown4k-screenshot_intellij_run.png)
