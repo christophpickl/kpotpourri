@@ -53,6 +53,18 @@ allprojects {
     }
 
     apply plugin: 'idea'
+
+    // https://discuss.gradle.org/t/travis-ci-org-gradle-launcher-daemon-client-daemondisappearedexception-gradle-build-daemon-disappeared-unexpectedly-it-may-have-been-killed-or-may-have-crashed/13106/3
+    if (System.env.TRAVIS == 'true') {
+        tasks.withType(GroovyCompile) {
+            groovyOptions.fork = false
+        }
+        tasks.withType(Test) {
+            // containers (currently) have 2 dedicated cores and 4GB of memory
+            maxParallelForks = 2
+            minHeapSize = '128m'
+        }
+    }
 }
 
 // VERSIONS
@@ -123,11 +135,6 @@ subprojects { subproject ->
         reports {
             junitXml.enabled = true
             html.enabled = true
-        }
-
-        // ignore: STARTED, PASSED, SKIPPED
-        testLogging {
-            events "FAILED"
         }
     }
 
