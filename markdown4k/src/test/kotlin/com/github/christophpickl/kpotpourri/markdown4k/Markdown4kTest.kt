@@ -22,7 +22,7 @@ import java.io.File
 
     fun `kompile - Given unsafed instruction, Then ignores uncompilable code`() {
         assertKompileIgnored(CodeSnippet.testee.copy(code =
-        """/// unsafe
+        """/// ignore
 this wont be compiled ;)
 """))
     }

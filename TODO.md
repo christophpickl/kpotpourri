@@ -52,7 +52,6 @@
 
 * split into three libs: core, testng, junit (in order to make the base class and stuff visible via main dep, rather test dep)
 * the assert Kompile matchers are not visible as they reside in test scope, but should be in main scope (exposing hamcrest dependency as non-test)
-* MINOR: when using /// unsafe, instead of simply not compiling and return green test, not include as test AT ALL (would require deeper integration into test framework, not using data provider/parameterized tests)
 
 # TODOs HTTP4K
 

@@ -38,7 +38,7 @@ object Markdown4k {
                         lineNumber = lineNumber,
                         code = code
                 )
-                if (!suppressIgnoredSnippets || !snippet.isMarkedAsUnsafeCode) {
+                if (!suppressIgnoredSnippets || !snippet.isIgnored) {
                     result += snippet
                 }
             }
@@ -47,10 +47,10 @@ object Markdown4k {
     }
 
     /**
-     * Suppress compilation by prefixing the code with "/// unsafe".
+     * Suppress compilation by prefixing the code with "/// ignore".
      */
     fun kompile(snippet: CodeSnippet): KompilationResult {
-        if (snippet.isMarkedAsUnsafeCode) {
+        if (snippet.isIgnored) {
             log.debug { "Skipping Kotlin snippet as it is marked as unsafe: $snippet" }
             return KompilationResult.Ignored()
         }
@@ -94,10 +94,10 @@ data class CodeSnippet(
         val code: String
 ) {
     companion object {
-        private val unsafeEscapeSequence = "/// unsafe"
+        private val ignoreEscapeSequence = "/// ignore"
     }
 
-    internal val isMarkedAsUnsafeCode = code.startsWith(unsafeEscapeSequence)
+    internal val isIgnored = code.startsWith(ignoreEscapeSequence)
 
     /**
      * Used by TestNG and JUnit to construct the test name as it is used by a data provider, so watch out.

@@ -91,10 +91,10 @@ val codeSnippets = Markdown4k.kollect(
     
 ### Ignore code snippets
 
-Start a line with `/// unsafe` in your markdown files, in order to exclude this specific code snippet from compilation:
+Start a line with `/// ignore` in your markdown files, in order to exclude this specific code snippet from compilation:
 
     ```kotlin
-    /// unsafe
+    /// ignore
     val x = notCompilable
     ```
 
