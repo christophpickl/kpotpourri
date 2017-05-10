@@ -17,7 +17,7 @@ import kotlin.reflect.KClass
             Markdown4k.kollect(root, ignoreFolders).toDataProviding()
 
     @Test(dataProvider = "provideSnippets")
-    fun `compiling markdown should not throw exception`(snippet: CodeSnippet) {
+    fun `kompile`(snippet: CodeSnippet) {
         assertKompileSuccessOrIgnored(snippet)
     }
 

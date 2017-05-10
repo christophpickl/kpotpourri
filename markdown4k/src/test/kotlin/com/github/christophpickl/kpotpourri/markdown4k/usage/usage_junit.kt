@@ -26,7 +26,7 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
     }
 
     @Test
-    fun `compiling markdown should not throw exception`() {
+    fun `kompile`() {
         assertKompileSuccessOrIgnored(snippet)
     }
 
