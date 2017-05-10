@@ -13,6 +13,8 @@ _KPotpourri_ is a collection of several tools and libraries covering different a
 Mostly they introduce a more Kotlin-ish API over existing libraries like Logback, TestNG, Wiremock and others.
 It tries to reduce the need of repeating yourself, filling the gaps and simplify usage by taking advantage Kotlin's language features.
 
+![Kotlin](https://github.com/christophpickl/kpotpourri/raw/master/doc/images/kotlin.png)
+
 * Common
     * [Common4k](common4k/README.md) ... Common extensions to the standard library (like Guava for Java).
     * [Test4k](test4k/README.md) ... Test extensions for TestNG, Hamkrest and Mockito-Kotlin.
