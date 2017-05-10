@@ -13,14 +13,14 @@ import java.io.File
 @Test class UsageTestngTest {
 
     @DataProvider
-    fun provideSnippets() = Markdown4k.collectSnippets(
+    fun provideSnippets() = Markdown4k.kollect(
             root = File("."), // assume the current working directory contains the MD files
             ignoreFolders = listOf("src", "build", ".git")
     ).toDataProviding()
 
     @Test(dataProvider = "provideSnippets")
     fun `compiling markdown should not throw exception`(snippet: CodeSnippet) {
-        Markdown4k.compile(snippet)
+        assertKompileSuccessOrIgnored(snippet)
     }
 
 }

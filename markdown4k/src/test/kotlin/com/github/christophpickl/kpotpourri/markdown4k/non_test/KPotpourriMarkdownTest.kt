@@ -13,14 +13,14 @@ import java.io.File
 @Test class KPotpourriMarkdownTest {
 
     @DataProvider
-    fun provideSnippets() = Markdown4k.collectSnippets(
+    fun provideSnippets() = Markdown4k.kollect(
             root = File("../"),
             ignoreFolders = listOf("src", "build", ".git")
     ).toDataProviding()
 
     @Test(dataProvider = "provideSnippets")
     fun `markdown`(snippet: CodeSnippet) {
-        Markdown4k.compile(snippet)
+        assertKompileSuccessOrIgnored(snippet)
     }
 
 }

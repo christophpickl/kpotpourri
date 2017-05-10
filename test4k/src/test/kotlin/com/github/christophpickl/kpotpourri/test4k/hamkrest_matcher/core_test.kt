@@ -11,7 +11,7 @@ import org.testng.annotations.Test
 
     //<editor-fold desc="allOf">
 
-    fun `allOf - Given vararg which mathes, Should not throw`() {
+    fun `allOf - Given vararg which matches, Should not throw`() {
         assertThat("foobar", allOf(startsWith("f"), endsWith("r")))
     }
 
@@ -34,6 +34,36 @@ import org.testng.annotations.Test
     fun `allOf - Given list which not matches, Should throw`() {
         assertThrown<AssertionError> {
             assertThat("fooxxx", allOf(listOf(startsWith("f"), endsWith("r"))))
+        }
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="anyOf">
+
+    fun `anyOf - Given vararg with one match, Should not throw`() {
+        assertThat("foobar", anyOf(startsWith("f"), startsWith("r")))
+    }
+
+    fun `anyOf - Given vararg with no matches, Should throw`() {
+        assertThrown<AssertionError> {
+            assertThat("foobar", anyOf(startsWith("x"), startsWith("y")))
+        }
+    }
+
+    fun `anyOf - Given list with one match, Should not throw`() {
+        assertThat("foobar", anyOf(listOf(startsWith("f"), startsWith("r"))))
+    }
+
+    fun `anyOf - Given list with no match, Should throw`() {
+        assertThrown<AssertionError> {
+            assertThat("foobar", anyOf(listOf(startsWith("x"), startsWith("y"))))
+        }
+    }
+
+    fun `anyOf - Given list which empty matchers, Should throw`() {
+        assertThrown<IllegalArgumentException>({ e -> e.message!!.contains("empty") }) {
+            assertThat("", anyOf(emptyList()))
         }
     }
 

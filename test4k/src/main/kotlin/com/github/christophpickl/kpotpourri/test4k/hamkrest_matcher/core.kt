@@ -4,6 +4,7 @@ import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.or
 import kotlin.reflect.KClass
 
 /**
@@ -23,6 +24,28 @@ fun <T> allOf(matchers: Collection<Matcher<T>>): Matcher<T> {
     matchers.forEachIndexed { i, matcher ->
         if (i != 0) {
             allMatcher = allMatcher and matcher
+        }
+    }
+    return allMatcher
+}
+
+/**
+ * Hamcrest matcher to check if any of the given matchers match.
+ */
+fun <T> anyOf(vararg matchers: Matcher<T>): Matcher<T> =
+        anyOf(matchers.toList())
+
+/**
+ * Hamcrest matcher to check if any of the given matchers match.
+ */
+fun <T> anyOf(matchers: Collection<Matcher<T>>): Matcher<T> {
+    if (matchers.isEmpty()) {
+        throw IllegalArgumentException("Passed matchers must not be empty!")
+    }
+    var allMatcher = matchers.first()
+    matchers.forEachIndexed { i, matcher ->
+        if (i != 0) {
+            allMatcher = allMatcher or matcher
         }
     }
     return allMatcher

@@ -16,9 +16,9 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
 
     companion object {
         @JvmStatic
-        @Parameterized.Parameters(name = "{index}: compile {0}")
+        @Parameterized.Parameters(name = "{index}: kompile {0}")
         fun data() =
-                Markdown4k.collectSnippets(
+                Markdown4k.kollect(
                         root = File("."), // assume the current working directory contains the MD files
                         ignoreFolders = listOf("src", "build", ".git")
                 ).toParamterized()
@@ -26,7 +26,7 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
 
     @Test
     fun `compiling markdown should not throw exception`() {
-        Markdown4k.compile(snippet)
+        assertKompileSuccessOrIgnored(snippet)
     }
 
 }

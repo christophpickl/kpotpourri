@@ -4,7 +4,7 @@ import com.github.christophpickl.kpotpourri.common.file.nameStartingFrom
 import com.github.christophpickl.kpotpourri.common.file.scanForFilesRecursively
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.string.cutOffAt
-import com.github.christophpickl.kpotpourri.markdown4k.internal.KotlinCompiler
+import com.github.christophpickl.kpotpourri.markdown4k.internal.Kompiler
 import com.github.christophpickl.kpotpourri.markdown4k.internal.MarkdownParser
 import com.google.common.base.MoreObjects
 import java.io.File
@@ -23,7 +23,7 @@ object Markdown4k {
      *
      * @param ignoreFolders specify list of directory names which should be skipped in recursive file scan.
      */
-    fun collectSnippets(
+    fun kollect(
             root: File,
             ignoreFolders: List<String> = emptyList()
     ): List<CodeSnippet> {
@@ -44,16 +44,30 @@ object Markdown4k {
 
     /**
      * Suppress compilation by prefixing the code with "/// unsafe".
-     *
-     * @throws ScriptException if code is not compilable.
      */
-    fun compile(snippet: CodeSnippet) {
+    fun kompile(snippet: CodeSnippet): KompilationResult {
         if (snippet.isMarkedAsUnsafeCode) {
             log.debug { "Skipping Kotlin snippet as it is marked as unsafe: $snippet" }
-            return
+            return KompilationResult.Ignored()
         }
-        KotlinCompiler.compile(snippet.code)
+        return Kompiler.kompile(snippet.code).toKompilationResult()
     }
+
+}
+
+/**
+ * Possible result of compiling a Kotlin code snippet.
+ */
+sealed class KompilationResult {
+
+    /** Code was compilable. */
+    class Success : KompilationResult()
+
+    /** There was a compilation error, details can be found in the provided exception. */
+    class Failure(val exception: ScriptException) : KompilationResult()
+
+    /** The provided code snippet was marked to be unsafe and skipped compilation. */
+    class Ignored : KompilationResult()
 
 }
 
