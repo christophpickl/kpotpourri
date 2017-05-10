@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
-import com.github.christophpickl.kpotpourri.http4k.BasicAuth
+import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest

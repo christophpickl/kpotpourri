@@ -1,8 +1,8 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.control.takeFirstIfIs
-import com.github.christophpickl.kpotpourri.http4k.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode
+import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuth
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 

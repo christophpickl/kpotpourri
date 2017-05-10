@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuthDisabled
 import com.github.christophpickl.kpotpourri.http4k.RequestBody.None
 import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 

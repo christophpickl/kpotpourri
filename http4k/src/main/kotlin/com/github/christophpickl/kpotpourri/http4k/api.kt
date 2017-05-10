@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuthDisabled
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode.Anything
 import com.github.christophpickl.kpotpourri.http4k.internal.HeadersMap
 import com.github.christophpickl.kpotpourri.http4k.internal.Http4kImpl
@@ -164,8 +165,11 @@ data class Request4k(
  * Core response object abstraction.
  */
 data class Response4k(
+        /** HTTP status code. */
         val statusCode: StatusCode,
+        /** Eagerly response body as a string. */
         val bodyAsString: String,
+        /** Response headers, obviously. */
         val headers: Map<String, String> = emptyMap()
 ) {
     companion object // test extensions
