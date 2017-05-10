@@ -1,4 +1,3 @@
-// common4k
 
 dependencies {
     testCompile "ch.qos.logback:logback-core:" + rootProject.version_logback

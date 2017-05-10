@@ -18,6 +18,7 @@
 * get rid of: MockRequest instance
 
 ## Med
+* parallel test builds: maxParallelForks = 2 (need to use random port for wiremock then!)
 * could extract module kompile4k (out of markdown4k)
 * ad web4k: RootErrorHandler does not catch 404s
 * ad markdown4k: get rid of warning about Kotlin runtime library

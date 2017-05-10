@@ -54,3 +54,17 @@ dependencies {
 ```
 
 Maven users please visit the [Maven setup](doc/maven_setup.md) page.
+
+## Notes
+
+Every KPotpourri library comes with some default dependencies:
+ 
+```groovy
+compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+compile "com.google.guava:guava:$version_guava"
+
+compile "io.github.microutils:kotlin-logging:$version_kotlin_logging"
+runtime "org.slf4j:jcl-over-slf4j:$version_jcl"
+```
