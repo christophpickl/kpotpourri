@@ -3,7 +3,6 @@ package com.github.christophpickl.kpotpourri.markdown4k
 import com.github.christophpickl.kpotpourri.common.enforceAllBranchesCovered
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.anyOf
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.isA
-import com.github.christophpickl.kpotpourri.test4k.skip
 import com.github.christophpickl.kpotpourri.test4k.toDataProviding
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.Assert
@@ -17,7 +16,7 @@ import kotlin.reflect.KClass
 
     @DataProvider
     fun provideSnippets() =
-            Markdown4k.kollect(root, ignoreFolders).toDataProviding()
+            Markdown4k.kollect(root, ignoreFolders, suppressIgnoredSnippets = true).toDataProviding()
 
     @Test(dataProvider = "provideSnippets")
     fun `kompile`(snippet: CodeSnippet) {
@@ -30,7 +29,7 @@ import kotlin.reflect.KClass
                 Assert.fail("Compilation failed for: $snippet", kompilationResult.exception)
             }
             is KompilationResult.Ignored -> {
-                skip("Ignoring $snippet")
+                throw IllegalStateException("This is actually not possible as suppressIgnoredSnippets was set to true!")
             }
         }.enforceAllBranchesCovered
     }

@@ -25,18 +25,22 @@ object Markdown4k {
      */
     fun kollect(
             root: File,
-            ignoreFolders: List<String> = emptyList()
+            ignoreFolders: List<String> = emptyList(),
+            suppressIgnoredSnippets: Boolean = true
     ): List<CodeSnippet> {
         log.info { "collectSnippets(root=${root.canonicalPath}, ignoreFolders=$ignoreFolders)" }
         val result = mutableListOf<CodeSnippet>()
         root.scanForFilesRecursively("md", ignoreFolders).forEach { file ->
             MarkdownParser.extractKotlinCode(file.readText()).forEach { (lineNumber, code) ->
-                result += CodeSnippet(
+                val snippet = CodeSnippet(
                         markdown = file,
                         relativePath = file.nameStartingFrom(root),
                         lineNumber = lineNumber,
                         code = code
                 )
+                if (!suppressIgnoredSnippets || !snippet.isMarkedAsUnsafeCode) {
+                    result += snippet
+                }
             }
         }
         return result
@@ -63,8 +67,13 @@ sealed class KompilationResult {
     /** Code was compilable. */
     class Success : KompilationResult()
 
-    /** There was a compilation error, details can be found in the provided exception. */
-    data class Failure(val exception: ScriptException) : KompilationResult()
+    /**
+     * There was a compilation error, details can be found in the provided exception.
+     */
+    data class Failure(
+            /** The underlying exception which has been thrown from the script engine. */
+            val exception: ScriptException
+    ) : KompilationResult()
 
     /** The provided code snippet was marked to be unsafe and skipped compilation. */
     class Ignored : KompilationResult()
@@ -79,7 +88,9 @@ data class CodeSnippet(
         val markdown: File,
         /** Path parth relative to the root scan folder. */
         val relativePath: String,
+        /** Line number of the ```kotlin declaration. */
         val lineNumber: Int,
+        /** The actual kotlin code. */
         val code: String
 ) {
     companion object {
