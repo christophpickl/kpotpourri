@@ -211,13 +211,15 @@ The quickest way to trigger a compilation cycle is by collecting and compiling:
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
+import com.github.christophpickl.kpotpourri.markdown4k.KompilationResult
 import java.io.File
 
-Markdown4k.collectSnippets(File("root_directory")).forEach { 
-    Markdown4k.compile(it)
+Markdown4k.kollect(File("root_directory")).forEach { 
+    val result: KompilationResult = Markdown4k.kompile(it)
+    // do something with [ Success, Failure(ScriptException), Ignored ]
 }
 ```
 
-The suggested approach is to integrate these steps into the testing framework (TestNG, JUnit).
+The suggested approach is rather to integrate these steps into a testing framework (TestNG, JUnit).
 
 [Read more](markdown4k/README.md)

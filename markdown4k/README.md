@@ -19,18 +19,19 @@ dependencies {
 ```
 
 Afterwards you only need to feed the test framework with your code snippets by passing a `root` directory which will be scanned for `*.md` files recursively,
-and then try to compile them or throw an exception if there was an error, making the test fail.
+and then try to compile them and check for a proper `KompilationResult`.
 
 (The following examples assume all relevant markdown files reside in the current working directory.)
 
 ### TestNG
 
-The following sample is using TestNG's `@DataProvider` mechanism in combination with a custom `toDataProviding()` 
+Here we are using TestNG's `@DataProvider` mechanism in combination with a custom `toDataProviding()` 
 extension method in order to convert the returned `List` into something TestNG can actually use:
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.CodeSnippet
 import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
+import com.github.christophpickl.kpotpourri.markdown4k.assertKompileSuccessOrIgnored
 import com.github.christophpickl.kpotpourri.test4k.toDataProviding
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
@@ -40,11 +41,11 @@ import java.io.File
 
     @DataProvider
     fun provideSnippets() = 
-        Markdown4k.collectSnippets(root = File(".")).toDataProviding()
+        Markdown4k.kollect(root = File(".")).toDataProviding()
 
     @Test(dataProvider = "provideSnippets")
     fun `compiling markdown should not throw exception`(snippet: CodeSnippet) {
-        Markdown4k.compile(snippet)
+        assertKompileSuccessOrIgnored(snippet)
     }
 
 }
@@ -54,12 +55,13 @@ import java.io.File
 
 ## JUnit
 
-The following sample is using JUnit's parameterized tests in combination with a custom `toParamterized()` 
+Here we are using JUnit's parameterized tests in combination with a custom `toParamterized()` 
 extension method in order to convert the returned `List` into something JUnit can actually use:
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.CodeSnippet
 import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
+import com.github.christophpickl.kpotpourri.markdown4k.assertKompileSuccessOrIgnored
 import com.github.christophpickl.kpotpourri.test4k.toParamterized
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -73,12 +75,12 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
         @JvmStatic
         @Parameterized.Parameters(name = "{index}: compile {0}")
         fun data() =
-            Markdown4k.collectSnippets(root = File(".")).toParamterized()
+            Markdown4k.kollect(root = File(".")).toParamterized()
     }
 
     @Test
     fun `compiling markdown should not throw exception`() {
-        Markdown4k.compile(snippet)
+        assertKompileSuccessOrIgnored(snippet)
     }
 
 }
@@ -88,13 +90,13 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
 
 ### Ignore folders
 
-The `collectSnippets()` method provides a default argument which enables you to ignore certain directories by their name called `ignoreFolders`:
+The `kollect()` method provides a default argument which enables you to ignore certain directories by their name called `ignoreFolders`:
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
 import java.io.File
 
-Markdown4k.collectSnippets(
+val codeSnippets = Markdown4k.kollect(
     root = File("./"),
     ignoreFolders = listOf("src", "build", ".git")
 )

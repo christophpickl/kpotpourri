@@ -1,7 +1,8 @@
-package com.github.christophpickl.kpotpourri.markdown4k.non_test
+package com.github.christophpickl.kpotpourri.markdown4k.usage
 
 import com.github.christophpickl.kpotpourri.markdown4k.CodeSnippet
 import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
+import com.github.christophpickl.kpotpourri.markdown4k.assertKompileSuccessOrIgnored
 import com.github.christophpickl.kpotpourri.test4k.toParamterized
 import org.junit.Test
 import org.junit.runner.RunWith

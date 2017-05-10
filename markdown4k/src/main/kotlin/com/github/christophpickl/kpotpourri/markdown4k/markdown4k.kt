@@ -64,7 +64,7 @@ sealed class KompilationResult {
     class Success : KompilationResult()
 
     /** There was a compilation error, details can be found in the provided exception. */
-    class Failure(val exception: ScriptException) : KompilationResult()
+    data class Failure(val exception: ScriptException) : KompilationResult()
 
     /** The provided code snippet was marked to be unsafe and skipped compilation. */
     class Ignored : KompilationResult()

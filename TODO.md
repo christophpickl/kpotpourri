@@ -49,8 +49,7 @@
 
 # TODOs Markdown4k
 
-* right now, a failing test makes the test errornous (instead failing), as the thrown ScriptException should actually be replaced by returning a value which can be asserted on (sealed class)
-* when using /// unsafe, instead of simply not compiling and return green test, not include as test AT ALL (would require deeper integration into test framework, not using data provider/parameterized tests)
+* MINOR: when using /// unsafe, instead of simply not compiling and return green test, not include as test AT ALL (would require deeper integration into test framework, not using data provider/parameterized tests)
 
 # TODOs HTTP4K
 

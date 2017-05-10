@@ -1,8 +1,5 @@
-package com.github.christophpickl.kpotpourri.markdown4k.non_test
+package com.github.christophpickl.kpotpourri.markdown4k
 
-import com.github.christophpickl.kpotpourri.markdown4k.CodeSnippet
-import com.github.christophpickl.kpotpourri.markdown4k.KompilationResult
-import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.anyOf
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.isA
 import com.natpryce.hamkrest.assertion.assertThat
@@ -18,7 +15,8 @@ val CodeSnippet.Companion.testee get() = CodeSnippet(
 )
 
 fun assertKompileSuccessOrIgnored(code: CodeSnippet) {
-    assertThat(Markdown4k.kompile(code), anyOf(
+    val actual = Markdown4k.kompile(code)
+    assertThat("Actual: $actual", actual, anyOf(
             isA(KompilationResult.Success::class),
             isA(KompilationResult.Ignored::class)
     ))
