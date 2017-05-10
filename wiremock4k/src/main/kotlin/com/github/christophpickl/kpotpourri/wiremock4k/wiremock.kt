@@ -14,7 +14,7 @@ import org.testng.annotations.BeforeMethod
 import org.testng.annotations.Test
 
 val WIREMOCK_HOSTNAME = "localhost"
-val WIREMOCK_PORT = 8044 // could introduce .dynamicPort()
+val WIREMOCK_PORT = 9987 // could introduce .dynamicPort()
 //const val WIREMOCK_DEFAULT_URL = "http://$WIREMOCK_HOSTNAME:$WIREMOCK_PORT"
 
 /**
