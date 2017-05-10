@@ -27,10 +27,3 @@ dependencies {
     testRuntime project(':web4k')
     testRuntime project(':wiremock4k')
 }
-
-compileKotlin {
-    kotlinOptions {
-        // kotlin-jsr223 comes with 1.1-SNAPSHOT, we use 1.1.1 of kotlin stdlib; suppress this warning
-        freeCompilerArgs = ["-Xskip-runtime-version-check"]
-    }
-}
