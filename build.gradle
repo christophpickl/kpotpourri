@@ -112,7 +112,6 @@ subprojects { subproject ->
         compile "com.google.guava:guava:" + version_guava
 
         if (subproject.name != "test4k") {
-            println "[KPOT] adding test4k dependency for ${subproject.name}"
             testCompile project(':test4k')
         }
         testRuntime "ch.qos.logback:logback-classic:" + version_logback
@@ -124,6 +123,11 @@ subprojects { subproject ->
         reports {
             junitXml.enabled = true
             html.enabled = true
+        }
+
+        // ignore: STARTED, PASSED, SKIPPED
+        testLogging {
+            events "FAILED"
         }
     }
 
