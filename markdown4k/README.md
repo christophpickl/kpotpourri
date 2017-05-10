@@ -14,7 +14,7 @@ but first of all you need to declare a new dependency:
 
 ```groovy
 dependencies {
-  testCompile 'com.github.christophpickl.kpotpourri:markdown4k:1.x'
+  testCompile 'com.github.christophpickl.kpotpourri:markdown4k:$versionKPotpourri'
 }
 ```
 
