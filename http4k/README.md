@@ -82,9 +82,9 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 
-val response = buildHttp4k().get<Response4k>("")
+val http4k = buildHttp4k()
 
-// process response object
+val response = http4k.get<Response4k>("")
 if (response.statusCode != SC_200_Ok) {
     println("Body: ${response.bodyAsString}")
     println("Accept Header: ${response.headers["Accept"]}")

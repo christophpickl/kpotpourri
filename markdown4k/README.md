@@ -5,7 +5,7 @@ Writing documentation is a good idea, right, we agree on that?
 So you end up having tons of markdown files with tons of kotlin code snippets.
 After a while they get outdated, because writing documentation is good, but who cares about updating them?!
 
-This is where Markdown4k gets handy, as it tries to compile all of your code snippets and reports an error if something wrent wrong. 
+This is where Markdown4k gets handy, as it tries to **compile all of your Kotlin code snippets** and reports an error if something wrent wrong.
 
 ## Usage
 
@@ -23,6 +23,21 @@ and then try to compile them and check for a proper `KompilationResult`.
 
 (The following examples assume all relevant markdown files reside in the current working directory.)
 
+### Manual invocation
+
+The quickest way to trigger a compilation cycle is by collecting and compiling the snippets:
+
+```kotlin
+import com.github.christophpickl.kpotpourri.markdown4k.Markdown4k
+import com.github.christophpickl.kpotpourri.markdown4k.KompilationResult
+import java.io.File
+
+Markdown4k.kollect(File("root_directory")).forEach { 
+    val result: KompilationResult = Markdown4k.kompile(it)
+    // do something with [ Success, Failure(ScriptException), Ignored ]
+}
+```
+
 ### TestNG
 
 For sake of simplicity there is a ready to use base class which only requires you to pass
@@ -38,7 +53,7 @@ import java.io.File
 )
 ```
 
-![IntelliJ Screenshot using TestNG](https://github.com/christophpickl/kpotpourri/raw/master/doc/images/markdown4k-screenshot_intellij_run.png)
+![IntelliJ Screenshot using TestNG](https://github.com/christophpickl/kpotpourri/raw/master/doc/images/markdown4k-screenshot_intellij_run.gif)
 
 ## JUnit
 
