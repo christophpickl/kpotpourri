@@ -18,6 +18,7 @@
 * get rid of: MockRequest instance
 
 ## Med
+* could extract module kompile4k (out of markdown4k)
 * ad web4k: RootErrorHandler does not catch 404s
 * ad markdown4k: get rid of warning about Kotlin runtime library
 * go through yobu (random stuff)

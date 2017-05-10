@@ -1,9 +1,12 @@
 package com.github.christophpickl.kpotpourri.markdown4k
 
+import com.github.christophpickl.kpotpourri.common.enforceAllBranchesCovered
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.anyOf
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.isA
+import com.github.christophpickl.kpotpourri.test4k.skip
 import com.github.christophpickl.kpotpourri.test4k.toDataProviding
 import com.natpryce.hamkrest.assertion.assertThat
+import org.testng.Assert
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import java.io.File
@@ -18,7 +21,18 @@ import kotlin.reflect.KClass
 
     @Test(dataProvider = "provideSnippets")
     fun `kompile`(snippet: CodeSnippet) {
-        assertKompileSuccessOrIgnored(snippet)
+        val kompilationResult = Markdown4k.kompile(snippet)
+        when (kompilationResult) {
+            is KompilationResult.Success -> {
+                // do nothing
+            }
+            is KompilationResult.Failure -> {
+                Assert.fail("Compilation failed for: $snippet", kompilationResult.exception)
+            }
+            is KompilationResult.Ignored -> {
+                skip("Ignoring $snippet")
+            }
+        }.enforceAllBranchesCovered
     }
 
 }

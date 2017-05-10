@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.markdown4k.internal
 
+import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.markdown4k.KompilationResult
 import javax.script.Compilable
@@ -11,7 +12,7 @@ internal object Kompiler {
     private val log = LOG {}
 
     internal fun kompile(code: String): InternalKompilationResult {
-        val engine = ScriptEngineManager().getEngineByExtension("kts") ?: throw Exception("No script engine found to kompile Kotlin code.")
+        val engine = ScriptEngineManager().getEngineByExtension("kts") ?: throw KPotpourriException("No script engine found to kompile Kotlin code.")
         log.trace { "Compiling Kotlin code:\n>>>\n$code\n<<<" }
         try {
             (engine as Compilable).compile(code) // no need to eval, just compile ;)
