@@ -23,7 +23,8 @@ val testMapper = buildJackson4k()
 
 abstract class Http4kWiremockTest(
         private val httpImpl: HttpImplProducer,
-        port: Int = WIREMOCK_PORT) : WiremockTest(port) {
+        port: Int = WIREMOCK_PORT
+) : WiremockTest(port) {
 
     protected val mockEndpointUrl = "/mock"
     protected val anyStatusCode = SC_418_Teapot
