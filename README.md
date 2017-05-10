@@ -9,7 +9,8 @@
 
 ## About
 
-<img style="float: right;" src="https://github.com/christophpickl/kpotpourri/raw/master/doc/images/kotlin.png">
+<img align="right" src="https://github.com/christophpickl/kpotpourri/raw/master/doc/images/kotlin.png">
+
 _KPotpourri_ is a collection of several tools and libraries covering different aspects of a programmer's life.
 Mostly they introduce a more Kotlin-ish API over existing libraries like Logback, TestNG, Wiremock and others.
 It tries to reduce the need of repeating yourself, filling the gaps and simplify usage by taking advantage Kotlin's language features.
