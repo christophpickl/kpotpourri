@@ -6,6 +6,12 @@ sudo: false # route the build to the container-based infrastructure for a faster
 jdk:
   - oraclejdk8
 
+# fiddle around with memory settings in order to get build with long running markdown4k tests working again
+# https://discuss.gradle.org/t/gradle-travis-ci/11928/5
+env:
+  global:
+    - GRADLE_OPTS="-Xms128m"
+
 before_install:
   - "chmod +x gradlew"
 
@@ -20,6 +26,8 @@ notifications:
     - christoph.pickl@gmail.com
 
 
+# cache gradle dependencies
+# https://docs.travis-ci.com/user/languages/java#Caching
 before_cache:
   - "rm -f $HOME/.gradle/caches/modules-2/modules-2.lock"
 cache:
