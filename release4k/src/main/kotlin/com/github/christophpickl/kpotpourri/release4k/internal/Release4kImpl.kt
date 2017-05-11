@@ -6,7 +6,7 @@ import com.github.christophpickl.kpotpourri.common.io.Keyboard
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.string.splitAsArguments
 import com.github.christophpickl.kpotpourri.github.GithubApi
-import com.github.christophpickl.kpotpourri.github.GithubConfig
+import com.github.christophpickl.kpotpourri.github.RepositoryConfig
 import com.github.christophpickl.kpotpourri.github.buildGithub4k
 import com.github.christophpickl.kpotpourri.release4k.Release4k
 import com.github.christophpickl.kpotpourri.release4k.Release4kException
@@ -23,7 +23,7 @@ class Release4kImpl : Release4k {
 
     private var github: GithubApi? = null
 
-    override fun initGithub(config: GithubConfig) {
+    override fun initGithub(config: RepositoryConfig) {
         if (github != null) {
             throw Release4kException("initGithub() already invoked! ($github)")
         }

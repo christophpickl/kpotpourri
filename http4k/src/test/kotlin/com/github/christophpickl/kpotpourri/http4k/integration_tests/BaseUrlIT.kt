@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
+import com.github.christophpickl.kpotpourri.http4k.BaseUrlConfig
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
-import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
@@ -36,7 +36,7 @@ abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(rest
         givenGetMockEndpointUrl()
 
         buildHttp4k {
-            baseUrlBy(UrlConfig(
+            baseUrlBy(BaseUrlConfig(
                     protocol = HttpProtocol.Http,
                     hostName = WIREMOCK_HOSTNAME,
                     port = WIREMOCK_PORT

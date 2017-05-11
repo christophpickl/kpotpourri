@@ -194,7 +194,7 @@ private val testPort = 8082
     }
 
     private fun testee() = GithubApiImpl(
-            config = GithubConfig(
+            config = RepositoryConfig(
                     repositoryOwner = repositoryOwner,
                     repositoryName = repositoryName,
                     username = "testUser",

@@ -3,7 +3,7 @@ package com.github.christophpickl.kpotpourri.release4k
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.time.MsTimification
 import com.github.christophpickl.kpotpourri.common.time.timify
-import com.github.christophpickl.kpotpourri.github.GithubConfig
+import com.github.christophpickl.kpotpourri.github.RepositoryConfig
 import com.github.christophpickl.kpotpourri.release4k.internal.Release4kImpl
 import com.github.christophpickl.kpotpourri.release4k.internal.kout
 import java.io.File
@@ -31,7 +31,7 @@ interface Release4k {
     val gitCheckoutDirectory: File
 
     fun checkoutGitProject(gitUrl: String)
-    fun initGithub(config: GithubConfig)
+    fun initGithub(config: RepositoryConfig)
     fun readVersionFromTxt(relativeFilePath: String): Version
     fun git(command: String)
     fun gradlew(command: String)

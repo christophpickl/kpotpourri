@@ -5,9 +5,9 @@ import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.github.AssetUpload
 import com.github.christophpickl.kpotpourri.github.CreateReleaseRequest
 import com.github.christophpickl.kpotpourri.github.CreateReleaseResponse
-import com.github.christophpickl.kpotpourri.github.GithubConfig
 import com.github.christophpickl.kpotpourri.github.Issue
 import com.github.christophpickl.kpotpourri.github.Milestone
+import com.github.christophpickl.kpotpourri.github.RepositoryConfig
 import com.github.christophpickl.kpotpourri.github.State
 import com.github.christophpickl.kpotpourri.github.Tag
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
@@ -24,7 +24,7 @@ private val mapper = buildJackson4k()
 fun String.wrapJsonArrayBrackets() = "[ $this ]"
 
 @Suppress("unused")
-val GithubConfig.Companion.testRepository get() = GithubConfig(
+val RepositoryConfig.Companion.testRepository get() = RepositoryConfig(
         repositoryName = "gadsu_release_playground",
         repositoryOwner = "christophpickl",
         username = "christoph.pickl@gmail.com",
