@@ -1,9 +1,10 @@
 # Common4k
 
-* Exception stack trace handling
 * `fun Long.timify(format: MsTimification): String`
 * `val Any.enforceAllBranchesCovered: Unit get() = Unit`
 * `fun <IN, OUT> IN?.nullOrWith(wither: (IN) -> OUT): OUT?`
+* `fun Throwable.stackTraceAsString(): String`
+* `fun Array<StackTraceElement>.formatted(): List<String>`
 
 ## Numbers
 
@@ -22,11 +23,20 @@
 ## Logging
 
 ```kotlin
-// instead of:
-val oldLog = KotlinLogging.logger { }
+import com.github.christophpickl.kpotpourri.common.logging.LOG
+import mu.KotlinLogging
+import org.slf4j.LoggerFactory
 
-// use a shortcut function
-val log = LOG {}
+class Logee {
+    // first we did this:
+    val slf4jLog = LoggerFactory.getLogger(javaClass)
+    
+    // then kotlin came:
+    val kotlinLog = KotlinLogging.logger { }
+
+    // finally with common4k:
+    val log = LOG {}
+}
 ```
 
 ## Collection
