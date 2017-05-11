@@ -1,4 +1,3 @@
-// test4k
 
 dependencies {
     // no dependency to project :common, as this would lead to cyclic dependency
@@ -8,6 +7,7 @@ dependencies {
 
     runtime "ch.qos.logback:logback-core:" + rootProject.version_logback
 
+    // TODO is this required?!
     testRuntime "com.google.inject:guice:" + rootProject.version_guice
 
 }
