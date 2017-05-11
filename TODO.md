@@ -16,8 +16,11 @@
 ## High
 * get rid of guava Bytes stuff (create abstraction layer)
 * get rid of: MockRequest instance
+* automate upload of kdoc to github.io (while releasing)
 
 ## Med
+* delete `Any.enforceAllBranchesCovered` and `Any.println` as they are too global and not worth it (?)
+    * or simply ignore them in kdoc generation ;)
 * parallel test builds: maxParallelForks = 2 (need to use random port for wiremock then!)
 * could extract module kompile4k (out of markdown4k)
 * ad web4k: RootErrorHandler does not catch 404s
@@ -31,6 +34,7 @@
 
 ## Low
 
+* proper bintray upload (for maven central): https://github.com/MicroUtils/kotlin-logging/blob/master/build.gradle
 * fine tune dokka output (XyzKt files, code format, ...)
 * @BUILD: automatically execute dokka task on package
 * @BUILD: creating sources artifact in gradle for MyPublication doesnt work

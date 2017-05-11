@@ -1,5 +1,12 @@
 # Common4k
 
+Common extensions on different areas of the language, basic types, strings, collections, files, control structures,
+exceptions and even logging.
+
+Here are some highlights pointed out, but you might want to visit the [KDoc](https://christophpickl.github.io/kdoc/common4k/index.html).
+
+## Misc
+
 * `fun Long.timify(format: MsTimification): String`
 * `val Any.enforceAllBranchesCovered: Unit get() = Unit`
 * `fun <IN, OUT> IN?.nullOrWith(wither: (IN) -> OUT): OUT?`
