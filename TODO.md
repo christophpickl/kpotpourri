@@ -1,9 +1,9 @@
 
 * module ideas:
-    * logback (programmatic appenders)
-    * testng (custom listeners)
-    * gmail
-    * gcal
+    * jetty4k
+    * gmail4k
+    * gcal4k
+    * george4k
 
 # What others do
 
@@ -17,6 +17,7 @@
 * get rid of guava Bytes stuff (create abstraction layer)
 * get rid of: MockRequest instance
 * automate upload of kdoc to github.io (while releasing)
+* extract random stuff from yobu app
 
 ## Med
 * delete `Any.enforceAllBranchesCovered` and `Any.println` as they are too global and not worth it (?)
