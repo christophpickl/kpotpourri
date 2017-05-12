@@ -1,9 +1,5 @@
-# Wiremock4k
+package com.github.christophpickl.kpotpourri.wiremock4k.non_test
 
-A slim test library basically simplifying the [Wiremock](http://wiremock.org/) API
-by providing a TestNG base class `WiremockTest` which manages the wiremock server and provides some handy verification methods.
-
-```kotlin
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyDeleteRequest
@@ -51,11 +47,10 @@ import org.testng.annotations.Test
         verifyRequest(WiremockMethod.PATCH, path)
     }
 
-    fun `access the native mock server instance`() {
+    fun `access to mock server`() {
         println(server.isRunning)
 
         server.findNearMissesForUnmatchedRequests()
     }
 
 }
-```

@@ -5,7 +5,7 @@ import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
 import com.github.christophpickl.kpotpourri.http4k.StatusFamily
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK_PORT
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.*
@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
 data class SomeDto (val string: String)
 
 
-fun withWiremock(port: Int = WIREMOCK_PORT, action: () -> Unit) {
+fun withWiremock(port: Int = DEFAULT_WIREMOCK_PORT, action: () -> Unit) {
     WireMock.configureFor("localhost", port)
     val server = WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
     server.start()

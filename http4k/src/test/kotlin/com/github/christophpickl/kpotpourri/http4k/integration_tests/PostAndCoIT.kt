@@ -5,9 +5,10 @@ import com.github.christophpickl.kpotpourri.http4k.patch
 import com.github.christophpickl.kpotpourri.http4k.post
 import com.github.christophpickl.kpotpourri.http4k.put
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.github.christophpickl.kpotpourri.wiremock4k.InternalMockRequest
-import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyPostRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -29,7 +30,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
 
         http4k.post<Any>(mockEndpointUrl)
 
-        verifyPostRequest(MockRequest(mockEndpointUrl))
+        verifyPostRequest(mockEndpointUrl)
     }
 
     fun `Given default Http4k, When POST with JSON response, Then response DTO should be returned`() {
@@ -49,10 +50,10 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
             requestBody(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy)
         }
 
-        verifyPostRequest(MockRequest(mockEndpointUrl) {
-            withRequestBody(equalTo(com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy.toJson()))
+        verifyPostRequest(mockEndpointUrl) {
+            withRequestBody(equalTo(PersonDto.Companion.dummy.toJson()))
             withHeader("content-type", equalTo("application/json"))
-        })
+        }
     }
 
     fun `Given default Http4k, When POST with JSON body and custom content type, Then default content type should have been overridden`() {
@@ -63,9 +64,9 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
             headers += "content-type" to "application/foobar"
         }
 
-        verifyPostRequest(MockRequest(mockEndpointUrl, {
+        verifyPostRequest(mockEndpointUrl) {
             withHeader("content-type", equalTo("application/foobar"))
-        }))
+        }
 
     }
 
@@ -76,9 +77,9 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
             requestBodyDisabled()
         }
 
-        verifyPostRequest(MockRequest(mockEndpointUrl, {
+        verifyPostRequest(mockEndpointUrl) {
             withRequestBody(equalTo(""))
-        }))
+        }
     }
 
     fun `Given default Http4k, When POST with string request body, Then string body should have been sent`() {
@@ -88,14 +89,14 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
             requestBody(REQUEST_STRING_BODY)
         }
 
-        verifyPostRequest(MockRequest(mockEndpointUrl, {
+        verifyPostRequest(mockEndpointUrl) {
             withRequestBody(equalTo(REQUEST_STRING_BODY))
-        }))
+        }
     }
 
     fun `Given default Http4k, When POST with JSON request body and custom response body, Then both should be ok`() {
         val requestDto = com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy1
-        val responseDto  = com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy2
+        val responseDto = com.github.christophpickl.kpotpourri.http4k.integration_tests.PersonDto.Companion.dummy2
         givenPostToMockEndpointUrl {
             withBody(responseDto.toJson())
         }
@@ -104,9 +105,9 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
             requestBody(requestDto)
         }
 
-        verifyPostRequest(MockRequest(mockEndpointUrl, {
+        verifyPostRequest(mockEndpointUrl) {
             withRequestBody(equalTo(requestDto.toJson()))
-        }))
+        }
         assertThat(actualResponseDto, com.natpryce.hamkrest.equalTo(responseDto))
     }
 
@@ -116,6 +117,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
     ) {
         givenToMockEndpointUrl(WiremockMethod.POST, body, withResponse)
     }
+
     private fun givenToMockEndpointUrl(
             method: WiremockMethod,
             body: String? = null,
@@ -124,7 +126,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
         givenWiremock(
                 method = method,
                 path = mockEndpointUrl,
-                body = body,
+                responseBody = body,
                 withResponse = withResponse
         )
     }
@@ -137,7 +139,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
 
         http4k.put<Any>(mockEndpointUrl)
 
-        verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PUT))
+        verifyRequest(path = mockEndpointUrl, method = WiremockMethod.PUT)
     }
 
     // DELETE
@@ -148,7 +150,7 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
 
         http4k.delete<Any>(mockEndpointUrl)
 
-        verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.DELETE))
+        verifyRequest(path = mockEndpointUrl, method = WiremockMethod.DELETE)
     }
 
     // PATCH
@@ -160,10 +162,9 @@ abstract class PostAndCoIT(restClient: HttpImplProducer) : Http4kWiremockTest(re
         http4k.patch<Any>(mockEndpointUrl)
 
         if (javaClass.simpleName == "PostAndCoFuelIT") {
-            verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.POST,
-                    func = { withHeader("X-HTTP-Method-Override", equalTo("PATCH"))}))
+            verifyRequest(WiremockMethod.POST, mockEndpointUrl) { withHeader("X-HTTP-Method-Override", equalTo("PATCH")) }
         } else {
-            verifyRequest(InternalMockRequest(path = mockEndpointUrl, method = WiremockMethod.PATCH))
+            verifyRequest(WiremockMethod.PATCH, mockEndpointUrl)
         }
     }
 

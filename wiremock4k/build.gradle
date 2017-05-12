@@ -1,8 +1,9 @@
-// wiremock4k
 
 dependencies {
     compile project(':common4k')
     compile project(':test4k')
 
     compile "com.github.tomakehurst:wiremock:" + rootProject.version_wiremock
+
+    testCompile "com.github.kittinunf.fuel:fuel:" + rootProject.version_fuel
 }

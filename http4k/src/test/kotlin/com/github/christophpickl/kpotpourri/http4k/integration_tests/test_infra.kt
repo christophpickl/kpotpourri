@@ -11,9 +11,10 @@ import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
 import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
+import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import org.testng.annotations.BeforeMethod
 
@@ -23,7 +24,7 @@ val testMapper = buildJackson4k()
 
 abstract class Http4kWiremockTest(
         private val httpImpl: HttpImplProducer,
-        port: Int = WIREMOCK_PORT
+        port: Int = DEFAULT_WIREMOCK_PORT
 ) : WiremockTest(port) {
 
     protected val mockEndpointUrl = "/mock"
@@ -59,7 +60,7 @@ abstract class Http4kWiremockTest(
                 method = WiremockMethod.GET,
                 statusCode = statusCode,
                 path = path,
-                body = body,
+                responseBody = body,
                 withResponse = withResponse
         )
     }
