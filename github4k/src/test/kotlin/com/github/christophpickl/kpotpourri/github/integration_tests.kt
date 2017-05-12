@@ -9,6 +9,7 @@ import com.github.christophpickl.kpotpourri.github.non_test.toJson
 import com.github.christophpickl.kpotpourri.github.non_test.toTagsJson
 import com.github.christophpickl.kpotpourri.github.non_test.wrapJsonArrayBrackets
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
+import com.github.christophpickl.kpotpourri.http4k.ServerConfig
 import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
 import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
@@ -193,16 +194,18 @@ private val testPort = 8082
         return UploadPaths(requestPath1, requestPath2)
     }
 
-    private fun testee() = GithubApiImpl(
+    private fun testee() = buildGithub4k(
             config = RepositoryConfig(
                     repositoryOwner = repositoryOwner,
                     repositoryName = repositoryName,
                     username = "testUser",
                     password = "testPass"
             ),
-            protocol = HttpProtocol.Http,
-            hostName = "localhost",
-            port = testPort
+            connection = ServerConfig(
+                    protocol = HttpProtocol.Http,
+                    hostName = "localhost",
+                    port = testPort
+            )
     )
 
     @JsonObject
