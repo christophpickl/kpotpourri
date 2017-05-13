@@ -10,8 +10,8 @@ and a base class `WiremockTest`. Additionally the setup of responses and verific
 This is the preferred approach, as it does not limit you in having only a single base class or a single test runner like in JUnit.
 
 ```kotlin
-import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK_PORT
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK4K_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK4K_HOSTNAME
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
@@ -26,7 +26,7 @@ class MyWiremockTest {
     fun `verify request`() {
         givenWiremock(WiremockMethod.GET, "/rest")
         
-        println("execute request: http://$WIREMOCK_HOSTNAME:$DEFAULT_WIREMOCK_PORT/rest")
+        println("execute request: http://$WIREMOCK4K_HOSTNAME:$DEFAULT_WIREMOCK4K_PORT/rest")
         
         verifyGetRequest("/rest")
     }

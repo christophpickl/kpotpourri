@@ -7,14 +7,14 @@ import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder
 /**
  * Wiremock always is reachable via localhost.
  */
-val WIREMOCK_HOSTNAME = "localhost"
+val WIREMOCK4K_HOSTNAME = "localhost"
 
 /**
  * The default port to be used if nothing was explicitly set.
  *
  * Could use wiremock's dynamicPort() instead.
  */
-val DEFAULT_WIREMOCK_PORT = 9987
+val DEFAULT_WIREMOCK4K_PORT = 9987
 
 /**
  * Enumeration of all available Wiremock HTTP methods.

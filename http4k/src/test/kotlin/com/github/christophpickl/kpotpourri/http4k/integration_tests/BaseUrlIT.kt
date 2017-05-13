@@ -4,8 +4,8 @@ import com.github.christophpickl.kpotpourri.http4k.BaseUrlConfig
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
-import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK_PORT
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK4K_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK4K_HOSTNAME
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 
 
@@ -38,8 +38,8 @@ abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(rest
         buildHttp4k {
             baseUrlBy(BaseUrlConfig(
                     protocol = HttpProtocol.Http,
-                    hostName = WIREMOCK_HOSTNAME,
-                    port = DEFAULT_WIREMOCK_PORT
+                    hostName = WIREMOCK4K_HOSTNAME,
+                    port = DEFAULT_WIREMOCK4K_PORT
             ))
         }
                 .get<Any>(mockEndpointUrl)

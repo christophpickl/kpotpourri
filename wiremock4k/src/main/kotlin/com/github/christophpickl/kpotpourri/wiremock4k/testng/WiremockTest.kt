@@ -1,8 +1,8 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.testng
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
-import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK_PORT
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK4K_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK4K_HOSTNAME
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
@@ -19,7 +19,7 @@ import org.testng.annotations.Test
  */
 @Test(groups = arrayOf("wiremock"))
 abstract class WiremockTest(
-        private val port: Int = DEFAULT_WIREMOCK_PORT
+        private val port: Int = DEFAULT_WIREMOCK4K_PORT
 ) {
 
     private val log = LOG {}
@@ -27,7 +27,7 @@ abstract class WiremockTest(
     /**
      * Default value: "http://localhost:9987"
      */
-    protected val wiremockBaseUrl = "http://${WIREMOCK_HOSTNAME}:$port"
+    protected val wiremockBaseUrl = "http://${WIREMOCK4K_HOSTNAME}:$port"
 
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer
@@ -36,7 +36,7 @@ abstract class WiremockTest(
     @BeforeClass
     fun `wiremock startup`() {
         log.debug { "Starting up Wiremock on $wiremockBaseUrl" }
-        WireMock.configureFor(WIREMOCK_HOSTNAME, port)
+        WireMock.configureFor(WIREMOCK4K_HOSTNAME, port)
         server = WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
         server.start()
     }

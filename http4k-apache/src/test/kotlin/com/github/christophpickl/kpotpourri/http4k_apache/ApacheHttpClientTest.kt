@@ -10,8 +10,8 @@ import com.github.christophpickl.kpotpourri.http4k.internal.TimeoutException
 import com.github.christophpickl.kpotpourri.http4k.non_test.AbstractHttpClientFactoryDetectorTest
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import kotlin.reflect.KClass
 
@@ -36,7 +36,7 @@ class ApacheHttpClientTest : WiremockTest() {
 
         response.statusCode shouldMatchValue mockResponseStatus
         response.bodyAsString shouldMatchValue mockResponseBody
-        verifyWiremockGet(MockRequest(mockUrl))
+        verifyGetRequest(mockUrl)
     }
 
     fun `Given request timeout set, When response takes longer than timeout, Then throw custom TimeoutException`() {
@@ -57,6 +57,5 @@ class ApacheHttpClientTest : WiremockTest() {
 
     private fun execute(request: Request4k, meta: MetaMap = MetaMap()) =
             ApacheHttpClientFactory().build(meta).execute(request)
-//        ApacheHttpClientHttpImpl(meta).execute(request)
 
 }
