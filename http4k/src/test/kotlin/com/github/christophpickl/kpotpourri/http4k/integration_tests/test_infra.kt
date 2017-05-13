@@ -13,8 +13,8 @@ import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import org.testng.annotations.BeforeMethod
 

@@ -5,6 +5,27 @@ import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.describe
 
 /**
+ * Checks if the given collection contains exactly (not more or less) elements in the very same order.
+ */
+@Suppress("KDocMissingDocumentation")
+fun <K> containsExactlyInOrder(vararg expected: K) = object : Matcher.Primitive<Collection<K>>() {
+
+    override fun invoke(actual: Collection<K>): MatchResult {
+        if (expected.size != actual.size) return MatchResult.Mismatch("was ${describe(actual)} (length mismatch)")
+        actual.forEachIndexed { i, v ->
+            if (expected[i] != v) {
+                return MatchResult.Mismatch("was ${describe(actual)}")
+            }
+        }
+        return MatchResult.Match
+    }
+
+    override val description: String get() = "contains ${expected.contentToString()}"
+    override val negatedDescription: String get() = "does not contain ${expected.contentToString()}"
+}
+
+
+/**
  * Checks if the given collection contains exactly (not more or less) elements in an undefined order.
  */
 @Suppress("KDocMissingDocumentation")

@@ -1,7 +1,6 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.non_test
 
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyDeleteRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyPostRequest
@@ -11,6 +10,7 @@ import com.github.christophpickl.kpotpourri.wiremock4k.request.withCookie
 import com.github.christophpickl.kpotpourri.wiremock4k.request.withHeader
 import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
 import com.github.christophpickl.kpotpourri.wiremock4k.response.withHeaders
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import org.testng.annotations.Test
 
 @Test(enabled = false) class UsageTest : WiremockTest() {

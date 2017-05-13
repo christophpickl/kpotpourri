@@ -1,6 +1,8 @@
-package com.github.christophpickl.kpotpourri.wiremock4k
+package com.github.christophpickl.kpotpourri.wiremock4k.testng
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
@@ -25,7 +27,7 @@ abstract class WiremockTest(
     /**
      * Default value: "http://localhost:9987"
      */
-    protected val wiremockBaseUrl = "http://$WIREMOCK_HOSTNAME:$port"
+    protected val wiremockBaseUrl = "http://${WIREMOCK_HOSTNAME}:$port"
 
     // http://wiremock.org/docs/getting-started/
     protected lateinit var server: WireMockServer

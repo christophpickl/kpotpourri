@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.response
 
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import com.github.kittinunf.fuel.Fuel
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.natpryce.hamkrest.assertion.assertThat

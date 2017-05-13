@@ -2,6 +2,7 @@
 dependencies {
     compile project(':common4k')
     compile project(':test4k')
+    compile "org.testng:testng:" + rootProject.version_testng
 
     compile "com.github.tomakehurst:wiremock:" + rootProject.version_wiremock
 

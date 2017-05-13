@@ -54,11 +54,19 @@ fun Request.hasHeader(pair: Pair<String, String>) =
         headers.getHeader(pair.first).containsValue(pair.second)
 
 /**
- * Check header for equality by default (instead of complex `StringValuePattern`.
+ * Check header value for equality (instead of complex `StringValuePattern`).
  */
 fun RequestPatternBuilder.withHeader(key: String, expectedValue: String) = apply {
     withHeader(key, WireMock.equalTo(expectedValue))
 }
+
+/**
+ * Check request body contained the given bytes.
+ */
+fun RequestPatternBuilder.withRequestBody(bytes: ByteArray) = apply {
+    withRequestBody(WireMock.equalTo(String(bytes)))
+}
+
 
 /**
  * Check cookie for equality by default (instead of complex `StringValuePattern`.

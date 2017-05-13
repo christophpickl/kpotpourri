@@ -14,9 +14,13 @@ import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
 import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
-import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.*
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyPostRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.withHeader
+import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
@@ -35,23 +39,23 @@ private val testPort = 8082
     private val pathMilestones = "$endpointPrefix/milestones"
 
     fun `headers Authorization and Accept are always set`() {
-        givenWiremock(GET, "$endpointPrefix/milestones", body = "[]")
+        givenWiremock(GET, "$endpointPrefix/milestones", responseBody = "[]")
 
         testee().listOpenMilestones() // any request will be sufficient
 
-        verifyWiremockGet(MockRequest("$endpointPrefix/milestones", {
-            withHeader("Authorization", equalTo("Basic dGVzdFVzZXI6dGVzdFBhc3M="))
-            withHeader("Accept", equalTo("application/vnd.github.v3+json"))
-        }))
+        verifyGetRequest("$endpointPrefix/milestones") {
+            withHeader("Authorization", "Basic dGVzdFVzZXI6dGVzdFBhc3M=")
+            withHeader("Accept", "application/vnd.github.v3+json")
+        }
     }
 
     fun `listOpenMilestones - request made and response parsed`() {
         val milestone = Milestone.testInstance
-        givenWiremock(GET, pathMilestones, body = milestone.toJson().wrapJsonArrayBrackets())
+        givenWiremock(GET, pathMilestones, responseBody = milestone.toJson().wrapJsonArrayBrackets())
 
         val milestones = testee().listOpenMilestones()
 
-        verifyWiremockGet(MockRequest(pathMilestones))
+        verifyGetRequest(pathMilestones)
         assertThat(milestones[0], com.natpryce.hamkrest.equalTo(milestone))
     }
 
@@ -59,11 +63,11 @@ private val testPort = 8082
         val milestone = Milestone.testInstance
         val issue = Issue.testInstance
         val requestPath = "$endpointPrefix/issues?milestone=${milestone.number}&state=all"
-        givenWiremock(GET, requestPath, body = issue.toJson().wrapJsonArrayBrackets())
+        givenWiremock(GET, requestPath, responseBody = issue.toJson().wrapJsonArrayBrackets())
 
         val actualIssues = testee().listIssues(milestone)
 
-        verifyWiremockGet(MockRequest(requestPath))
+        verifyGetRequest(requestPath)
         assertThat(actualIssues.size, com.natpryce.hamkrest.equalTo(1))
         assertThat(actualIssues[0], com.natpryce.hamkrest.equalTo(issue))
     }
@@ -74,7 +78,7 @@ private val testPort = 8082
                 Issue.testInstance.copy(number = 2),
                 Issue.testInstance.copy(number = 1))
         val requestPath = "$endpointPrefix/issues?milestone=${milestone.number}&state=all"
-        givenWiremock(GET, requestPath, body = issues.toIssuesJson())
+        givenWiremock(GET, requestPath, responseBody = issues.toIssuesJson())
 
         val actualIssues = testee().listIssues(milestone)
 
@@ -84,11 +88,11 @@ private val testPort = 8082
     fun `listTags - request made and response parsed`() {
         val tag = Tag.testInstance
         val requestPath = "$endpointPrefix/tags"
-        givenWiremock(GET, requestPath, body = tag.toJson().wrapJsonArrayBrackets())
+        givenWiremock(GET, requestPath, responseBody = tag.toJson().wrapJsonArrayBrackets())
 
         val actualTags = testee().listTags()
 
-        verifyWiremockGet(MockRequest(requestPath))
+        verifyGetRequest(requestPath)
         assertThat(actualTags.size, com.natpryce.hamkrest.equalTo(1))
         assertThat(actualTags[0], com.natpryce.hamkrest.equalTo(tag))
     }
@@ -98,18 +102,18 @@ private val testPort = 8082
                 Tag.testInstance.copy(name = "1.1"),
                 Tag.testInstance.copy(name = "1.0"))
         val requestPath = "$endpointPrefix/tags"
-        givenWiremock(GET, requestPath, body = tags.toTagsJson())
+        givenWiremock(GET, requestPath, responseBody = tags.toTagsJson())
 
         val actualTags = testee().listTags()
 
-        verifyWiremockGet(MockRequest(requestPath))
+        verifyGetRequest(requestPath)
         assertThat(actualTags.map(Tag::name), com.natpryce.hamkrest.equalTo(listOf("1.0", "1.1")))
     }
 
     fun `close milestone - sunshine`() {
         val milestone = Milestone.testInstance
         val requestPath = "$endpointPrefix/milestones/${milestone.number}"
-        givenWiremock(PATCH, requestPath, body = """ { "state": "closed" } """)
+        givenWiremock(PATCH, requestPath, responseBody = """ { "state": "closed" } """)
 
         testee().close(milestone)
 
@@ -121,7 +125,7 @@ private val testPort = 8082
     fun `close milestone - close already closed throws`() {
         val milestone = Milestone.testInstance
         val requestPath = "$endpointPrefix/milestones/${milestone.number}"
-        givenWiremock(PATCH, requestPath, body = """ { "state": "open" } """)
+        givenWiremock(PATCH, requestPath, responseBody = """ { "state": "open" } """)
 
         assertThrown<Github4kException> {
             testee().close(milestone)
@@ -132,13 +136,13 @@ private val testPort = 8082
         val releaseRequest = CreateReleaseRequest.testInstance
         val releaseResponse = CreateReleaseResponse.testInstance
         val requestPath = "$endpointPrefix/releases"
-        givenWiremock(POST, requestPath, body = releaseResponse.toJson())
+        givenWiremock(POST, requestPath, responseBody = releaseResponse.toJson())
 
         val response = testee().createNewRelease(releaseRequest)
 
-        verifyPostRequest(MockRequest(requestPath, {
+        verifyPostRequest(requestPath) {
            withRequestBody(releaseRequest.toEqualJson())
-        }))
+        }
         assertThat(response, com.natpryce.hamkrest.equalTo(releaseResponse))
     }
 
@@ -146,11 +150,11 @@ private val testPort = 8082
         val release = CreateReleaseResponse.testInstance
 
         val requestPath = "$endpointPrefix/releases"
-        givenWiremock(GET, requestPath, body = release.toJson().wrapJsonArrayBrackets())
+        givenWiremock(GET, requestPath, responseBody = release.toJson().wrapJsonArrayBrackets())
 
         val actualReleases = testee().listReleases()
 
-        verifyWiremockGet(MockRequest(requestPath))
+        verifyGetRequest(requestPath)
         assertThat(actualReleases.size, com.natpryce.hamkrest.equalTo(1))
         assertThat(actualReleases[0], com.natpryce.hamkrest.equalTo(release))
     }
@@ -162,11 +166,11 @@ private val testPort = 8082
 
         testee().uploadReleaseAsset(uploadRequest)
 
-        verifyWiremockGet(MockRequest(requestPath1))
-        verifyPostRequest(MockRequest(requestPath2, {
-            withHeader("Content-Type", equalTo(uploadRequest.contentType))
+        verifyGetRequest(requestPath1)
+        verifyPostRequest(requestPath2) {
+            withHeader("Content-Type", uploadRequest.contentType)
             withRequestBody(equalTo(String(uploadRequest.bytes)))
-        }))
+        }
     }
 
     fun `uploadReleaseAsset - state is not uploaded should throw`() {
@@ -188,8 +192,8 @@ private val testPort = 8082
         val requestPath1 = "$endpointPrefix/releases/${uploadRequest.releaseId}"
         val requestPath2 = "$responseUploadRelativeUrl?name=${uploadRequest.fileName}"
 
-        givenWiremock(GET, requestPath1, body = """{"upload_url":"$responseUploadFullUrl"}""")
-        givenWiremock(POST, requestPath2, body = uploadResponse.toJson())
+        givenWiremock(GET, requestPath1, responseBody = """{"upload_url":"$responseUploadFullUrl"}""")
+        givenWiremock(POST, requestPath2, responseBody = uploadResponse.toJson())
 
         return UploadPaths(requestPath1, requestPath2)
     }

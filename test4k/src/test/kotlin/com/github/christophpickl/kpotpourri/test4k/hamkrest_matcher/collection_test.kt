@@ -10,6 +10,22 @@ import org.testng.annotations.Test
     private val MATCH = MatchResult.Match::class
     private val MISMATCH = MatchResult.Mismatch::class
 
+    fun `containsExactlyInOrder - Given a, When search a, Then matches`() {
+        assertContainsExactlyInOrder(listOf("a"), listOf("a"), true)
+    }
+
+    fun `containsExactlyInOrder - Given a b, When search a b, Then matches`() {
+        assertContainsExactlyInOrder(listOf("a", "b"), listOf("a", "b"), true)
+    }
+
+    fun `containsExactlyInOrder - Given a, When search b, Then fails`() {
+        assertContainsExactlyInOrder(listOf("a"), listOf("b"), false)
+    }
+
+    fun `containsExactlyInOrder - Given a b, When search b a, Then fails`() {
+        assertContainsExactlyInOrder(listOf("a", "b"), listOf("b", "a"), false)
+    }
+
     fun `containsExactlyInAnyOrder - Given a, When search a, Then matches`() {
         assertContainsExactlyInAnyOrder(listOf("a"), listOf("a"), true)
     }
@@ -29,6 +45,11 @@ import org.testng.annotations.Test
     private fun assertContainsExactlyInAnyOrder(given: List<String>, contains: List<String>, shouldMatch: Boolean) {
         val expected = if (shouldMatch) MATCH else MISMATCH
         assertThat(containsExactlyInAnyOrder(*contains.toTypedArray())(given), isA(expected))
+    }
+
+    private fun assertContainsExactlyInOrder(given: List<String>, contains: List<String>, shouldMatch: Boolean) {
+        val expected = if (shouldMatch) MATCH else MISMATCH
+        assertThat(containsExactlyInOrder(*contains.toTypedArray())(given), isA(expected))
     }
 
     fun `containsExactlyInAnyOrder - Given invalid match, Then should contain array contents in description`() {

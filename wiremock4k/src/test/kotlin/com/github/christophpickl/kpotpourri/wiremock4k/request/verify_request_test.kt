@@ -2,7 +2,7 @@ package com.github.christophpickl.kpotpourri.wiremock4k.request
 
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.github.christophpickl.kpotpourri.wiremock4k.WiremockTest
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import com.github.kittinunf.fuel.Fuel
 import com.github.tomakehurst.wiremock.client.VerificationException
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -79,6 +79,13 @@ class VerifyRequestTest : WiremockTest() {
 
         request.hasHeader("key" to "val") shouldMatchValue false
     }
+
+    // FIXME
+//    fun `RequestPatternBuilder withRequestBody - Sunshine`() {
+//        val bytes = byteArrayOf(0, 1, 1, 0)
+//        val builder = RequestPatternBuilder().withRequestBody(bytes)
+//        assertThat(builder.build().bodyPatterns, containsExactlyInOrder(WireMock.equalTo(String(bytes))))
+//    }
 
     fun `RequestPatternBuilder withHeader - Sunshine`() {
         val builder = RequestPatternBuilder().withHeader("key", "val")
