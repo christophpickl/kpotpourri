@@ -18,6 +18,7 @@ import org.testng.annotations.Test
  * Needs to be a base class in order to provide more explicit functionality.
  */
 @Test(groups = arrayOf("wiremock"))
+@Deprecated(message = "use listener instead")
 abstract class WiremockTest(
         private val port: Int = DEFAULT_WIREMOCK4K_PORT
 ) {
@@ -35,7 +36,7 @@ abstract class WiremockTest(
     /** TestNG wiring to start wiremock. */
     @BeforeClass
     fun `wiremock startup`() {
-        log.debug { "Starting up Wiremock on $wiremockBaseUrl" }
+        log.debug { "Starting up Wiremock on $wiremockBaseUrl for ${this::class.simpleName}" }
         WireMock.configureFor(WIREMOCK4K_HOSTNAME, port)
         server = WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
         server.start()
@@ -44,12 +45,14 @@ abstract class WiremockTest(
     /** TestNG wiring to stop wiremock. */
     @AfterClass
     fun `wiremock stop`() {
+        log.debug { "Stopping wiremock server for ${this::class.simpleName}" }
         server.stop()
     }
 
     /** TestNG wiring to reset wiremock's state. */
     @BeforeMethod
     fun `wiremock reset`() {
+        log.trace { "Reset wiremock" }
         WireMock.reset()
     }
 

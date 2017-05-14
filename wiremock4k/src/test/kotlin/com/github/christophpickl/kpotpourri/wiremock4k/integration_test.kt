@@ -3,33 +3,12 @@ package com.github.christophpickl.kpotpourri.wiremock4k
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.InjectPort
-import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTestngListener
 import com.github.kittinunf.fuel.Fuel
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.testng.annotations.AfterClass
-import org.testng.annotations.BeforeClass
 import org.testng.annotations.Listeners
 import org.testng.annotations.Test
-
-
-@Test class WiremockTestIT : WiremockTest() {
-
-    @BeforeClass
-    fun beforre() {
-        println("before: " + server)
-    }
-
-    @AfterClass
-    fun foo() {
-        println("before: " + server)
-    }
-
-    fun `server is running`() {
-        assertThat(server.isRunning, equalTo(true))
-    }
-}
 
 
 @Test

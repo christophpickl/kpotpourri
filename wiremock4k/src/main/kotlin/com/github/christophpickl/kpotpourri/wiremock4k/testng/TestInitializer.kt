@@ -32,7 +32,7 @@ internal object TestInitializer {
             if (prop !is KMutableProperty<*>) {
                 throw TestInitializationException("Expected property '${prop.name}' to be mutable.")
             }
-            log.debug { "Setting test property @InjectPort '${prop.name}' to: $port" }
+            log.debug { "Setting test property @InjectPort '${testClass.simpleName}.${prop.name}' to: $port" }
 
             prop.setter.isAccessible.also { old ->
                 prop.setter.isAccessible = true

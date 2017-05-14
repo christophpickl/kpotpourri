@@ -1,8 +1,12 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.request
 
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsExactlyInOrder
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK4K_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
+import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTestngListener
 import com.github.kittinunf.fuel.Fuel
 import com.github.tomakehurst.wiremock.client.VerificationException
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -15,10 +19,13 @@ import com.natpryce.hamkrest.equalTo
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.testng.annotations.BeforeMethod
+import org.testng.annotations.Listeners
 import org.testng.annotations.Test
 
+@Test @Listeners(WiremockTestngListener::class)
+class VerifyRequestTest {
 
-class VerifyRequestTest : WiremockTest() {
+    private val wiremockBaseUrl = "http://localhost:$DEFAULT_WIREMOCK4K_PORT" // FIXME change me
 
     fun `verifyWiremockGet - When not requested, Then throws`() {
         assertThrown<VerificationException> {
@@ -27,21 +34,25 @@ class VerifyRequestTest : WiremockTest() {
     }
 
     fun `verifyGetRequest - When requested, Then not throws`() {
+        givenWiremock(WiremockMethod.GET)
         Fuel.get(wiremockBaseUrl).response()
         verifyGetRequest(path = "/")
     }
 
     fun `verifyPostRequest - When requested, Then not throws`() {
+        givenWiremock(WiremockMethod.POST)
         Fuel.post(wiremockBaseUrl).response()
         verifyPostRequest(path = "/")
     }
 
     fun `verifyPutRequest - When requested, Then not throws`() {
+        givenWiremock(WiremockMethod.PUT)
         Fuel.put(wiremockBaseUrl).response()
         verifyPutRequest(path = "/")
     }
 
     fun `verifyDeleteRequest - When requested, Then not throws`() {
+        givenWiremock(WiremockMethod.DELETE)
         Fuel.delete(wiremockBaseUrl).response()
         verifyDeleteRequest(path = "/")
     }
@@ -80,12 +91,11 @@ class VerifyRequestTest : WiremockTest() {
         request.hasHeader("key" to "val") shouldMatchValue false
     }
 
-    // FIXME
-//    fun `RequestPatternBuilder withRequestBody - Sunshine`() {
-//        val bytes = byteArrayOf(0, 1, 1, 0)
-//        val builder = RequestPatternBuilder().withRequestBody(bytes)
-//        assertThat(builder.build().bodyPatterns, containsExactlyInOrder(WireMock.equalTo(String(bytes))))
-//    }
+    fun `RequestPatternBuilder withRequestBody - Sunshine`() {
+        val bytes = byteArrayOf(0, 1, 1, 0)
+        val builder = RequestPatternBuilder().withRequestBody(bytes)
+        assertThat(builder.build().bodyPatterns, containsExactlyInOrder(WireMock.equalTo(String(bytes))))
+    }
 
     fun `RequestPatternBuilder withHeader - Sunshine`() {
         val builder = RequestPatternBuilder().withHeader("key", "val")
