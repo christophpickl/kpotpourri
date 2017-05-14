@@ -18,7 +18,13 @@ import org.testng.ITestResult
  * Attention: Kotlin's Int is a primitive type and therefor not usable with lateinit :-/
  */
 @Target(AnnotationTarget.PROPERTY)
-annotation class InjectPort
+annotation class InjectMockPort
+
+/**
+ * Injects the base url "http://localhost:??" used by wiremock server into a property like `private lateinit var mockUrl: String`.
+ */
+@Target(AnnotationTarget.PROPERTY)
+annotation class InjectMockUrl
 
 /**
  * Injects something like "http://localhost:8080" for a property like `private lateinit var mockUrl: String`.

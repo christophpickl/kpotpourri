@@ -2,7 +2,7 @@ package com.github.christophpickl.kpotpourri.wiremock4k
 
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
-import com.github.christophpickl.kpotpourri.wiremock4k.testng.InjectPort
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.InjectMockPort
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTestngListener
 import com.github.kittinunf.fuel.Fuel
 import com.natpryce.hamkrest.assertion.assertThat
@@ -18,7 +18,7 @@ import org.testng.annotations.Test
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 class WiremockTestngListenerIT {
 
-    @InjectPort private lateinit var port: Integer
+    @InjectMockPort private lateinit var port: Integer
 
     fun `injected port should be wiremock4k default port`() {
         port shouldMatchValue DEFAULT_WIREMOCK4K_PORT

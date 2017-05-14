@@ -17,7 +17,7 @@ import org.testng.annotations.Test
 
     fun `sunshine`() {
         class DtoSunshine {
-            @InjectPort private lateinit var port: Integer
+            @InjectMockPort private lateinit var port: Integer
             val publicPort get() = port
         }
 
@@ -30,7 +30,7 @@ import org.testng.annotations.Test
 
     fun `must be private `() {
         class DtoNotPrivate {
-            @InjectPort lateinit var port: Integer
+            @InjectMockPort lateinit var port: Integer
         }
 
         assertThrown<TestInitializationException> {
@@ -40,7 +40,7 @@ import org.testng.annotations.Test
 
     fun `not late init`() {
         class DtoNotLateInit {
-            @InjectPort var port: Integer = anyInteger
+            @InjectMockPort var port: Integer = anyInteger
         }
 
         assertThrown<TestInitializationException> {
@@ -50,7 +50,7 @@ import org.testng.annotations.Test
 
     fun `val`() {
         class DtoVal {
-            @InjectPort val port: Integer = anyInteger
+            @InjectMockPort val port: Integer = anyInteger
         }
 
         assertThrown<TestInitializationException> {
@@ -60,7 +60,7 @@ import org.testng.annotations.Test
 
     fun `not Integer`() {
         class DtoNotInteger {
-            @InjectPort lateinit var port: String
+            @InjectMockPort lateinit var port: String
         }
 
         assertThrown<TestInitializationException> {

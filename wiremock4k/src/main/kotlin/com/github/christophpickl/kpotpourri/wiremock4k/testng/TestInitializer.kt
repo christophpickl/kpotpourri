@@ -18,7 +18,7 @@ internal object TestInitializer {
         val testClass = testInstance::class
         testClass.memberProperties
 //                .filterIsInstance<KMutableProperty<*>>()
-                .filter { it.findAnnotation<InjectPort>() != null }.forEach { prop ->
+                .filter { it.findAnnotation<InjectMockPort>() != null }.forEach { prop ->
             val propType = prop.returnType.javaType
             if (propType != Integer::class.java) {
                 throw TestInitializationException("Expected property '${prop.name}' to be of type ${Integer::class.java.name}, but was: ${propType.typeName}")

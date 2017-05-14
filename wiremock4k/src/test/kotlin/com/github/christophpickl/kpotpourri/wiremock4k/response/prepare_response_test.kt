@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.response
 
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
-import com.github.christophpickl.kpotpourri.wiremock4k.testng.InjectPort
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.InjectMockPort
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTestngListener
 import com.github.kittinunf.fuel.Fuel
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
@@ -14,7 +14,7 @@ import org.testng.annotations.Test
 class PrepareResponseTest {
 
     // FIXME @InjectWiremockUrl private lateinit var wiremockUrl: String
-    @InjectPort private lateinit var port: Integer
+    @InjectMockPort private lateinit var port: Integer
 
     fun `given - When requested, Then not throws`() {
         givenWiremock(WiremockMethod.GET, "/", 201, "response body")
