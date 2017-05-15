@@ -52,7 +52,7 @@
     * Access-Control-Allow-Credentials = true
     * Access-Control-Max-Age = '86400'; // 24 hours
     * Access-Control-Allow-Headers = "X-Requested-With, Access-Control-Allow-Origin, X-HTTP-Method-Override, Content-Type, Authorization, Accept"
-
+* could rewrite markdown4k dynamic tests with testng's @Factory instead of using a data provider 
 
 # TODOs Markdown4k
 

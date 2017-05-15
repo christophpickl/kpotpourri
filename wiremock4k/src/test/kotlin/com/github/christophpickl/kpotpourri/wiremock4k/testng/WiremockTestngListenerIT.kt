@@ -3,7 +3,6 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.testng
 
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.github.christophpickl.kpotpourri.test4k.skip
 import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK4K_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK4K_HOSTNAME
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
@@ -65,14 +64,17 @@ class OverridePortIT {
 }
 
 @Test @Listeners(WiremockTestngListener::class)
-//@DynamicPort
-class DynamicPortIT {
+@DynamicMockPort
+class DynamicMockPortIT {
 
     @InjectMockPort private lateinit var port: Integer
 
-    fun `DynamicPort - custom port received by InjectMockPort`() {
-        skip("WIP")
-        port shouldMatchValue OVERRIDE_PORT
+    fun `DynamicPort - injects any valid port`() {
+        @Suppress("ConvertTwoComparisonsToRangeCheck")
+        assertThat("Expected port to be within valid range but was: $port",
+                port >= 0 && port <= 0xFFFF, equalTo(true))
     }
 
 }
+
+// actually would like to test for both, @OverrideMockPort and @DynamicMockPort to be set, which should fail...

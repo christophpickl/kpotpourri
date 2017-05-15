@@ -11,6 +11,7 @@ import org.testng.ITestClass
 import org.testng.ITestContext
 import org.testng.ITestListener
 import org.testng.ITestResult
+import kotlin.reflect.full.findAnnotation
 
 /**
  * Injects the port used by wiremock server into a property like `private lateinit var port: Integer`.
@@ -33,6 +34,12 @@ annotation class InjectMockUrl
 annotation class OverrideMockPort(val port: Int)
 
 /**
+ * Tells wiremock to randomly select a port.
+ */
+@Target(AnnotationTarget.CLASS)
+annotation class DynamicMockPort
+
+/**
  * Deals with starting/stopping/resetting the wiremock server.
  */
 class WiremockTestngListener : IClassListener, ITestListener {
@@ -48,16 +55,36 @@ class WiremockTestngListener : IClassListener, ITestListener {
         val testInstance = testClass.testInstance()
 
         val overridePort = TestInitializer.exjectOverridePort(testInstance)
-        port = overridePort ?: DEFAULT_WIREMOCK4K_PORT
-        wiremockBaseUrl = "http://$WIREMOCK4K_HOSTNAME:$port"
+        val enableDynamicPort = testInstance::class.findAnnotation<DynamicMockPort>() != null
 
-        log.debug { "Starting up Wiremock on $wiremockBaseUrl for ${testInstance::class.simpleName}" }
-        WireMock.configureFor(WIREMOCK4K_HOSTNAME, port!!)
-        server = WireMockServer(WireMockConfiguration.wireMockConfig().port(port!!))
+        port = when {
+            overridePort != null && enableDynamicPort -> {
+                log.warn { "Wiremock4k configured with custom port $overridePort and dynamic port usage enabled! Using custom port." }
+                overridePort
+            }
+            overridePort != null -> overridePort
+            else -> DEFAULT_WIREMOCK4K_PORT
+        }
+
+        server = WireMockServer(WireMockConfiguration.wireMockConfig().apply {
+            if (enableDynamicPort) {
+                dynamicPort()
+            } else {
+                port(port!!)
+            }
+        })
         server.start()
+        if (enableDynamicPort) {
+            port = server.port()
+        }
+
+        wiremockBaseUrl = "http://$WIREMOCK4K_HOSTNAME:$port"
+        WireMock.configureFor(WIREMOCK4K_HOSTNAME, port!!)
 
         TestInitializer.injectPort(testInstance, port!!)
         TestInitializer.injectMockUrl(testInstance, wiremockBaseUrl)
+
+        log.debug { "Started up Wiremock on $wiremockBaseUrl for ${testInstance::class.simpleName}" }
     }
 
     /** Shutdown wiremock server. */
