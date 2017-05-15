@@ -21,16 +21,10 @@ import org.testng.ITestResult
 annotation class InjectMockPort
 
 /**
- * Injects the base url "http://localhost:??" used by wiremock server into a property like `private lateinit var mockUrl: String`.
+ * Injects the base url "http://localhost:9987" used by wiremock server into a property like `private lateinit var mockUrl: String`.
  */
 @Target(AnnotationTarget.PROPERTY)
 annotation class InjectMockUrl
-
-/**
- * Injects something like "http://localhost:8080" for a property like `private lateinit var mockUrl: String`.
- */
-@Target(AnnotationTarget.PROPERTY)
-annotation class InjectWiremockUrl
 
 /**
  * Deals with starting/stopping/resetting the wiremock server.
@@ -40,7 +34,7 @@ class WiremockTestngListener : IClassListener, ITestListener {
     private val log = LOG {}
     private val port: Int = DEFAULT_WIREMOCK4K_PORT
     // FIXME inject base URL into tests
-    private val wiremockBaseUrl = "http://${WIREMOCK4K_HOSTNAME}:$port"
+    private val wiremockBaseUrl = "http://$WIREMOCK4K_HOSTNAME:$port"
     private lateinit var server: WireMockServer
 
     /** Startup wiremock server. */
@@ -52,6 +46,7 @@ class WiremockTestngListener : IClassListener, ITestListener {
         server.start()
 
         TestInitializer.injectPort(testInstance, port)
+        TestInitializer.injectMockUrl(testInstance, wiremockBaseUrl)
     }
 
     /** Shutdown wiremock server. */

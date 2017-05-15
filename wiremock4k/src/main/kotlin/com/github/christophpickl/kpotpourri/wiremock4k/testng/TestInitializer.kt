@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.wiremock4k.testng
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import kotlin.reflect.KMutableProperty
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
@@ -14,31 +15,66 @@ internal object TestInitializer {
 
     private val log = LOG {}
 
-    internal fun injectPort(testInstance: Any, port: Int) {
-        val testClass = testInstance::class
-        testClass.memberProperties
-//                .filterIsInstance<KMutableProperty<*>>()
-                .filter { it.findAnnotation<InjectMockPort>() != null }.forEach { prop ->
-            val propType = prop.returnType.javaType
-            if (propType != Integer::class.java) {
-                throw TestInitializationException("Expected property '${prop.name}' to be of type ${Integer::class.java.name}, but was: ${propType.typeName}")
-            }
-            if (prop.visibility != KVisibility.PRIVATE) {
-                throw TestInitializationException("Expected property '${prop.name}' to be private, but was: ${prop.visibility}")
-            }
-            if (!prop.isLateinit) {
-                throw TestInitializationException("Expected property '${prop.name}' to be marked as lateinit.")
-            }
-            if (prop !is KMutableProperty<*>) {
-                throw TestInitializationException("Expected property '${prop.name}' to be mutable.")
-            }
-            log.debug { "Setting test property @InjectPort '${testClass.simpleName}.${prop.name}' to: $port" }
 
-            prop.setter.isAccessible.also { old ->
-                prop.setter.isAccessible = true
-                prop.setter.call(testInstance, port)
-                prop.setter.isAccessible = old
+    internal fun injectPort(testInstance: Any, port: Int) {
+        testInstance::class.memberProperties
+                .filter { it.findAnnotation<InjectMockPort>() != null }.forEach { prop ->
+            prop.apply {
+                ensureReturnType(Integer::class.java)
+                ensureVisibility(KVisibility.PRIVATE)
+                ensureLateInit()
+                asMutable {
+                    log.debug { "Setting test property @InjectPort '${testInstance::class.simpleName}.${prop.name}' to: $port" }
+                    setRetainOldValue(testInstance, port)
+                }
             }
+        }
+    }
+
+    // could also allow to inject a complex object instead of a simple string representing the full base URL
+    internal fun injectMockUrl(testInstance: Any, url: String) {
+        testInstance::class.memberProperties
+                .filter { it.findAnnotation<InjectMockUrl>() != null }.forEach { prop ->
+            prop.apply {
+                ensureReturnType(String::class.java)
+                ensureVisibility(KVisibility.PRIVATE)
+                ensureLateInit()
+                asMutable {
+                    log.debug { "Setting test property @InjectMockUrl '${testInstance::class.simpleName}.${prop.name}' to: $url" }
+                    setRetainOldValue(testInstance, url)
+                }
+            }
+        }
+    }
+
+    // MINOR create reflection4k
+    private fun <T> KProperty1<T, *>.ensureReturnType(expectedType: Class<*>) {
+        if (returnType.javaType != expectedType) {
+            throw TestInitializationException("Expected property '$name' to be of type ${expectedType.name}, but was: ${returnType.javaType.typeName}")
+        }
+    }
+
+    private fun KProperty1<*, *>.ensureVisibility(expectedVisibility: KVisibility) {
+        if (visibility != expectedVisibility) {
+            throw TestInitializationException("Expected property '$name' to be $expectedVisibility, but was: $visibility")
+        }
+    }
+
+    private fun KProperty1<*, *>.ensureLateInit() {
+        if (!isLateinit) {
+            throw TestInitializationException("Expected property '$name' to be marked as lateinit.")
+        }
+    }
+
+    private inline fun <T, R> KProperty1<T, R>.asMutable(withMutabe: KMutableProperty<R>.() -> Unit) {
+        withMutabe(this as? KMutableProperty<R> ?: throw TestInitializationException("Expected property '$name' to be mutable."))
+    }
+
+    private fun <T> KMutableProperty<T>.setRetainOldValue(target: Any, value: T) {
+        setter.isAccessible.also { old ->
+            setter.isAccessible = true
+            setter.call(target, value)
+            setter.isAccessible = old
         }
     }
 }
