@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.testng
 
-import com.github.christophpickl.kpotpourri.common.string.containsAll
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.TestInitializer.injectMockUrl
@@ -36,9 +35,7 @@ import kotlin.reflect.KVisibility
             @InjectMockPort lateinit var port: Integer
         }
 
-        assertThrown<TestInitializationException>(
-                matcher = { e -> e.message!!.containsAll("port", KVisibility.PRIVATE.toString(), KVisibility.PUBLIC.toString()) }
-        ) {
+        assertThrown<TestInitializationException>(expectedMessageParts = listOf("port", KVisibility.PRIVATE.toString(), KVisibility.PUBLIC.toString())) {
             injectPort(DtoNotPrivate(), anyPort)
         }
     }
@@ -48,9 +45,7 @@ import kotlin.reflect.KVisibility
             @InjectMockPort private var port: Integer = anyInteger
         }
 
-        assertThrown<TestInitializationException>(
-                matcher = { e -> e.message!!.containsAll("port", "lateinit") }
-        ) {
+        assertThrown<TestInitializationException>(expectedMessageParts = listOf("port", "lateinit")) {
             injectPort(DtoNotLateInit(), anyPort)
         }
     }
@@ -63,14 +58,14 @@ import kotlin.reflect.KVisibility
             @InjectMockPort private lateinit var port: String
         }
 
-        assertThrown<TestInitializationException>(
-                matcher = { e -> e.message!!.containsAll("port", Integer::class.java.name, String::class.java.name) }) {
+        assertThrown<TestInitializationException>(expectedMessageParts = listOf("port", Integer::class.java.name, String::class.java.name)) {
             injectPort(DtoNotInteger(), anyPort)
         }
     }
 
 }
 
+@Suppress("unused")
 @Test class InjectMockUrlTest {
 
     companion object {
@@ -95,9 +90,7 @@ import kotlin.reflect.KVisibility
             @InjectMockUrl private lateinit var notString: ArrayList<Int>
         }
 
-        // TODO simplify assertThrown(messageContains(vararg String)
-        assertThrown<TestInitializationException>(
-                matcher = { e -> println(e.message); e.message!!.containsAll("notString", String::class.java.name, ArrayList::class.java.name) }) {
+        assertThrown<TestInitializationException>(expectedMessageParts = listOf("notString", String::class.java.name, ArrayList::class.java.name)) {
             injectMockUrl(DtoNotString(), anyUrl)
         }
     }
@@ -107,9 +100,7 @@ import kotlin.reflect.KVisibility
             @InjectMockUrl lateinit var notPrivate: String
         }
 
-        assertThrown<TestInitializationException>(
-                matcher = { e -> e.message!!.containsAll("notPrivate", KVisibility.PRIVATE.toString(), KVisibility.PUBLIC.toString()) }
-        ) {
+        assertThrown<TestInitializationException>(expectedMessageParts = listOf("notPrivate", KVisibility.PRIVATE.toString(), KVisibility.PUBLIC.toString())) {
             injectMockUrl(DtoNotPrivate(), anyUrl)
         }
     }
@@ -119,9 +110,7 @@ import kotlin.reflect.KVisibility
             @InjectMockUrl private var notLateInit: String = anyUrl
         }
 
-        assertThrown<TestInitializationException>(
-                matcher = { e -> e.message!!.containsAll("notLateInit", "lateinit") }
-        ) {
+        assertThrown<TestInitializationException>(expectedMessageParts = listOf("notLateInit", "lateinit")) {
             injectMockUrl(DtoNotLateInit(), anyUrl)
         }
     }

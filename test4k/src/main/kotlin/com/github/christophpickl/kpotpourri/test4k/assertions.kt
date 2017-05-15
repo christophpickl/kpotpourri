@@ -31,6 +31,18 @@ inline fun <reified E : Throwable> assertThrown(expectedMessage: String, code: (
     assertThrown<E>({ it.message == expectedMessage }, code)
 }
 
+/**
+ * Tests for correct exception type and message subparts.
+ */
+inline fun <reified E : Throwable> assertThrown(expectedMessageParts: List<String>, code: () -> Unit) {
+    assertThrown<E>({ it.message!!.__containsAll(expectedMessageParts) }, code)
+}
+
+/**
+ * Duplicate from common4k, in order to avoid cyclic dependency.
+ */
+fun String.__containsAll(substrings: List<String>, ignoreCase: Boolean = false) =
+        substrings.all { this.contains(it, ignoreCase) }
 
 /**
  * Expect an exception to be thrown which can be individually checked for correctness.
