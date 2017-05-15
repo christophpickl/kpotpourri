@@ -1,3 +1,5 @@
+@file:Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+
 package com.github.christophpickl.kpotpourri.wiremock4k.testng
 
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
@@ -26,7 +28,6 @@ class WiremockTestngListenerIT {
 
 }
 
-@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 @Test @Listeners(WiremockTestngListener::class)
 class InjectMockPortIT {
 
@@ -52,13 +53,12 @@ class InjectMockUrlIT {
 private const val OVERRIDE_PORT = 8337
 
 @Test @Listeners(WiremockTestngListener::class)
-//@OverridePort(OVERRIDE_PORT)
+@OverrideMockPort(OVERRIDE_PORT)
 class OverridePortIT {
 
     @InjectMockPort private lateinit var port: Integer
 
     fun `OverridePort - custom port received by InjectMockPort`() {
-        skip("WIP")
         port shouldMatchValue OVERRIDE_PORT
     }
 

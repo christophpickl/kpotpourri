@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.wiremock4k.testng
 
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
+import com.github.christophpickl.kpotpourri.wiremock4k.testng.TestInitializer.exjectOverridePort
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.TestInitializer.injectMockUrl
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.TestInitializer.injectPort
 import org.testng.annotations.Test
@@ -113,5 +114,24 @@ import kotlin.reflect.KVisibility
         assertThrown<TestInitializationException>(expectedMessageParts = listOf("notLateInit", "lateinit")) {
             injectMockUrl(DtoNotLateInit(), anyUrl)
         }
+    }
+}
+
+@Test class OverrideMockPortTest {
+
+    companion object {
+        private const val port = 42
+    }
+
+    fun `sunshine`() {
+        @OverrideMockPort(port) class DtoSunshine
+
+        exjectOverridePort(DtoSunshine()) shouldMatchValue port
+    }
+
+    fun `not defined returns null`() {
+        class DtoNoPort
+
+        exjectOverridePort(DtoNoPort()) shouldMatchValue null
     }
 }

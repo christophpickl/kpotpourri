@@ -11,10 +11,10 @@ import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
 
 
+// MINOR create reflection4k
 internal object TestInitializer {
 
     private val log = LOG {}
-
 
     internal fun injectPort(testInstance: Any, port: Int) {
         testInstance::class.memberProperties
@@ -47,7 +47,9 @@ internal object TestInitializer {
         }
     }
 
-    // MINOR create reflection4k
+    internal fun exjectOverridePort(testInstance: Any): Int? =
+            testInstance::class.findAnnotation<OverrideMockPort>()?.port
+
     private fun <T> KProperty1<T, *>.ensureReturnType(expectedType: Class<*>) {
         if (returnType.javaType != expectedType) {
             throw TestInitializationException("Expected property '$name' to be of type ${expectedType.name}, but was: ${returnType.javaType.typeName}")
