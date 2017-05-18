@@ -4,7 +4,8 @@ import com.github.christophpickl.kpotpourri.common.file.resetDirectory
 import com.github.christophpickl.kpotpourri.common.file.verifyExists
 import com.github.christophpickl.kpotpourri.common.io.Keyboard
 import com.github.christophpickl.kpotpourri.common.logging.LOG
-import com.github.christophpickl.kpotpourri.common.string.splitAsArguments
+import com.github.christophpickl.kpotpourri.common.process.ProcessExecuter
+import com.github.christophpickl.kpotpourri.common.process.ProcessExecuterImpl
 import com.github.christophpickl.kpotpourri.github.GithubApi
 import com.github.christophpickl.kpotpourri.github.RepositoryConfig
 import com.github.christophpickl.kpotpourri.github.buildGithub4k
@@ -13,8 +14,13 @@ import com.github.christophpickl.kpotpourri.release4k.Release4kException
 import com.github.christophpickl.kpotpourri.release4k.Version
 import java.io.File
 
-
-class Release4kImpl : Release4k {
+/**
+ * Actual implementation.
+ */
+@Suppress("KDocMissingDocumentation")
+/*pseudo-internal*/ class Release4kImpl(
+        private val process: ProcessExecuter = ProcessExecuterImpl()
+) : Release4k {
 
     private val log = LOG {}
 
@@ -31,9 +37,8 @@ class Release4kImpl : Release4k {
     }
 
     override fun checkoutGitProject(gitUrl: String) {
-        execute("/usr/bin/git", "clone $gitUrl ${gitCheckoutDirectory.name}", release4kDirectory)
+        process.execute("/usr/bin/git", "clone $gitUrl ${gitCheckoutDirectory.name}", release4kDirectory)
     }
-
 
     override fun promptUser(prompt: String): String {
         println(prompt)
@@ -50,41 +55,18 @@ class Release4kImpl : Release4k {
         kout("Read from [$relativeFilePath] version: ${version.niceString}")
         return version
     }
-
-    override fun execute(cmd: String, args: String, cwd: File, suppressKout: Boolean) {
-        if (!suppressKout) {
-            koutCmd(cwd, "$cmd $args")
-        }
-        val cmdAndArgs = buildCmdAndArgs(cmd, args)
-        val processBuilder = ProcessBuilder(cmdAndArgs)
-        processBuilder.inheritIO()
-        processBuilder.directory(cwd)
-        val process = processBuilder.start()
-        val exitCode = process.waitFor()
-        if (exitCode != 0) {
-            throw Release4kException("Failed to execute '$cmd $args' with exit code $exitCode!")
-        }
-    }
-
-    private fun buildCmdAndArgs(cmd: String, args: String): List<String> {
-        return ArrayList<String>().apply {
-            add(cmd)
-            addAll(args.splitAsArguments())
-        }
-    }
-
     override fun gradlew(command: String) {
-//        execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
-        execute("./gradlew", command, gitCheckoutDirectory)
+        // process.execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
+        process.execute("./gradlew", command, gitCheckoutDirectory)
     }
 
     override fun git(command: String) {
-        execute("git", command, gitCheckoutDirectory)
+        process.execute("git", command, gitCheckoutDirectory)
     }
 
-    fun onFinish() {
+    /*pseudo-internal*/ fun onFinish() {
         // actually just create a descriptive task and add it to queue ... and execute here
-        execute("say", "\"Release build finished.\"", release4kDirectory, suppressKout = true)
+        process.execute("say", "\"Release build finished.\"", release4kDirectory, suppressOutput = true)
     }
 
 }
