@@ -1,17 +1,5 @@
-# Release4k
+package com.github.christophpickl.kpotpourri.release4k.non_test
 
-Simple replacement for common release shell scripts using the Kotlin language.
-The main entry point is via the `release4k(func: Release4k.() -> Unit)` function which provides further (stateful) operations like:
-
-* GIT interaction
-* GitHub interaction
-* Execute gradle or any other shell command
-* Handles interactive I/O with user
-* Version handling
-
-## Sample
-
-```kotlin
 import com.github.christophpickl.kpotpourri.common.io.Keyboard
 import com.github.christophpickl.kpotpourri.release4k.Version.VersionParts2.Companion.readVersion2FromStdin
 import com.github.christophpickl.kpotpourri.release4k.release4k
@@ -25,7 +13,7 @@ fun main(args: Array<String>) = release4k {
 
     val currentVersion = readVersionFromTxt(versionTxtFilename).toVersion2()
     val nextVersion = readVersion2FromStdin(
-            prompt = "Enter next release version", 
+            prompt = "Enter next release version",
             defaultVersion = currentVersion.incrementMinor()
     )
     val nextVersionString = nextVersion.niceString
@@ -75,4 +63,3 @@ fun main(args: Array<String>) = release4k {
     git("push origin --tags")
 
 }
-```

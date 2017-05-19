@@ -1,3 +1,5 @@
+@file:Suppress("KDocMissingDocumentation")
+
 package com.github.christophpickl.kpotpourri.release4k
 
 import com.github.christophpickl.kpotpourri.common.io.Keyboard
@@ -6,15 +8,18 @@ import com.github.christophpickl.kpotpourri.common.io.Keyboard
  * Distinction between snapshots and releases.
  */
 enum class VersionType {
+
     /** Identifies a regular Maven snapshot version. */
     Snapshot,
+
     /** Indentifies a stable, released version. */
     Release // not yet used...
+
 }
 
-private val pattern2 = "^(\\d+)\\.(\\d+)$".toRegex()
-private val pattern3 = "^(\\d+)\\.(\\d+)\\.(\\d+)$".toRegex()
-private val pattern4 = "^(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)$".toRegex()
+private val pattern2 = """^(\d+)\.(\d+)$""".toRegex()
+private val pattern3 = """^(\d+)\.(\d+)\.(\d+)$""".toRegex()
+private val pattern4 = """^(\d+)\.(\d+)\.(\d+)\.(\d+)$""".toRegex()
 
 /**
  * Parse an input like "42" or return null.
@@ -67,8 +72,7 @@ sealed class Version(open val type: VersionType, private val numbers: List<Int>)
     companion object {
 
         private fun <T : Version> _readFromStdin(parser: (String) -> T?, prompt: String, defaultVersion: T? = null): T {
-            val defaultPrompt = if (defaultVersion != null) " [${defaultVersion.niceString}]"
-            else ""
+            val defaultPrompt = if (defaultVersion != null) " [${defaultVersion.niceString}]" else ""
             while (true) {
                 print("$prompt$defaultPrompt: ")
                 val input = Keyboard.readLine().trim()

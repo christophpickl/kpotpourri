@@ -9,9 +9,11 @@ import com.github.christophpickl.kpotpourri.common.process.ProcessExecuterImpl
 import com.github.christophpickl.kpotpourri.github.GithubApi
 import com.github.christophpickl.kpotpourri.github.RepositoryConfig
 import com.github.christophpickl.kpotpourri.github.buildGithub4k
+import com.github.christophpickl.kpotpourri.http4k.ServerConfig
 import com.github.christophpickl.kpotpourri.release4k.Release4k
 import com.github.christophpickl.kpotpourri.release4k.Release4kException
 import com.github.christophpickl.kpotpourri.release4k.Version
+import com.google.common.annotations.VisibleForTesting
 import java.io.File
 
 /**
@@ -19,21 +21,29 @@ import java.io.File
  */
 @Suppress("KDocMissingDocumentation")
 /*pseudo-internal*/ class Release4kImpl(
+        private val workingDirectory: File = File("."),
         private val process: ProcessExecuter = ProcessExecuterImpl()
-) : Release4k {
+) : Release4k, ProcessExecuter by process {
 
     private val log = LOG {}
 
-    override val release4kDirectory = File("build/release4k").apply { resetDirectory() }
+    override val release4kDirectory = File(workingDirectory, "build/release4k").apply { resetDirectory() }
     override val gitCheckoutDirectory = File(release4kDirectory, "git_checkout")
 
     private var github: GithubApi? = null
+    @VisibleForTesting internal val _github: GithubApi? get() = github
 
-    override fun initGithub(config: RepositoryConfig) {
+    init {
+        log.debug { "workingDirectory: ${workingDirectory.canonicalPath}" }
+        log.debug { "release4kDirectory: ${release4kDirectory.canonicalPath}" }
+        log.debug { "gitCheckoutDirectory: ${gitCheckoutDirectory.canonicalPath}" }
+    }
+
+    override fun initGithub(repository: RepositoryConfig, server: ServerConfig) {
         if (github != null) {
             throw Release4kException("initGithub() already invoked! ($github)")
         }
-        github = buildGithub4k(config)
+        github = buildGithub4k(repository, server)
     }
 
     override fun checkoutGitProject(gitUrl: String) {
@@ -55,8 +65,9 @@ import java.io.File
         kout("Read from [$relativeFilePath] version: ${version.niceString}")
         return version
     }
+
     override fun gradlew(command: String) {
-        // process.execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
+        // TODO process.execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
         process.execute("./gradlew", command, gitCheckoutDirectory)
     }
 
@@ -65,7 +76,6 @@ import java.io.File
     }
 
     /*pseudo-internal*/ fun onFinish() {
-        // actually just create a descriptive task and add it to queue ... and execute here
         process.execute("say", "\"Release build finished.\"", release4kDirectory, suppressOutput = true)
     }
 

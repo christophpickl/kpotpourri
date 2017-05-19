@@ -31,6 +31,28 @@ val RepositoryConfig.Companion.testRepository get() = RepositoryConfig(
         password = detectGithubPass()
 )
 
+@Suppress("unused")
+val RepositoryConfig.Companion.testInstance get() = RepositoryConfig(
+        repositoryName = "testRepoName",
+        repositoryOwner = "testRepoOwner",
+        username = "test@github.com",
+        password = "testPwd"
+)
+@Suppress("unused")
+val RepositoryConfig.Companion.testInstance1 get() = RepositoryConfig(
+        repositoryName = "testRepoName1",
+        repositoryOwner = "testRepoOwner1",
+        username = "test@github.com1",
+        password = "testPwd1"
+)
+@Suppress("unused")
+val RepositoryConfig.Companion.testInstance2 get() = RepositoryConfig(
+        repositoryName = "testRepoName2",
+        repositoryOwner = "testRepoOwner2",
+        username = "test@github.com2",
+        password = "testPwd2"
+)
+
 val githubPassSysprop = "github.pass"
 private fun detectGithubPass(): String {
     val sysprop = System.getProperty(githubPassSysprop, null)

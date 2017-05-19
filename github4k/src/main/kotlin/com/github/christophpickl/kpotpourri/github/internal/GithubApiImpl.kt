@@ -18,6 +18,7 @@ import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.http4k.patch
 import com.github.christophpickl.kpotpourri.http4k.post
+import com.google.common.base.MoreObjects
 
 
 @Suppress("KDocMissingDocumentation")
@@ -112,6 +113,9 @@ internal class GithubApiImpl(
         }
     }
 
+    override fun toString() = MoreObjects.toStringHelper(this)
+            .add("config", config)
+            .toString()
 
 }
 

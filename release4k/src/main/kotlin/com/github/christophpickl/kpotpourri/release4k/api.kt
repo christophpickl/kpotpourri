@@ -1,9 +1,12 @@
 package com.github.christophpickl.kpotpourri.release4k
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
+import com.github.christophpickl.kpotpourri.common.process.ProcessExecuter
 import com.github.christophpickl.kpotpourri.common.time.MsTimification
 import com.github.christophpickl.kpotpourri.common.time.timify
+import com.github.christophpickl.kpotpourri.github.GITHUB_COM
 import com.github.christophpickl.kpotpourri.github.RepositoryConfig
+import com.github.christophpickl.kpotpourri.http4k.ServerConfig
 import com.github.christophpickl.kpotpourri.release4k.internal.Release4kImpl
 import com.github.christophpickl.kpotpourri.release4k.internal.kout
 import java.io.File
@@ -26,7 +29,7 @@ inline fun release4k(func: Release4k.() -> Unit) {
 /**
  * Core DSL setting configs and invoking misc shell commands.
  */
-interface Release4k {
+interface Release4k : ProcessExecuter {
 
     // could provide properties:
     // - project name
@@ -57,7 +60,7 @@ interface Release4k {
      *
      * @throws Release4kException if this method is invoked twice
      */
-    fun initGithub(config: RepositoryConfig)
+    fun initGithub(repository: RepositoryConfig, server: ServerConfig = GITHUB_COM)
 
     /**
      * Reads the given file, expecting it to contain a valid version specification.
@@ -80,7 +83,7 @@ interface Release4k {
     fun promptUser(prompt: String): String
 
     /**
-     * Rints a header line.
+     * Prints a header line.
      */
     fun printHeader(message: String) {
         println()
