@@ -24,7 +24,7 @@ import java.io.File
             koutFile(file, message)
         }
 
-        assertThat(actual, equalTo("[${file.canonicalPath}] $message\n"))
+        assertThat(actual, equalTo("[KRELEASE] [${file.canonicalPath}] $ $message\n"))
     }
 
 }

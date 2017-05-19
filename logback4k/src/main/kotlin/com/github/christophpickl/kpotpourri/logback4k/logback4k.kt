@@ -32,7 +32,7 @@ object Logback4k {
 /**
  * Supported logback configuration options.
  */
-interface LogbackConfig {
+@Logback4kMarker interface LogbackConfig {
     /** Change the global log level for all appenders and packages. */
     var rootLevel: Level
 
@@ -47,3 +47,6 @@ interface LogbackConfig {
      */
     fun addConsoleAppender(withBuilder: ConsoleAppenderBuilder.() -> Unit = {})
 }
+
+@DslMarker
+internal annotation class Logback4kMarker
