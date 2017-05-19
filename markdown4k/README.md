@@ -1,5 +1,9 @@
 # Markdown4k
 
+```groovy
+compile 'com.github.christophpickl.kpotpourri:markdown4k:$versionKPotpourri'
+```
+
 Writing documentation is a good idea, right, we agree on that?
 
 So you end up having tons of markdown files with tons of kotlin code snippets.
@@ -10,13 +14,7 @@ This is where Markdown4k gets handy, as it tries to **compile all of your Kotlin
 ## Usage
 
 The suggested approach is to integrate the check into a **testing framework** like TestNG or JUnit or whatever you prefer,
-but first of all you need to declare a new dependency:
-
-```groovy
-dependencies {
-  testCompile 'com.github.christophpickl.kpotpourri:markdown4k:$versionKPotpourri'
-}
-```
+but first of all you need to declare a new dependency for markdown4k.
 
 Afterwards you only need to feed the test framework with your code snippets by passing a `root` directory which will be scanned for `*.md` files recursively,
 and then try to compile them and check for a proper `KompilationResult`.

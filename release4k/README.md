@@ -1,5 +1,9 @@
 # Release4k
 
+```groovy
+compile 'com.github.christophpickl.kpotpourri:release4k:$versionKPotpourri'
+```
+
 Simple replacement for common release shell scripts using the Kotlin language.
 The main entry point is via the `release4k(func: Release4k.() -> Unit)` function which provides further (stateful) operations like:
 

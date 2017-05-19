@@ -61,30 +61,26 @@ import org.testng.annotations.Test
 
     fun `failOnUnknownProperties - When enabled, Then throws`() {
         assertThrown<UnrecognizedPropertyException> {
-            buildJackson4k { failOnUnknownProperties = true }
+            buildJackson4kMapper { failOnUnknownProperties = true }
                     .readValue<StringDto>("{\"unknown\":\"value\"}")
         }
     }
 
     fun `failOnUnknownProperties - When false, Then unknown property is ignored`() {
-        assertThat(buildJackson4k { failOnUnknownProperties = false }
+        assertThat(buildJackson4kMapper { failOnUnknownProperties = false }
                 .readValue<StringDto>("{\"unknown\":\"value\"}"),
                 equalTo(StringDto()))
     }
 
-
-    private fun assertAsString(withConfig: WithConfig, dto: Any, expectedJson: String) {
-        assertThat(buildJackson4k(withConfig).asString(dto),
+    private fun assertAsString(withConfig: Jackson4kConfig.() -> Unit, dto: Any, expectedJson: String) {
+        assertThat(buildJackson4kMapper(withConfig).asString(dto),
                 equalTo(expectedJson.replace("\\\\n", "\\n")))
     }
-
-    // MINOR TEST arrays, lists, maps
 
     data class ComplexDto(
             val string: String = "string",
             val int: Int = 42,
             val boolean: Boolean = true,
-            //            val array: Array<String> = arrayOf("a1"),
             val list: List<String> = listOf("l1")
     )
 
@@ -100,8 +96,4 @@ import org.testng.annotations.Test
             val map: Map<String, Int> = emptyMap()
     )
 
-//    data class BaDto(
-//            val b: String = "b",
-//            val a: String = "a"
-//    )
 }

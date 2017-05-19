@@ -12,7 +12,7 @@ import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.ServerConfig
 import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod.*
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
@@ -30,7 +30,7 @@ private val testPort = 8082
 @Test class Github4kIntegrationTest : WiremockTest(testPort) {
 
     companion object {
-        private val mapper = buildJackson4k()
+        private val mapper = buildJackson4kMapper()
     }
 
     private val repositoryOwner = "testOwner"

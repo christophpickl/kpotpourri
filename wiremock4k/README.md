@@ -1,5 +1,9 @@
 # Wiremock4k
 
+```groovy
+compile 'com.github.christophpickl.kpotpourri:wiremock4k:$versionKPotpourri'
+```
+
 This is a small test library basically simplifying the [Wiremock](http://wiremock.org/) API.
 
 It automates starting/stopping/reseting the wiremock server by providing a TestNG listener `WiremockTestngListener`

@@ -1,5 +1,9 @@
 # Test4k
 
+```groovy
+compile 'com.github.christophpickl.kpotpourri:test4k:$versionKPotpourri'
+```
+
 Test extensions using TestNG, hamkrest and mockito-kotlin.
 
 ```kotlin

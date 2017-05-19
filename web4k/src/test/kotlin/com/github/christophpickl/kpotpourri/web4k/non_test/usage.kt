@@ -1,9 +1,8 @@
 package com.github.christophpickl.kpotpourri.web4k.non_test
 
-import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.web4k.JettyConfig
 import com.github.christophpickl.kpotpourri.web4k.JettyServer
-import com.github.christophpickl.kpotpourri.web4k.WebConfig
+import com.github.christophpickl.kpotpourri.web4k.Web4kSpringConfig
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
@@ -15,22 +14,23 @@ fun main(args: Array<String>) {
     JettyServer(JettyConfig(
             springConfig = DemoSpringConfig::class
     )).startInteractively()
+    // listens on: http://localhost:8442/rest
 }
 
-@Configuration @Import(WebConfig::class)
+@Configuration @Import(Web4kSpringConfig::class)
 class DemoSpringConfig {
-    @Bean fun demoResource() = DemoResource()
+    @Bean fun personResource() = PersonResource()
 }
 
 @Path("/")
-class DemoResource {
+class PersonResource {
 
-    @GET @Produces("text/plain")
-    fun getRoot() = "this is root"
+    @GET @Produces("application/json")
+    fun getPerson() = Person("anna", 42)
 
-    @GET @Path("/fail")
-    fun getFail() {
-        throw KPotpourriException("i dont want to work anymore")
-    }
 }
 
+data class Person(
+        val name: String,
+        val age: Int
+)

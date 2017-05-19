@@ -12,14 +12,14 @@ import com.github.christophpickl.kpotpourri.github.State
 import com.github.christophpickl.kpotpourri.github.Tag
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import java.io.File
 
 private val log = LOG {}
 
-private val mapper = buildJackson4k()
+private val mapper = buildJackson4kMapper()
 
 fun String.wrapJsonArrayBrackets() = "[ $this ]"
 

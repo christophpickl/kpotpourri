@@ -7,14 +7,14 @@ import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteS
 import com.github.christophpickl.kpotpourri.http4k.RequestBody
 import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import org.testng.annotations.Test
 
 @Test class RequestBodyTest {
 
     companion object {
-        private val mapper = buildJackson4k()
+        private val mapper = buildJackson4kMapper()
     }
 
     fun `prepareBodyAndContentType - When prepare non-RequestWithEntityOpts, Then return null`() {

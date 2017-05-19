@@ -23,7 +23,7 @@ import javax.ws.rs.Path
 import javax.ws.rs.Produces
 
 @Configuration
-@Import(WebConfig::class)
+@Import(Web4kSpringConfig::class)
 class TestableSpringConfig {
     @Bean fun myResource() = TestableResource()
 }

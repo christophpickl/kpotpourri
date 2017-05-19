@@ -1,5 +1,8 @@
 # Logback4k
 
+```groovy
+compile 'com.github.christophpickl.kpotpourri:logback4k:$versionKPotpourri'
+```
 Simple way to programmatically configure logback, instead of using plain XML files.
 
 ```kotlin
