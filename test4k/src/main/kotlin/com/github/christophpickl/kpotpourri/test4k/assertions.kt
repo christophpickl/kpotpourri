@@ -62,6 +62,9 @@ inline fun <reified E : Throwable> assertThrown(matcher: (E) -> Boolean, code: (
     }
 }
 
+/**
+ * Utility method to transform the stack trace to its string representation.
+ */
 fun Throwable.toStackTrace(): String {
     val writer = StringWriter()
     printStackTrace(PrintWriter(writer))
