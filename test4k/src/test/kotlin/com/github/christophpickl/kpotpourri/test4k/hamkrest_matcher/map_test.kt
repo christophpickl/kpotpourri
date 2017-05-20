@@ -1,10 +1,19 @@
 package com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher
 
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
+import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
 
 @Test class MapTest {
+
+    fun `mapContainsKey - ok`() {
+        mapContainsKey<String, String>("a").invoke(mapOf("a" to "b")) shouldMatchValue MatchResult.Match
+    }
+
+    fun `mapContainsKey - nok`() {
+        assertThat(mapContainsKey<String, String>("a").invoke(emptyMap()), isA(MatchResult.Mismatch::class))
+    }
 
     fun `mapContains - Given exact map, Should not throw`() {
         assertThat(mapOf("a" to "b"), mapContains("a" to "b"))
