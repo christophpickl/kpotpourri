@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.jackson4k
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -25,6 +26,17 @@ import org.testng.annotations.Test
                 "{\"string\":\"string\",\"int\":42,\"boolean\":true,\"list\":[\"l1\"]}")
     }
 
+    fun `serializationInclusion - When set to ALWAYS, Then null should be rendered`() {
+        assertAsString({ serializationInclusion = JsonInclude.Include.ALWAYS },
+                NullableDto(value = null),
+                "{\"value\":null}")
+    }
+
+    fun `serializationInclusion - When set to NON_NULL, Then null field should be ignored`() {
+        assertAsString({ serializationInclusion = JsonInclude.Include.NON_NULL },
+                NullableDto(value = null),
+                "{}")
+    }
     fun `renderNulls - When true, Given null value, Then null field should be rendered`() {
         assertAsString({ renderNulls() },
                 NullableDto(value = null),
