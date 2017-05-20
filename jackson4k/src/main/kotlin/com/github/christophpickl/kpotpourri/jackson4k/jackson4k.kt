@@ -1,7 +1,6 @@
 package com.github.christophpickl.kpotpourri.jackson4k
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -27,14 +26,12 @@ fun buildJackson4kMapper(withConfig: Jackson4kConfig.() -> Unit = {}): ObjectMap
             enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
         }
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, config.failOnUnknownProperties)
-        if (!config.renderNulls) {
-            setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        }
         setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
 
         config.visibilities.forEach { (accessor, visibility) ->
             setVisibility(accessor, visibility)
         }
-        // setSerializationInclusion(JsonInclude.Include.ALWAYS)
+
+        setSerializationInclusion(config.serializationInclusion)
     }
 }

@@ -26,13 +26,13 @@ import org.testng.annotations.Test
     }
 
     fun `renderNulls - When true, Given null value, Then null field should be rendered`() {
-        assertAsString({ renderNulls = true },
+        assertAsString({ renderNulls() },
                 NullableDto(value = null),
                 "{\"value\":null}")
     }
 
     fun `renderNulls - When false, Given null value, Then null field should not be rendered`() {
-        assertAsString({ renderNulls = false },
+        assertAsString({ renderNoNulls() },
                 NullableDto(value = null),
                 "{}")
     }
