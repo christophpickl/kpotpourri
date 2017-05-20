@@ -1,8 +1,9 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.common.reflection.Reflector
+import com.github.christophpickl.kpotpourri.common.reflection.ReflectorImpl
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
-import com.google.common.annotations.VisibleForTesting
 
 enum class HttpClientType(
         val fqnToLookFor: String
@@ -18,12 +19,14 @@ enum class HttpClientType(
     // Spring RestTemplate
 }
 
-internal object HttpClientFactoryDetector {
+internal class HttpClientFactoryDetector(
+        private val reflector: Reflector = ReflectorImpl()
+) {
 
     private val log = LOG {}
 
-    fun detect(): HttpClientFactory {
-        val availableClients = HttpClientType.values().map { reflectivelyClassExists(it.fqnToLookFor) }.filterNotNull()
+    internal fun detect(): HttpClientFactory {
+        val availableClients = HttpClientType.values().map { reflector.lookupClass(it.fqnToLookFor) }.filterNotNull()
         if (log.isDebugEnabled) {
             log.debug("Available HTTP4k implementations:")
             availableClients.forEach {
@@ -33,20 +36,9 @@ internal object HttpClientFactoryDetector {
 
         return when (availableClients.size) {
             0 -> throw Http4kException("Http4k could not find any available implementation! Add a new (runtime) dependency for http4k-apache, http4k-fuel, etc.")
-            1 -> instantiateRestClient(availableClients[0])
+            1 -> availableClients[0].newInstance() as HttpClientFactory
             else -> throw Http4kException("Multiple implementations found: " + availableClients.map { it.name }.joinToString(", "))
         }
     }
 
-    @VisibleForTesting fun instantiateRestClient(type: Class<*>) =
-            type.newInstance() as HttpClientFactory
-
-    @VisibleForTesting fun reflectivelyClassExists(fqn: String): Class<*>? {
-        try {
-            return Class.forName(fqn)
-        } catch(e: ClassNotFoundException) {
-            log.trace { "Not found runtime class: $fqn" }
-            return null
-        }
-    }
 }
