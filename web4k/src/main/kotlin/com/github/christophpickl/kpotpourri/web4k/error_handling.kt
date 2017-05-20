@@ -93,7 +93,7 @@ internal object JsonErrorHandler : CustomErrorHandler {
     private val SERVLET_ATTRIBUTE_ERROR_MESSAGE = "javax.servlet.error.message"
 
     private val mapper = buildJackson4kMapper {
-        renderNulls = false
+        renderNoNulls()
     }
 
     /**
