@@ -1,6 +1,8 @@
 package com.github.christophpickl.kpotpourri.jackson4k
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -16,6 +18,7 @@ fun buildJackson4kMapper(withConfig: Jackson4kConfig.() -> Unit = {}): ObjectMap
     val config = Jackson4kConfig()
     withConfig.invoke(config)
     log.debug { "buildJackson4kMapper with: $config" }
+
     return jacksonObjectMapper().apply {
         if (config.indentOutput) {
             enable(SerializationFeature.INDENT_OUTPUT)
@@ -27,7 +30,11 @@ fun buildJackson4kMapper(withConfig: Jackson4kConfig.() -> Unit = {}): ObjectMap
         if (!config.renderNulls) {
             setSerializationInclusion(JsonInclude.Include.NON_NULL)
         }
-        // setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
+        setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
+
+        config.visibilities.forEach { (accessor, visibility) ->
+            setVisibility(accessor, visibility)
+        }
         // setSerializationInclusion(JsonInclude.Include.ALWAYS)
     }
 }

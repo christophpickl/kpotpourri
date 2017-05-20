@@ -1,9 +1,13 @@
 package com.github.christophpickl.kpotpourri.jackson4k
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.not
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.containsSubstring
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.Test
 
@@ -55,6 +59,27 @@ import org.testng.annotations.Test
         assertAsString({ orderMapEntries = false },
                 MapDto(linkedMapOf("b" to 2, "a" to 1)),
                 "{\"map\":{\"b\":2,\"a\":1}}")
+    }
+
+    data class VisibleDto(
+            private val privateField: Int = 1,
+            val publicField: Int = 2
+    )
+
+    fun `visibilities - When set ALL to ANY, Then render all`() {
+        val actual = buildJackson4kMapper {
+            visibilities += PropertyAccessor.ALL to JsonAutoDetect.Visibility.ANY
+        }.asString(VisibleDto())
+
+        assertThat(actual, containsSubstring("privateField"))
+    }
+
+    fun `visibilities - When set ALL to PUBLIC, Then render public only`() {
+        val actual = buildJackson4kMapper {
+            visibilities += PropertyAccessor.ALL to JsonAutoDetect.Visibility.PUBLIC_ONLY
+        }.asString(VisibleDto())
+
+        assertThat(actual, not(containsSubstring("privateField")))
     }
 
     // READ

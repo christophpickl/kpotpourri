@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.jackson4k
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 
 /**
@@ -25,6 +27,11 @@ data class Jackson4kConfig(
          * Should fields with null values rendered or not.
          * (or annotate your DTO: `@JsonIgnoreProperties(ignoreUnknown = true)`)
          */
-        var renderNulls: Boolean = true
+        var renderNulls: Boolean = true,
+
+        /**
+         * Defines which members should be rendered by a minimum defined visibility.
+         */
+        val visibilities: MutableList<Pair<PropertyAccessor, JsonAutoDetect.Visibility>> = mutableListOf()
 
 )
