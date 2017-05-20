@@ -61,7 +61,7 @@ class Http4kBuilder : GlobalHttp4kConfigurable {
         val restClient = if (overrideHttpClient != null) {
             overrideHttpClient!!
         } else {
-            val httpClientFactory = HttpClientFactoryDetector.detect()
+            val httpClientFactory = HttpClientFactoryDetector().detect()
             httpClientFactory.build(_implMetaMap)
         }
         return Http4kImpl(restClient, this)
