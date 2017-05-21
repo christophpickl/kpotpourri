@@ -30,3 +30,5 @@ package com.github.christophpickl.kpotpourri.common.random
 //        }
 //        throw IllegalStateException("Distribution algorithm failed! rand=$rand, distribution=$distribution (currentPercent=$currentPercent)")
 //    }
+
+//    private fun <T> Distribution<T>.sumOfPercents() = this.items.sumBy { it.percent }

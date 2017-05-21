@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.common.random
 
+import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.and
@@ -104,6 +105,56 @@ import java.lang.IllegalArgumentException
     fun `randomBetween - couple of times with except set`() {
         doCoupleOfTimes {
             realTestee().randomBetween(0, 10, except = 5) shouldNotMatch equalTo(5)
+        }
+    }
+
+    fun `randomBetween - Infinite loop throws`() {
+        assertThrown<KPotpourriException>(expectedMessageParts = listOf("Maximum random iterations")) {
+            testee().randomBetween(0, 1, 0)
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="randomOf">
+
+    fun `randomOf - Given single element, Then returns it`() {
+        whenGeneratorThenReturn(0)
+
+        testee().randomOf(listOf("a")) shouldMatchValue "a"
+    }
+
+    fun `randomOf - Given two elements, When rand generates 1, Then returns second element`() {
+        whenGeneratorThenReturn(1)
+
+        testee().randomOf(listOf("a", "b")) shouldMatchValue "b"
+    }
+
+    fun `randomOf - Given a a b, When except a and rand generates 0 and 1 and 2, Then return b`() {
+        whenGeneratorThenReturn(0)
+        whenGeneratorThenReturn(1)
+        whenGeneratorThenReturn(2)
+
+        testee().randomOf(listOf("a", "a", "b"), exceptItem = "a") shouldMatchValue "b"
+    }
+
+    fun `randomOf - Infinite loop throws`() {
+        assertThrown<KPotpourriException>(expectedMessageParts = listOf("Maximum random iterations")) {
+            testee().randomOf(listOf("a", "b"), exceptItem = "a")
+        }
+    }
+
+    fun `randomOf - Given empty list, Then throws`() {
+        assertThrown<IllegalArgumentException> {
+            testee().randomOf(emptyList<String>())
+        }
+    }
+
+
+    fun `randomOf - couple of times`() {
+        doCoupleOfTimes {
+            assertThat(realTestee().randomOf(listOf(10, 11, 12)),
+                    greaterThanOrEqualTo(10) and lessThanOrEqualTo(12)
+            )
         }
     }
 
