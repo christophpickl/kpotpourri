@@ -32,6 +32,7 @@
     * LogTestListener
 * deploy dokka HTML to github (github.io?)
 * dokka generates nasty warnings in build console: `Can't find node by signature com.github.christophpickl.kpotpourri.common$toPrettyString(kotlin.collections.List((kotlin.Any)))`
+* github.io website
 
 ## Low
 
