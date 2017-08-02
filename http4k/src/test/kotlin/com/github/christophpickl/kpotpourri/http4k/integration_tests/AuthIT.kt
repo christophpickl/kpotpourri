@@ -1,10 +1,10 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
-import com.github.christophpickl.kpotpourri.http4k.BasicAuth
+import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuth
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
-import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 import com.github.tomakehurst.wiremock.client.WireMock
 
 
@@ -24,9 +24,9 @@ abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restCli
             )
         }
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+        verifyGetRequest(mockEndpointUrl) {
             withHeader("Authorization", WireMock.equalTo(authHeaderValue))
-        }))
+        }
     }
 
     fun `Given basic auth configured Http4k, When GET, Then Authorization header is set`() {
@@ -37,9 +37,9 @@ abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restCli
 
         http4k.get<Any>(concatUrlParts(wiremockBaseUrl, mockEndpointUrl))
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+        verifyGetRequest(mockEndpointUrl) {
             withHeader("Authorization", WireMock.equalTo(authHeaderValue))
-        }))
+        }
     }
 
     fun `Given basic auth configured Http4k, When GET with basic auth, Then Authorization header is set by request auth`() {
@@ -55,9 +55,9 @@ abstract class AuthIT(restClient: HttpImplProducer) : Http4kWiremockTest(restCli
             )
         }
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+        verifyGetRequest(mockEndpointUrl) {
             withHeader("Authorization", WireMock.equalTo(authHeaderValue))
-        }))
+        }
     }
 
 }

@@ -34,8 +34,8 @@ data class Milestone(
         val tag_name: String,
         val name: String,
         val body: String,
-        val draft: Boolean, // = true,
-        val prerelease: Boolean// = false
+        val draft: Boolean = false,
+        val prerelease: Boolean = false
 ) {
     companion object // for test extensions
 }

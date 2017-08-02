@@ -6,7 +6,7 @@ import com.github.christophpickl.kpotpourri.http4k.non_test.toJson
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContains
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.test4k.skip
-import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.natpryce.hamkrest.assertion.assertThat
 
@@ -35,9 +35,9 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
             headers += headerName to headerValue
         }
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl, {
+        verifyGetRequest(mockEndpointUrl) {
             withHeader(headerName, WireMock.equalTo(headerValue))
-        }))
+        }
     }
 
     fun `Given default Http4k and wiremocked header, When GET, Then headers are set in response`() {
@@ -50,7 +50,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
         // mapContains at least custom header, but additionally others from wiremock
         assertThat(response.headers, mapContains(headerName to headerValue))
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl))
+        verifyGetRequest(mockEndpointUrl)
     }
 
     fun `Given default Http4k and wiremocked JSON response, When GET, Then JSON DTO should be marshalled`() {

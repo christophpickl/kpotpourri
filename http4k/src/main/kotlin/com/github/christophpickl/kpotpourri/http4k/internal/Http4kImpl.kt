@@ -71,26 +71,27 @@ internal class Http4kImpl(
         val response4k = httpClient.execute(request4k)
         log.trace { "response body: <<${response4k.bodyAsString}>>" }
         checkStatusCode(globals.statusCheck, requestOpts.statusCheck, request4k, response4k)
-        return castReturnType(response4k, returnType)
+
+        return response4k.castTo(returnType)
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <R : Any> castReturnType(response: Response4k, returnType: KClass<R>): R =
+    private fun <R : Any> Response4k.castTo(returnType: KClass<R>): R =
             when (returnType) {
-                Response4k::class -> response as R
-                String::class -> response.bodyAsString as R
-                Any::class -> response as R
+                Response4k::class -> this as R
+                String::class -> this.bodyAsString as R
+                Any::class -> this as R
                 Unit::class -> Unit as R
                 // could catch parsing exceptions here ;)
-                Float::class -> response.bodyAsString.toFloat() as R
-                Double::class -> response.bodyAsString.toDouble() as R
-                Byte::class -> response.bodyAsString.toByte() as R
+                Float::class -> this.bodyAsString.toFloat() as R
+                Double::class -> this.bodyAsString.toDouble() as R
+                Byte::class -> this.bodyAsString.toByte() as R
                 // ByteArray::class -> ??? as R
-                Short::class -> response.bodyAsString.toShort() as R
-                Int::class -> response.bodyAsString.toInt() as R
-                Long::class -> response.bodyAsString.toLong() as R
-                Boolean::class -> response.bodyAsString.toBooleanLenient2() as R
-                else -> mapper.readValue(response.bodyAsString, returnType.java)
+                Short::class -> this.bodyAsString.toShort() as R
+                Int::class -> this.bodyAsString.toInt() as R
+                Long::class -> this.bodyAsString.toLong() as R
+                Boolean::class -> this.bodyAsString.toBooleanLenient2() as R
+                else -> mapper.readValue(this.bodyAsString, returnType.java)
             }
 
 }

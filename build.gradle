@@ -10,7 +10,7 @@
 
 buildscript {
     ext.myVersion = System.getProperty("kpotpourri.version", "SNAPSHOT")
-    ext.kotlin_version = '1.1.2-2'
+    ext.kotlin_version = '1.1.2-4'
     ext.dokka_version = '0.9.13'
 
     repositories {
@@ -53,6 +53,18 @@ allprojects {
     }
 
     apply plugin: 'idea'
+
+    // https://discuss.gradle.org/t/travis-ci-org-gradle-launcher-daemon-client-daemondisappearedexception-gradle-build-daemon-disappeared-unexpectedly-it-may-have-been-killed-or-may-have-crashed/13106/3
+    if (System.env.TRAVIS == 'true') {
+        tasks.withType(GroovyCompile) {
+            groovyOptions.fork = false
+        }
+        tasks.withType(Test) {
+            // containers (currently) have 2 dedicated cores and 4GB of memory
+            maxParallelForks = 1
+            minHeapSize = '128m'
+        }
+    }
 }
 
 // VERSIONS
@@ -60,13 +72,14 @@ project.ext.version_apache_httpclient = "4.5.3"
 project.ext.version_asm = "5.2"
 project.ext.version_fuel = "1.5.0"
 project.ext.version_guava = "21.0"
-project.ext.version_guice = "3.0"
+project.ext.version_guice = "4.1.0"
 project.ext.version_hamkrest = "1.4.0.0"
 project.ext.version_jackson = "2.8.8" // jackson-databind is actually 2.8.8.1
 project.ext.version_jackson_kotlin = "2.8.8"
 project.ext.version_jacoco = "0.7.9"
 project.ext.version_jcl = "1.7.25"
-project.ext.version_jetty = "9.4.4.v20170414"
+project.ext.version_jetty = "9.4.5.v20170502"
+project.ext.version_junit = "4.12"
 project.ext.version_kotlin_logging = "1.4.4"
 project.ext.version_logback = "1.2.3"
 project.ext.version_mockito_kotlin = "1.4.0"
@@ -104,6 +117,7 @@ subprojects { subproject ->
 
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+        // compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
         compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
         compile "io.github.microutils:kotlin-logging:" + version_kotlin_logging
@@ -111,7 +125,6 @@ subprojects { subproject ->
         compile "com.google.guava:guava:" + version_guava
 
         if (subproject.name != "test4k") {
-            println "[KPOT] adding test4k dependency for ${subproject.name}"
             testCompile project(':test4k')
         }
         testRuntime "ch.qos.logback:logback-classic:" + version_logback

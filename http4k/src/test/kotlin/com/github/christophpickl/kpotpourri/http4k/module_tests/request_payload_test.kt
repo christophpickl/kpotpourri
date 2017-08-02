@@ -4,14 +4,14 @@ import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.post
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import org.testng.annotations.Test
 
 
 @Test class RequestPayloadTest : ComponentTest() {
 
     companion object {
-        private val mapper = buildJackson4k()
+        private val mapper = buildJackson4kMapper()
     }
 
     private val anyRequestBody = "anyRequestBody"

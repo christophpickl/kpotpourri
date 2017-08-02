@@ -6,7 +6,7 @@ import ch.qos.logback.core.ConsoleAppender
 /**
  * Write to console using logback's [ConsoleAppender] class.
  */
-interface ConsoleAppenderBuilder {
+@Logback4kMarker interface ConsoleAppenderBuilder {
 
     /** The name of the appender. */
     var appenderName: String

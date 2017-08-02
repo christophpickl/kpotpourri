@@ -1,8 +1,26 @@
+@file:Suppress("KDocMissingDocumentation")
+
 package com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher
 
 import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.describe
+
+/**
+ * Checks if the given map contains the key.
+ */
+fun <K, V> mapContainsKey(key: K): Matcher<Map<K, V>> = object : Matcher.Primitive<Map<K, V>>() {
+    override fun invoke(actual: Map<K, V>): MatchResult {
+        return if (actual.containsKey(key)) {
+            MatchResult.Match
+        } else {
+            MatchResult.Mismatch("was ${describe(actual)}")
+        }
+    }
+
+    override val description: String get() = "contains ${describe(key)}"
+    override val negatedDescription: String get() = "does not contain ${describe(key)}"
+}
 
 /**
  * Checks if the actual Map contains at least the given entry.

@@ -15,7 +15,7 @@ interface BaseUrlConfigurable {
         baseUrl = BaseUrlByString(fullUrl)
     }
 
-    fun baseUrlBy(config: UrlConfig) {
+    fun baseUrlBy(config: BaseUrlConfig) {
         baseUrl = BaseUrlByConfig(config)
     }
 
@@ -39,7 +39,7 @@ class BaseUrlByString(private val fullUrl: String) : BaseUrl() {
     override fun combine(url: String) = concatUrlParts(fullUrl, url)
 }
 
-class BaseUrlByConfig(config: UrlConfig) : BaseUrl() {
+class BaseUrlByConfig(config: BaseUrlConfig) : BaseUrl() {
     private val urlPrefix =
             concatUrlParts("${config.protocol.urlPrefix}://${config.hostName}:${config.port}", config.path)
 

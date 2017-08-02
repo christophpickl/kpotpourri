@@ -12,6 +12,8 @@ dependencies {
     // unfortunately this good a dependency on kotlin-compiler:1.1-SNAPSHOT which got the runtime library bundled into it :-/
     compile "org.jetbrains.kotlin:kotlin-jsr223-local-example:1.1-SNAPSHOT"
 
+    testCompile "junit:junit:" + rootProject.version_junit
+
     testRuntime project(':george4k')
     testRuntime project(':github4k')
     testRuntime project(':http4k')

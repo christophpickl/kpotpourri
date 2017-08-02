@@ -38,5 +38,5 @@ fun Throwable.stackTraceAsString(): String {
  *
  * val formattedStackTrace = Exception().stackTrace.formatted()
  */
-fun Array<StackTraceElement>.formatted() =
+fun Array<StackTraceElement>.formatted(): List<String> =
         map { "${it.className}#${it.methodName}() at ${it.fileName}:${it.lineNumber}" }

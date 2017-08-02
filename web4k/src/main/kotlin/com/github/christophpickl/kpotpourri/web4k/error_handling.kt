@@ -4,7 +4,7 @@ import com.github.christophpickl.kpotpourri.common.exception.formatted
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.jackson4k.JsonObject
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Custom
 import com.github.christophpickl.kpotpourri.web4k.ErrorHandlerType.Default
 import org.eclipse.jetty.server.Request
@@ -92,8 +92,8 @@ internal object JsonErrorHandler : CustomErrorHandler {
     private val SERVLET_ATTRIBUTE_EXCEPTION = "javax.servlet.error.exception"
     private val SERVLET_ATTRIBUTE_ERROR_MESSAGE = "javax.servlet.error.message"
 
-    private val mapper = buildJackson4k {
-        renderNulls = false
+    private val mapper = buildJackson4kMapper {
+        renderNoNulls()
     }
 
     /**

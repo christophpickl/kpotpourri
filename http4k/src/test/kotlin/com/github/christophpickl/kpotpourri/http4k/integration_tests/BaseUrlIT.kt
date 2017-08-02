@@ -1,15 +1,15 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
+import com.github.christophpickl.kpotpourri.http4k.BaseUrlConfig
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
-import com.github.christophpickl.kpotpourri.http4k.UrlConfig
 import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
-import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_HOSTNAME
-import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK4K_PORT
+import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK4K_HOSTNAME
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 
 
-abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient, WIREMOCK_PORT) {
+abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
 
     fun `Given Http4k without baseUrl, When request, Then URL was called`() {
         givenGetMockEndpointUrl()
@@ -19,7 +19,7 @@ abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(rest
         }
                 .get<Any>(mockWiremockUrlAndEndpointUrl)
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl))
+        verifyGetRequest(mockEndpointUrl)
     }
 
     fun `Given Http4k with baseUrl as string, When request, Then URL was called`() {
@@ -29,22 +29,22 @@ abstract class BaseUrlIT(restClient: HttpImplProducer) : Http4kWiremockTest(rest
             baseUrlBy(wiremockBaseUrl)
         }.get<Any>(mockEndpointUrl)
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl))
+        verifyGetRequest(mockEndpointUrl)
     }
 
     fun `Given Http4k with baseUrl as config, When request, Then URL was called`() {
         givenGetMockEndpointUrl()
 
         buildHttp4k {
-            baseUrlBy(UrlConfig(
+            baseUrlBy(BaseUrlConfig(
                     protocol = HttpProtocol.Http,
-                    hostName = WIREMOCK_HOSTNAME,
-                    port = WIREMOCK_PORT
+                    hostName = WIREMOCK4K_HOSTNAME,
+                    port = DEFAULT_WIREMOCK4K_PORT
             ))
         }
                 .get<Any>(mockEndpointUrl)
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl))
+        verifyGetRequest(mockEndpointUrl)
     }
 
 }

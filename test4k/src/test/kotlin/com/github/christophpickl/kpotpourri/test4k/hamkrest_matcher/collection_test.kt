@@ -7,6 +7,25 @@ import org.testng.annotations.Test
 
 @Test class HamkrestCollectionMatchersTest {
 
+    private val MATCH = MatchResult.Match::class
+    private val MISMATCH = MatchResult.Mismatch::class
+
+    fun `containsExactlyInOrder - Given a, When search a, Then matches`() {
+        assertContainsExactlyInOrder(listOf("a"), listOf("a"), true)
+    }
+
+    fun `containsExactlyInOrder - Given a b, When search a b, Then matches`() {
+        assertContainsExactlyInOrder(listOf("a", "b"), listOf("a", "b"), true)
+    }
+
+    fun `containsExactlyInOrder - Given a, When search b, Then fails`() {
+        assertContainsExactlyInOrder(listOf("a"), listOf("b"), false)
+    }
+
+    fun `containsExactlyInOrder - Given a b, When search b a, Then fails`() {
+        assertContainsExactlyInOrder(listOf("a", "b"), listOf("b", "a"), false)
+    }
+
     fun `containsExactlyInAnyOrder - Given a, When search a, Then matches`() {
         assertContainsExactlyInAnyOrder(listOf("a"), listOf("a"), true)
     }
@@ -24,14 +43,27 @@ import org.testng.annotations.Test
     }
 
     private fun assertContainsExactlyInAnyOrder(given: List<String>, contains: List<String>, shouldMatch: Boolean) {
-        val expected = if (shouldMatch) MatchResult.Match::class else MatchResult.Mismatch::class
+        val expected = if (shouldMatch) MATCH else MISMATCH
         assertThat(containsExactlyInAnyOrder(*contains.toTypedArray())(given), isA(expected))
+    }
+
+    private fun assertContainsExactlyInOrder(given: List<String>, contains: List<String>, shouldMatch: Boolean) {
+        val expected = if (shouldMatch) MATCH else MISMATCH
+        assertThat(containsExactlyInOrder(*contains.toTypedArray())(given), isA(expected))
     }
 
     fun `containsExactlyInAnyOrder - Given invalid match, Then should contain array contents in description`() {
         assertThrown<AssertionError>({ e -> listOf("a", "b", "x", "y").all { e.message!!.contains(it) } }) {
             assertThat(listOf("a", "b"), containsExactlyInAnyOrder("x", "y"))
         }
+    }
+
+    fun `hasSizeOf - Given list of size 1, When assert hasSize of 1, Then matches`() {
+        assertThat(hasSizeOf(1)(listOf("a")), isA(MATCH))
+    }
+
+    fun `hasSizeOf - Given list of size 2, When assert hasSize of 1, Then mismatches`() {
+        assertThat(hasSizeOf(1)(listOf("a", "b")), isA(MISMATCH))
     }
 
 }

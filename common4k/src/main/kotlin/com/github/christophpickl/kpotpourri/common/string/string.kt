@@ -124,3 +124,18 @@ operator fun StringBuilder.plusAssign(char: Char) {
  */
 fun String.containsAll(vararg substrings: String, ignoreCase: Boolean = false) =
         substrings.all { this.contains(it, ignoreCase) }
+
+/**
+ * Ensure a maximum length but cutting of overlengthy part and append some indication symbol.
+ *
+ * E.g.: "1234567" cut off by 3 => "123 ..."
+ */
+fun String.cutOffAt(cutOffLength: Int, indicationSymbol: String = " ..."): String {
+    if (this.length <= cutOffLength || this.length <= indicationSymbol.length) {
+        return this
+    }
+    if (cutOffLength <= indicationSymbol.length) {
+        return this.substring(0, cutOffLength)
+    }
+    return this.substring(0, cutOffLength - indicationSymbol.length) + indicationSymbol
+}

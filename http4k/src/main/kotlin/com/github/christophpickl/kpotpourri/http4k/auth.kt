@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuth
+
 
 interface BasicAuthConfigurable {
 
@@ -8,14 +10,17 @@ interface BasicAuthConfigurable {
     fun basicAuth(username: String, password: String) {
         basicAuth = BasicAuth(username, password)
     }
+
 }
 
 
-sealed class BasicAuthMode
+sealed class BasicAuthMode {
 
-object BasicAuthDisabled : BasicAuthMode()
+    object BasicAuthDisabled : BasicAuthMode()
 
-data class BasicAuth(
-        val username: String,
-        val password: String
-) : BasicAuthMode()
+    data class BasicAuth(
+            val username: String,
+            val password: String
+    ) : BasicAuthMode()
+
+}

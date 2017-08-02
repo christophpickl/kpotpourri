@@ -30,7 +30,7 @@ what should the API look like?
 ## Simple requests
 
 ```kotlin
-/// unsafe
+/// ignore
 // simplest request ever
 val response = http4k.get("http://localhost/string")
 
@@ -41,7 +41,7 @@ val dto = http4k.get<SomeDto>("http://localhost/dto")
 ## Query params
 
 ```kotlin
-/// unsafe
+/// ignore
 http4k.get("http://localhost?key=val")
 
 http4k.get("http://localhost") {
@@ -56,7 +56,7 @@ http4k.get("http://localhost?key1=val1") {
 ## Sending Payload
 
 ```kotlin
-/// unsafe
+/// ignore
 // send simple string
 http4k.post("http://localhost/string", "some data")
 
@@ -77,7 +77,7 @@ http4k.post("http://localhost/dto") {
 ## Setting Up
 
 ```kotlin
-/// unsafe
+/// ignore
 val http4k = buildHttp4k {
     baseUrl = "http://some.server/rest"
     queryParams += "q" to "value"

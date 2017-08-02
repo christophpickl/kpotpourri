@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
 import com.github.christophpickl.kpotpourri.http4k.get
-import com.github.christophpickl.kpotpourri.wiremock4k.MockRequest
+import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 
 
 abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest(restClient) {
@@ -11,7 +11,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
 
         http4k.get<Any>(mockEndpointUrl)
 
-        verifyWiremockGet(MockRequest(mockEndpointUrl))
+        verifyGetRequest(mockEndpointUrl)
     }
 
     fun `When query param is set in request, Then url changed`() {
@@ -21,7 +21,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k" to "v"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl?k=v"))
+        verifyGetRequest("$mockEndpointUrl?k=v")
     }
 
     fun `When query param is set in globals, Then url changed`() {
@@ -33,7 +33,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
 
         http4k.get<Any>(mockEndpointUrl)
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl?k=v"))
+        verifyGetRequest("$mockEndpointUrl?k=v")
     }
 
 
@@ -49,7 +49,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k" to "request"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
+        verifyGetRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix")
     }
 
     fun `Given query params in baseUrl, When query param is set, Then params are concatenated properly`() {
@@ -63,7 +63,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k2" to "v2"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
+        verifyGetRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix")
     }
 
     fun `Given query params in baseUrl and globals, When query param is set too, Then params are concatenated properly`() {
@@ -78,7 +78,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k3" to "v3"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
+        verifyGetRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix")
     }
 
     fun `Given same query param in baseUrl, globals and request, Then request param should have precedence`() {
@@ -93,7 +93,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k" to "request"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$queryParamUrlSuffix"))
+        verifyGetRequest("$mockEndpointUrl$queryParamUrlSuffix")
     }
 
     fun `Given same query param in baseUrl and globals, Then globals param should have precedence`() {
@@ -106,7 +106,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
         }
         http4k.get<Any>("")
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
+        verifyGetRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix")
     }
 
     fun `Given same query param in baseUrl and request, Then request param should have precedence`() {
@@ -120,7 +120,7 @@ abstract class QueryParamsIT (restClient: HttpImplProducer) : Http4kWiremockTest
             queryParams += "k" to "request"
         }
 
-        verifyWiremockGet(MockRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix"))
+        verifyGetRequest("$mockEndpointUrl$expectedQueryParamUrlSuffix")
     }
 
 }

@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.web4k
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.ws.rs.Consumes
@@ -10,10 +10,17 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.ext.ContextResolver
 import javax.ws.rs.ext.Provider
 
-
+/**
+ * Integrate this spring configuration in order to setup some basic useful beans.
+ */
 @Configuration
-class WebConfig {
+class Web4kSpringConfig {
+
+    /**
+     * Jackson marshalling.
+     */
     @Bean fun kotlinObjectMapperProvider() = KotlinObjectMapperProvider()
+
 //    @Bean fun jsonParseExceptionMapper() = JsonParseExceptionMapper()
     /*
 
@@ -25,12 +32,19 @@ class JsonParseExceptionMapper extends ExceptionMapper[JsonParseException] {
      */
 }
 
+/**
+ * JAX-RS integration class.
+ */
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 class KotlinObjectMapperProvider : ContextResolver<ObjectMapper> {
+
+    /**
+     * Build jackson ObjectMapper instance via jackson4k.
+     */
     override fun getContext(type: Class<*>?) =
-    buildJackson4k {
-            failOnUnknownProperties = true
-    }
+            buildJackson4kMapper {
+                failOnUnknownProperties = true
+            }
 }

@@ -5,30 +5,52 @@ import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.github.AssetUpload
 import com.github.christophpickl.kpotpourri.github.CreateReleaseRequest
 import com.github.christophpickl.kpotpourri.github.CreateReleaseResponse
-import com.github.christophpickl.kpotpourri.github.GithubConfig
 import com.github.christophpickl.kpotpourri.github.Issue
 import com.github.christophpickl.kpotpourri.github.Milestone
+import com.github.christophpickl.kpotpourri.github.RepositoryConfig
 import com.github.christophpickl.kpotpourri.github.State
 import com.github.christophpickl.kpotpourri.github.Tag
 import com.github.christophpickl.kpotpourri.github.internal.AssetUploadResponse
 import com.github.christophpickl.kpotpourri.jackson4k.asString
-import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4k
+import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import java.io.File
 
 private val log = LOG {}
 
-private val mapper = buildJackson4k()
+private val mapper = buildJackson4kMapper()
 
 fun String.wrapJsonArrayBrackets() = "[ $this ]"
 
 @Suppress("unused")
-val GithubConfig.Companion.testRepository get() = GithubConfig(
+val RepositoryConfig.Companion.testRepository get() = RepositoryConfig(
         repositoryName = "gadsu_release_playground",
         repositoryOwner = "christophpickl",
         username = "christoph.pickl@gmail.com",
         password = detectGithubPass()
+)
+
+@Suppress("unused")
+val RepositoryConfig.Companion.testInstance get() = RepositoryConfig(
+        repositoryName = "testRepoName",
+        repositoryOwner = "testRepoOwner",
+        username = "test@github.com",
+        password = "testPwd"
+)
+@Suppress("unused")
+val RepositoryConfig.Companion.testInstance1 get() = RepositoryConfig(
+        repositoryName = "testRepoName1",
+        repositoryOwner = "testRepoOwner1",
+        username = "test@github.com1",
+        password = "testPwd1"
+)
+@Suppress("unused")
+val RepositoryConfig.Companion.testInstance2 get() = RepositoryConfig(
+        repositoryName = "testRepoName2",
+        repositoryOwner = "testRepoOwner2",
+        username = "test@github.com2",
+        password = "testPwd2"
 )
 
 val githubPassSysprop = "github.pass"

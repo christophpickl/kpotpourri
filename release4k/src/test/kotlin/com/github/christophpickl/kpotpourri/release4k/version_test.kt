@@ -26,20 +26,29 @@ val Version.Companion.testVersion_1_2_3_4 get() = VersionParts4(VersionType.Rele
 
     fun `increment - version2`() {
         version2(1, 1).increment1() shouldMatchValue version2(2, 1)
+        version2(1, 1).incrementMajor() shouldMatchValue version2(2, 1)
         version2(1, 1).increment2() shouldMatchValue version2(1, 2)
+        version2(1, 1).incrementMinor() shouldMatchValue version2(1, 2)
     }
 
     fun `increment - version3`() {
         version3(1, 1, 1).increment1() shouldMatchValue version3(2, 1, 1)
+        version3(1, 1, 1).incrementMajor() shouldMatchValue version3(2, 1, 1)
         version3(1, 1, 1).increment2() shouldMatchValue version3(1, 2, 1)
+        version3(1, 1, 1).incrementMinor() shouldMatchValue version3(1, 2, 1)
         version3(1, 1, 1).increment3() shouldMatchValue version3(1, 1, 2)
+        version3(1, 1, 1).incrementPatch() shouldMatchValue version3(1, 1, 2)
     }
 
     fun `increment - version4`() {
         version4(1, 1, 1, 1).increment1() shouldMatchValue version4(2, 1, 1, 1)
+        version4(1, 1, 1, 1).incrementMajor() shouldMatchValue version4(2, 1, 1, 1)
         version4(1, 1, 1, 1).increment2() shouldMatchValue version4(1, 2, 1, 1)
+        version4(1, 1, 1, 1).incrementMinor() shouldMatchValue version4(1, 2, 1, 1)
         version4(1, 1, 1, 1).increment3() shouldMatchValue version4(1, 1, 2, 1)
+        version4(1, 1, 1, 1).incrementPatch() shouldMatchValue version4(1, 1, 2, 1)
         version4(1, 1, 1, 1).increment4() shouldMatchValue version4(1, 1, 1, 2)
+        version4(1, 1, 1, 1).incrementBuild() shouldMatchValue version4(1, 1, 1, 2)
     }
 
 

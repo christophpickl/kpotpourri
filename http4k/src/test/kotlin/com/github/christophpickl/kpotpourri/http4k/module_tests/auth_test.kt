@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.module_tests
 
-import com.github.christophpickl.kpotpourri.http4k.BasicAuth
+import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuth
 import org.testng.annotations.Test
 
 

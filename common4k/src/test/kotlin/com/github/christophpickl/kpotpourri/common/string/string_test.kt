@@ -122,4 +122,35 @@ import java.io.File
         "a".containsAll("A", ignoreCase = true) shouldMatchValue true
     }
 
+    @DataProvider
+    fun provideCutOffStringWithDefaultSymbol(): Array<Array<out Any?>> = arrayOf(
+            arrayOf("", 0, ""),
+            arrayOf("a", 10, "a"),
+            arrayOf("123456789", 1, "1"),
+            arrayOf("123456789", 2, "12"),
+            arrayOf("123456789", 3, "123"),
+            arrayOf("123456789", 4, "1234"),
+            arrayOf("123456789", 5, "1 ..."),
+            arrayOf("123456789", 6, "12 ...")
+    )
+
+    @Test(dataProvider = "provideCutOffStringWithDefaultSymbol")
+    fun `cutOff - default symbol`(givenString: String, length: Int, expected: String) {
+        assertThat(givenString.cutOffAt(length), equalTo(expected))
+    }
+
+    @DataProvider
+    fun provideCutOffStringWithCustomSymbol(): Array<Array<out Any?>> = arrayOf(
+            arrayOf("", 0, "x", ""),
+            arrayOf("a", 10, "x", "a"),
+            arrayOf("123456789", 1, "x", "1"),
+            arrayOf("123456789", 2, "x", "1x"),
+            arrayOf("123456789", 3, "x", "12x")
+    )
+
+    @Test(dataProvider = "provideCutOffStringWithCustomSymbol")
+    fun `cutOff - custom symbol`(givenString: String, length: Int, cutOffSymbol: String, expected: String) {
+        assertThat(givenString.cutOffAt(length, cutOffSymbol), equalTo(expected))
+    }
+
 }
