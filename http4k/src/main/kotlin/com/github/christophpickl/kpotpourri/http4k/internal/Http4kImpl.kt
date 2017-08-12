@@ -98,7 +98,12 @@ internal class Http4kImpl(
 
         return when (returnOption) {
             is ReturnOption.ReturnSimpleOption<*> -> response4k.castTo(returnOption.type) as R
-            is ReturnOption.ReturnGenericOption<*> -> mapper.readValue<R>(response4k.bodyAsString, returnOption.ref)
+            is ReturnOption.ReturnGenericOption<*> ->
+                if ((returnOption.ref.type as? Class<R>) == Response4k::class.java || response4k.bodyAsString.isEmpty()) {
+                    response4k.castTo((returnOption.ref.type as Class<R>).kotlin)
+                } else {
+                    mapper.readValue<R>(response4k.bodyAsString, returnOption.ref)
+                }
         }
     }
 

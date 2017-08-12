@@ -71,7 +71,9 @@ class Http4kBuilder : GlobalHttp4kConfigurable {
 
 // in order to reifie generic type, must not be in an interface
 /** Reified version of GET. */
-inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getGeneric(url, object: TypeReference<R>() {}, withOpts)
+
+//inline fun <reified R : Any> Http4k.get2(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of POST. */
 inline fun <reified R : Any> Http4k.post(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postReturning(url, R::class, withOpts)

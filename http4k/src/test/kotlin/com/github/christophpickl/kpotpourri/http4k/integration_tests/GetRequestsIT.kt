@@ -62,15 +62,23 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
         actulJsonDto shouldMatchValue PersonDto.dummy
     }
 
-    fun `Given JSON list response, When GET plain list, Then Http4k should be so nice and indicate with exception`() {
+    fun `getReturning with generic response type, Then Http4k should be so nice and indicate with exception`() {
         givenGetMockEndpointUrl(body = PersonDto.dummies.toJson())
 
         assertThrown<Http4kException>(listOf("getGeneric", "TypeReference")) {
-            http4k.get<List<PersonDto>>(mockEndpointUrl)
+            http4k.getReturning(mockEndpointUrl, List::class)
         }
     }
 
-    fun `Given default Http4k and wiremocked JSON response, When GET list of persons, Then generic list should be marshalled`() {
+    fun `get with generic response type, Then generic list should be marshalled`() {
+        givenGetMockEndpointUrl(body = PersonDto.dummies.toJson())
+
+        val actulJsonDto = http4k.get<List<PersonDto>>(mockEndpointUrl)
+
+        actulJsonDto shouldMatchValue PersonDto.dummies
+    }
+
+    fun `getGeneric with generic response type, Then generic list should be marshalled`() {
         givenGetMockEndpointUrl(body = PersonDto.dummies.toJson())
 
         val actulJsonDto = http4k.getGeneric<List<PersonDto>>(mockEndpointUrl, object : TypeReference<List<PersonDto>>() {})
