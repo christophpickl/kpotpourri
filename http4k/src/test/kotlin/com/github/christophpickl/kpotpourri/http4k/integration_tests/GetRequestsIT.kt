@@ -1,7 +1,10 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
+import com.fasterxml.jackson.core.type.TypeReference
+import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.get
+import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContains
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
@@ -57,6 +60,22 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
         val actulJsonDto = http4k.get<PersonDto>(mockEndpointUrl)
 
         actulJsonDto shouldMatchValue PersonDto.dummy
+    }
+
+    fun `Given JSON list response, When GET plain list, Then Http4k should be so nice and indicate with exception`() {
+        givenGetMockEndpointUrl(body = PersonDto.dummies.toJson())
+
+        assertThrown<Http4kException>(listOf("getGeneric", "TypeReference")) {
+            http4k.get<List<PersonDto>>(mockEndpointUrl)
+        }
+    }
+
+    fun `Given default Http4k and wiremocked JSON response, When GET list of persons, Then generic list should be marshalled`() {
+        givenGetMockEndpointUrl(body = PersonDto.dummies.toJson())
+
+        val actulJsonDto = http4k.getGeneric<List<PersonDto>>(mockEndpointUrl, object : TypeReference<List<PersonDto>>() {})
+
+        actulJsonDto shouldMatchValue PersonDto.dummies
     }
 
 }

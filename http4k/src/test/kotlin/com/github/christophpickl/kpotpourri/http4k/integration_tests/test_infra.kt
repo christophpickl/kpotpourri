@@ -76,7 +76,11 @@ data class PersonDto(
         val dummy = PersonDto("dummy", 42)
         val dummy1 = PersonDto("dummy1", 1)
         val dummy2 = PersonDto("dummy2", 2)
+
+        val dummies = listOf(dummy1, dummy2)
     }
 
     fun toJson() = testMapper.asString(this)
 }
+
+fun List<Any>.toJson() = testMapper.asString(this)

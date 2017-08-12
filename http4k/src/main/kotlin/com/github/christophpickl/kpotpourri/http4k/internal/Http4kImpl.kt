@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.string.toBooleanLenient2
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
@@ -7,11 +8,19 @@ import com.github.christophpickl.kpotpourri.http4k.BodyfullRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.BodylessRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfigurable
 import com.github.christophpickl.kpotpourri.http4k.Http4k
+import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import kotlin.reflect.KClass
 
+private sealed class ReturnOption {
+    class ReturnSimpleOption<R : Any>(val type: KClass<R>) : ReturnOption()
+    class ReturnGenericOption<R>(val ref: TypeReference<R>) : ReturnOption()
+}
+
+private fun <R : Any> KClass<R>.toOption() = ReturnOption.ReturnSimpleOption<R>(this)
+private fun <R> TypeReference<R>.toOption() = ReturnOption.ReturnGenericOption<R>(this)
 
 internal class Http4kImpl(
         private val httpClient: HttpClient,
@@ -20,20 +29,35 @@ internal class Http4kImpl(
 
     private val log = LOG {}
 
-    override fun <R : Any> getReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
-            any(HttpMethod4k.GET, BodylessRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> getReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.GET, BodylessRequestOpts(), url, returnType.toOption(), withOpts)
 
-    override fun <R : Any> postReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
-            any(HttpMethod4k.POST, BodyfullRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> getGeneric(url: String, returnType: TypeReference<R>, withOpts: BodylessRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.GET, BodylessRequestOpts(), url, returnType.toOption(), withOpts)
 
-    override fun <R : Any> putReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
-            any(HttpMethod4k.PUT, BodyfullRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> postReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.POST, BodyfullRequestOpts(), url, returnType.toOption(), withOpts)
 
-    override fun <R : Any> deleteReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit) =
-            any(HttpMethod4k.DELETE, BodylessRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> postGeneric(url: String, returnType: TypeReference<R>, withOpts: BodyfullRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.POST, BodyfullRequestOpts(), url, returnType.toOption(), withOpts)
 
-    override fun <R : Any> patchReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit) =
-            any(HttpMethod4k.PATCH, BodyfullRequestOpts(), url, returnType, withOpts)
+    override fun <R : Any> putReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.PUT, BodyfullRequestOpts(), url, returnType.toOption(), withOpts)
+
+    override fun <R : Any> putGeneric(url: String, returnType: TypeReference<R>, withOpts: BodyfullRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.PUT, BodyfullRequestOpts(), url, returnType.toOption(), withOpts)
+
+    override fun <R : Any> deleteReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.DELETE, BodylessRequestOpts(), url, returnType.toOption(), withOpts)
+
+    override fun <R : Any> deleteGeneric(url: String, returnType: TypeReference<R>, withOpts: BodylessRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.DELETE, BodylessRequestOpts(), url, returnType.toOption(), withOpts)
+
+    override fun <R : Any> patchReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.PATCH, BodyfullRequestOpts(), url, returnType.toOption(), withOpts)
+
+    override fun <R : Any> patchGeneric(url: String, returnType: TypeReference<R>, withOpts: BodyfullRequestOpts.() -> Unit): R =
+            any(HttpMethod4k.PATCH, BodyfullRequestOpts(), url, returnType.toOption(), withOpts)
 
     /**
      * GET, POST, ... or any other. Preparing a [Request4k] instance and passing it to the specific implementation.
@@ -44,7 +68,7 @@ internal class Http4kImpl(
             method: HttpMethod4k,
             optInstance: OPT,
             url: String,
-            returnType: KClass<R>,
+            returnOption: ReturnOption,
             withOpts: OPT.() -> Unit
     ): R {
         val requestOpts = optInstance.apply { withOpts(this) }
@@ -72,7 +96,10 @@ internal class Http4kImpl(
         log.trace { "response body: <<${response4k.bodyAsString}>>" }
         checkStatusCode(globals.statusCheck, requestOpts.statusCheck, request4k, response4k)
 
-        return response4k.castTo(returnType)
+        return when (returnOption) {
+            is ReturnOption.ReturnSimpleOption<*> -> response4k.castTo(returnOption.type) as R
+            is ReturnOption.ReturnGenericOption<*> -> mapper.readValue<R>(response4k.bodyAsString, returnOption.ref)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -91,7 +118,11 @@ internal class Http4kImpl(
                 Int::class -> this.bodyAsString.toInt() as R
                 Long::class -> this.bodyAsString.toLong() as R
                 Boolean::class -> this.bodyAsString.toBooleanLenient2() as R
-                else -> mapper.readValue(this.bodyAsString, returnType.java)
+                else -> mapper.readValue(this.bodyAsString, returnType.java).apply {
+                    if (this is ArrayList<*> && this.isNotEmpty() && this[0] is LinkedHashMap<*, *>) {
+                        throw Http4kException("Seems as you ran into Java's type erasure problem! Solution: http4k.getGeneric<List<Dto>>(url, object : TypeReference<List<Dto>>() {})")
+                    }
+                }
             }
 
 }
