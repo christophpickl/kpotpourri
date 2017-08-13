@@ -81,7 +81,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
     fun `getGeneric with generic response type, Then generic list should be marshalled`() {
         givenGetMockEndpointUrl(body = PersonDto.dummies.toJson())
 
-        val actulJsonDto = http4k.getGeneric<List<PersonDto>>(mockEndpointUrl, object : TypeReference<List<PersonDto>>() {})
+        val actulJsonDto = http4k.getGeneric(mockEndpointUrl, object : TypeReference<List<PersonDto>>() {})
 
         actulJsonDto shouldMatchValue PersonDto.dummies
     }

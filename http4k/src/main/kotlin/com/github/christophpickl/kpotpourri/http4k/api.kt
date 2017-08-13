@@ -73,19 +73,17 @@ class Http4kBuilder : GlobalHttp4kConfigurable {
 /** Reified version of GET. */
 inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getGeneric(url, object: TypeReference<R>() {}, withOpts)
 
-//inline fun <reified R : Any> Http4k.get2(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getGeneric(url, object: TypeReference<R>() {}, withOpts)
-
 /** Reified version of POST. */
-inline fun <reified R : Any> Http4k.post(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.post(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of PUT. */
-inline fun <reified R : Any> Http4k.put(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.put(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of DELETE. */
-inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of PATCH. */
-inline fun <reified R : Any> Http4k.patch(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.patch(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /**
  * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.

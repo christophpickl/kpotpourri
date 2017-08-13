@@ -295,7 +295,7 @@ subprojects { subproject ->
         doFirst {
             println("[KPOT] Checking version for SNAPSHOT ...")
             if (myVersion == "SNAPSHOT") {
-                println("no please dont!")
+                println("Snapshot version detected!")
                 throw new GradleException("[KPOT] Tried to upload a SNAPSHOT version to bintray! Use the release script which defines -Dkpotpourri.version for that purpose.")
             }
         }
