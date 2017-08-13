@@ -44,7 +44,7 @@ class MyWiremockTest {
     }
 
     fun `verify request`() {
-//        TODO Inject Wiremock URL: println(wiremockBaseUrl) // http://localhost:9987
+//        ===> Inject Wiremock URL: println(wiremockBaseUrl) // http://localhost:9987
 
         verifyGetRequest(path)
         verifyPostRequest(path)
@@ -61,7 +61,7 @@ class MyWiremockTest {
         verifyRequest(WiremockMethod.PATCH, path)
     }
 
-    // TODO @InjectWiremockServer
+    // ====> @InjectWiremockServer
 //    fun `access to mock server`() {
 //        println(server.isRunning)
 //

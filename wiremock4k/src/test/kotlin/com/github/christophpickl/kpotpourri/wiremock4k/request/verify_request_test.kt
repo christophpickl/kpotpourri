@@ -25,7 +25,7 @@ import org.testng.annotations.Test
 @Test @Listeners(WiremockTestngListener::class)
 class VerifyRequestTest {
 
-    private val wiremockBaseUrl = "http://localhost:$DEFAULT_WIREMOCK4K_PORT" // FIXME change me
+    private val wiremockBaseUrl = "http://localhost:$DEFAULT_WIREMOCK4K_PORT"
 
     fun `verifyWiremockGet - When not requested, Then throws`() {
         assertThrown<VerificationException> {

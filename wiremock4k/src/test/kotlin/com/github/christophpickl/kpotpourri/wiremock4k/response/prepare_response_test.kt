@@ -13,7 +13,7 @@ import org.testng.annotations.Test
 @Test @Listeners(WiremockTestngListener::class)
 class PrepareResponseTest {
 
-    // FIXME @InjectWiremockUrl private lateinit var wiremockUrl: String
+    // MINOR @InjectWiremockUrl private lateinit var wiremockUrl: String
     @InjectMockPort private lateinit var port: Integer
 
     fun `given - When requested, Then not throws`() {

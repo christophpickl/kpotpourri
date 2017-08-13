@@ -7,7 +7,7 @@ dependencies {
 
     runtime "ch.qos.logback:logback-core:" + rootProject.version_logback
 
-    // TODO is this required?!
+    // MINOR is this dependnecy necessary?!
     testRuntime "com.google.inject:guice:" + rootProject.version_guice
 
 }

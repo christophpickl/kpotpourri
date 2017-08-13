@@ -45,7 +45,7 @@ annotation class DynamicMockPort
 class WiremockTestngListener : IClassListener, ITestListener {
 
     private val log = LOG {}
-    // FIXME inject base URL into tests
+    // MINOR inject base URL into tests
     private lateinit var server: WireMockServer
     private lateinit var wiremockBaseUrl: String
     private var port: Int? = null // actually lateinit, but as it is an Int... :-/
