@@ -60,7 +60,7 @@ internal object ResponseCaster {
                 Boolean::class -> this.bodyAsString.toBooleanLenient2() as R
                 else -> mapper.readValue(this.bodyAsString, returnType.java).apply {
                     if (this is ArrayList<*> && this.isNotEmpty() && this[0] is LinkedHashMap<*, *>) {
-                        throw Http4kException("Seems as you ran into Java's type erasure problem! Use cast(response, ReturnOption.ReturnType instead to internally use Jackson's TypeReference!)")
+                        throw Http4kException("Seems as you ran into Java's type erasure problem! Use Jackson's TypeReference instead.")
                     }
                 }
             }

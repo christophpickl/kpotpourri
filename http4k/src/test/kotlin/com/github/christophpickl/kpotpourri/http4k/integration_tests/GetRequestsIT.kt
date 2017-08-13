@@ -65,7 +65,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
     fun `getReturning with generic response type, Then Http4k should be so nice and indicate with exception`() {
         givenGetMockEndpointUrl(body = PersonDto.dummies.toJson())
 
-        assertThrown<Http4kException>(listOf("getGeneric", "TypeReference")) {
+        assertThrown<Http4kException>(listOf("type erasure", "TypeReference")) {
             http4k.getReturning(mockEndpointUrl, List::class)
         }
     }
