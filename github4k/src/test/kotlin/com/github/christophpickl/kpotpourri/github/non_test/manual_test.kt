@@ -8,6 +8,17 @@ import com.github.christophpickl.kpotpourri.github.buildGithub4k
 fun main(args: Array<String>) {
     val github = buildGithub4k(RepositoryConfig.testRepository)
     github.listOpenMilestones().prettyPrint()
+//    github.createNewRelease(CreateReleaseRequest(
+//            tag_name = "tagXxx",
+//            name = "nameX22",
+//            body = "bodyX22"
+//    ))
+//    github.uploadReleaseAsset(AssetUpload(
+//            releaseId = 7499645,
+//            fileName = "asdf.txt",
+//            contentType = "text/plain",
+//            bytes = byteArrayOf(0, 1, 1, 0)
+//    ))
 }
 
 fun usageDemo() {

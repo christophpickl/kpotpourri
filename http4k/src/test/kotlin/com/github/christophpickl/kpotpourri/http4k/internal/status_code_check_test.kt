@@ -16,7 +16,8 @@ import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
-@Test class StatusCodeCheckTest {
+@Test
+class status_code_checkKtTest {
 
     private val notSetAtAll = StatusCheckMode.NotSetAtAll
     private val disabled = StatusCheckMode.Anything
