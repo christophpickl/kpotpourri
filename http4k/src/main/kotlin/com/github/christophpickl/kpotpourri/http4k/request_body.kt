@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.github.christophpickl.kpotpourri.common.file.humanReadableSize
 import com.github.christophpickl.kpotpourri.common.file.verifyExistsAndIsFile
 import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
 import java.io.File
@@ -132,6 +133,9 @@ sealed class DefiniteRequestBody {
 
         /** Check bytes array manually. */
         override fun hashCode() = bytes.hashCode()
+
+        /** We do NOT want to print all bytes as string, as this would blow up the available memory! */
+        override fun toString() = bytes.humanReadableSize
     }
 
 }

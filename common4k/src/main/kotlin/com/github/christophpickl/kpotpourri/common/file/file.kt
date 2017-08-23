@@ -166,3 +166,35 @@ fun File.scanForFilesRecursively(
     }
     return foundFiles
 }
+
+
+/**
+ * Format given byte count into a proper readable format like "256 KB" or "12 MB".
+ */
+fun toHumanReadable(bytes: Long): String {
+    val kilo = bytes / 1024
+    if (kilo < 1024) {
+        return "$kilo KB"
+    }
+    val mega = kilo / 1024
+    if (mega < 1024) {
+        return "$mega MB"
+    }
+    val giga = mega / 1024
+    return "$giga GB"
+}
+
+/**
+ * See toHumanReadable(bytes: Long)
+ */
+fun toHumanReadable(bytes: Int) = toHumanReadable(bytes.toLong())
+
+/**
+ * See toHumanReadable(bytes: Long)
+ */
+val File.humanReadableSize: String get() = toHumanReadable(length())
+
+/**
+ * See toHumanReadable(bytes: Long)
+ */
+val ByteArray.humanReadableSize: String get() = toHumanReadable(size)
