@@ -76,7 +76,8 @@ fun main(args: Array<String>) = release4k(workingDirectory = liveKpotFolder) {
     git("push")
     git("push origin --tags")
 
-
+    // =================================================================================================================
+    printHeader("PULL LOCAL GIT")
     execute("/usr/bin/git", "pull", liveKpotFolder)
     execute("/usr/bin/git", "fetch -p", liveKpotFolder)
 }
