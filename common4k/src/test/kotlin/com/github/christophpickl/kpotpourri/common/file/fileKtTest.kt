@@ -10,7 +10,8 @@ import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 import java.io.File
 
-@Test class FileExtensionsTest {
+@Test
+class fileKtTest {
 
     private val resources = "src/test/resources"
 
@@ -115,6 +116,21 @@ import java.io.File
 
     fun `scanForFilesRecursively - Given dir3 and search for txt with ignoring subdir, Should return file1`() {
         assertScan(folder = "dir3", suffix = "txt", ignoreFolders = listOf("subdir"), expected = "file1.txt")
+    }
+
+    @DataProvider
+    fun provideHumanReadables(): Array<Array<out Any>> = arrayOf(
+            arrayOf(0L, "0 KB"),
+            arrayOf(1023L, "0 KB"),
+            arrayOf(1024L, "1 KB"),
+            arrayOf(1024L * 1024, "1 MB"),
+            arrayOf(1024L * 1024 * 1024, "1 GB"),
+            arrayOf(1024L * 1024 * 1024 * 1024, "1024 GB")
+    )
+
+    @Test(dataProvider = "provideHumanReadables")
+    fun `toHumanReadable foo`(bytes: Long, expected: String) {
+        assertThat(toHumanReadable(bytes), equalTo(expected))
     }
 
     private fun scan(folder: String, suffix: String, ignoreFolders: List<String>) =

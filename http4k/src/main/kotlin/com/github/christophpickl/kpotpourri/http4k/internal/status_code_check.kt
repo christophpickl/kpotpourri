@@ -59,7 +59,7 @@ internal fun checkStatusCode(
                     // succeeded
                 }
                 is FailWithException -> {
-                    throw result.exceptionFunc(response4k)
+                    throw result.exceptionFunc(response4k).copy(response = response4k)
                 }
                 is Fail -> {
                     throw Http4kStatusException(result.message)

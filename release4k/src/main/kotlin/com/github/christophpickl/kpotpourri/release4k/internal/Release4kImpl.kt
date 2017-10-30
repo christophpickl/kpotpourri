@@ -67,7 +67,7 @@ import java.io.File
     }
 
     override fun gradlew(command: String) {
-        // TODO process.execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
+        // MINOR or: process.execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
         process.execute("./gradlew", command, gitCheckoutDirectory)
     }
 

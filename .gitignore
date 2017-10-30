@@ -1,19 +1,34 @@
 
 /build/
 /common4k/build/
+/common4k/out/
 /george4k/build/
+/george4k/out/
 /github4k/build/
+/github4k/out/
 /http4k/build/
+/http4k/out/
 /http4k-apache/build/
+/http4k-apache/out/
 /http4k-fuel/build/
+/http4k-fuel/out/
 /http4k-tests/build/
+/http4k-tests/out/
 /logback4k/build/
+/logback4k/out/
 /jackson4k/build/
+/jackson4k/out/
 /markdown4k/build/
+/markdown4k/out/
 /release4k/build/
+/release4k/out/
 /swing4k/build/
+/swing4k/out/
 /test4k/build/
+/test4k/out/
 /web4k/build/
+/web4k/out/
 /wiremock4k/build/
+/wiremock4k/out/
 /.gradle/**
 

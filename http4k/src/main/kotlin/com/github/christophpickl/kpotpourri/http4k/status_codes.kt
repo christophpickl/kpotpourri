@@ -77,7 +77,7 @@ sealed class StatusCheckResult {
     ) : StatusCheckResult()
 
     data class FailWithException(
-            val exceptionFunc: (response4k: Response4k) -> Exception
+            val exceptionFunc: (response4k: Response4k) -> Http4kStatusCodeException
     ) : StatusCheckResult()
 
 }
@@ -93,17 +93,20 @@ sealed class StatusRange {
 }
 
 @Suppress("CanBeParameter")
-class Http4kStatusCodeException(
+data class Http4kStatusCodeException(
         val expected: StatusRange,
         val actual: StatusCode,
-        additionalMessage: String? = null,
-        cause: Exception? = null
-) : Http4kStatusException(buildMessage(expected, actual, additionalMessage), cause) {
+        val additionalMessage: String? = null,
+        val _cause: Exception? = null,
+        val response: Response4k? = null
+) : Http4kStatusException(buildMessage(expected, actual, additionalMessage, response), _cause) {
 
     companion object {
-        private fun buildMessage(expected: StatusRange, actual: StatusCode, additionalMessage: String? = null) =
+        private fun buildMessage(expected: StatusRange, actual: StatusCode, additionalMessage: String? = null, response: Response4k?) =
                 "Got ${statusCode2Label(actual)} but expected ${expected.toPrettyString()}!" +
-                        if (additionalMessage != null) " $additionalMessage" else ""
+                        (if (additionalMessage != null) "\n$additionalMessage" else "") +
+                        "Response body: ${response?.bodyAsString}"
+
     }
 }
 

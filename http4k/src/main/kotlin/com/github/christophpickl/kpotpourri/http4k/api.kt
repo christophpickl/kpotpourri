@@ -1,5 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.http4k.BasicAuthMode.BasicAuthDisabled
 import com.github.christophpickl.kpotpourri.http4k.StatusCheckMode.Anything
@@ -70,19 +71,19 @@ class Http4kBuilder : GlobalHttp4kConfigurable {
 
 // in order to reifie generic type, must not be in an interface
 /** Reified version of GET. */
-inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.get(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = getGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of POST. */
-inline fun <reified R : Any> Http4k.post(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.post(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = postGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of PUT. */
-inline fun <reified R : Any> Http4k.put(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.put(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = putGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of DELETE. */
-inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.delete(url: String, noinline withOpts: BodylessRequestOpts.() -> Unit = {}) = deleteGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /** Reified version of PATCH. */
-inline fun <reified R : Any> Http4k.patch(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchReturning(url, R::class, withOpts)
+inline fun <reified R : Any> Http4k.patch(url: String, noinline withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchGeneric(url, object: TypeReference<R>() {}, withOpts)
 
 /**
  * Core interface to execute HTTP requests for any method (GET, POST, ...) configurable via request options.
@@ -96,11 +97,17 @@ interface Http4k {
     /** GET response with explicity return type. */
     fun <R : Any> getReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
 
+    /** GET response for generic return types. */
+    fun <R : Any> getGeneric(url: String, returnType: TypeReference<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
+
     /** POST response with return type set to [Response4k]. */
     fun <R : Any> postAndReturnResponse(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = postReturning(url, Response4k::class, { withOpts(this) })
 
     /** POST response with explicity return type. */
     fun <R : Any> postReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
+
+    /** POST response for generic return types. */
+    fun <R : Any> postGeneric(url: String, returnType: TypeReference<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
 
     /** PUT response with return type set to [Response4k]. */
     fun <R : Any> putAndReturnResponse(url: String, body: Any, withOpts: BodyfullRequestOpts.() -> Unit = {}) = putReturning(url, Response4k::class, { requestBody(body); withOpts(this) })
@@ -108,14 +115,23 @@ interface Http4k {
     /** PUT response with explicity return type. */
     fun <R : Any> putReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
 
+    /** PUT response for generic return types. */
+    fun <R : Any> putGeneric(url: String, returnType: TypeReference<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
+
     /** DELETE response with explicity return type. */
     fun <R : Any> deleteReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
+
+    /** DELETE response for generic return types. */
+    fun <R : Any> deleteGeneric(url: String, returnType: TypeReference<R>, withOpts: BodylessRequestOpts.() -> Unit = {}): R
 
     /** PATCH response with return type set to [Response4k]. */
     fun <R : Any> patchAndReturnResponse(url: String, withOpts: BodyfullRequestOpts.() -> Unit = {}) = patchReturning(url, Response4k::class, { withOpts(this) })
 
     /** PATCH response with explicity return type. */
     fun <R : Any> patchReturning(url: String, returnType: KClass<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
+
+    /** PATCH response for generic return types. */
+    fun <R : Any> patchGeneric(url: String, returnType: TypeReference<R>, withOpts: BodyfullRequestOpts.() -> Unit = {}): R
 
 }
 

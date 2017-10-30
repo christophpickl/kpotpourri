@@ -61,6 +61,7 @@ interface GithubApi {
      * https://developer.github.com/v3/repos/releases/#upload-a-release-asset
      */
     fun uploadReleaseAsset(upload: AssetUpload)
+
 }
 
 /**
