@@ -10,7 +10,14 @@ dependencies {
     compile project(':common4k')
 
     // unfortunately this good a dependency on kotlin-compiler:1.1-SNAPSHOT which got the runtime library bundled into it :-/
-    compile "org.jetbrains.kotlin:kotlin-jsr223-local-example:1.1-SNAPSHOT"
+    compile("org.jetbrains.kotlin:kotlin-jsr223-local-example:1.1-SNAPSHOT") {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-runtime'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-compiler'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-script-util'
+    }
+    compile "org.jetbrains.kotlin:kotlin-runtime:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-compiler:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-script-util:$kotlin_version"
 
     testCompile "junit:junit:" + rootProject.version_junit
 
