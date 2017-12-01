@@ -108,7 +108,9 @@ subprojects { subproject ->
     apply plugin: "jacoco"
     apply plugin: "com.github.kt3k.coveralls"
     apply plugin: 'com.jfrog.bintray'
-//    apply plugin: 'signing'
+    apply from: "$rootDir/gradle/packaging.gradle"
+    apply from: "$rootDir/gradle/publishing.gradle"
+
 
     noArg {
         annotation("com.github.christophpickl.kpotpourri.common.KotlinNoArg")
