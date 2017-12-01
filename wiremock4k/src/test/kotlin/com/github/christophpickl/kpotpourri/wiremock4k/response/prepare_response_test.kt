@@ -14,6 +14,7 @@ import org.testng.annotations.Test
 class PrepareResponseTest {
 
     // MINOR @InjectWiremockUrl private lateinit var wiremockUrl: String
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     @InjectMockPort private lateinit var port: Integer
 
     fun `given - When requested, Then not throws`() {
