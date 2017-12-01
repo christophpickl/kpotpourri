@@ -59,7 +59,8 @@ fun main(args: Array<String>) = release4k(workingDirectory = liveKpotFolder) {
 
     // =================================================================================================================
     printHeader("GRADLE BUILD")
-    gradlew("clean check checkTodo test build $syspropNextVersion")
+//    gradlew("clean check checkTodo test build $syspropNextVersion")
+    gradlew("clean check test build $syspropNextVersion")
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")

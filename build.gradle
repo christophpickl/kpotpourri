@@ -26,7 +26,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'com.autoscout24.gradle:gradle-todo-plugin:1.0'
+//        classpath 'com.autoscout24.gradle:gradle-todo-plugin:1.0'
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2"
         classpath 'org.standardout:gradle-versioneye-plugin:1.5.0'
     }
@@ -100,7 +100,7 @@ subprojects { subproject ->
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
-    apply plugin: 'com.autoscout24.gradle.todo'
+//    apply plugin: 'com.autoscout24.gradle.todo'
     apply plugin: "jacoco"
     apply plugin: "com.github.kt3k.coveralls"
     apply plugin: 'com.jfrog.bintray'
@@ -140,12 +140,12 @@ subprojects { subproject ->
         }
     }
 
-    todo {
-        todoPattern = "//[\\t\\s]*(FIXME|TODO) (.*)"
-        failIfFound = true
-        sourceFolder = "${subproject.name}/src" // in order to look into main and test folders
-        fileExtensions = ["kt"]
-    }
+//    todo {
+//        todoPattern = "//[\\t\\s]*(FIXME|TODO) (.*)"
+//        failIfFound = true
+//        sourceFolder = "${subproject.name}/src" // in order to look into main and test folders
+//        fileExtensions = ["kt"]
+//    }
 
     jacoco {
         toolVersion = version_jacoco
