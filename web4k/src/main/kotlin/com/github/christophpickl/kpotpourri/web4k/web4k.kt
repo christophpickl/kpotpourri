@@ -9,6 +9,7 @@ import org.springframework.web.WebApplicationInitializer
 import javax.servlet.ServletContext
 import kotlin.reflect.KClass
 
+@Suppress("DEPRECATION")
 class WebAppInitializingConfiguration : AnnotationConfiguration() {
 
     override fun preConfigure(context: WebAppContext) {

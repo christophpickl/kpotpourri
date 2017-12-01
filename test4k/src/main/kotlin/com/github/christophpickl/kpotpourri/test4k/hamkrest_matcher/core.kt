@@ -70,11 +70,13 @@ fun <T> notEqualTo(expected: T) =
 /**
  * Hamcrest shortcut matcher to check for non-nullness.
  */
+@Suppress("UNCHECKED_CAST")
 fun <T> notNullValue() = not(equalTo(null as T))
 
 /**
  * Hamcrest shortcut matcher to check for nullness.
  */
+@Suppress("UNCHECKED_CAST")
 fun <T> nullValue() = equalTo(null as T)
 
 /**
