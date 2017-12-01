@@ -69,13 +69,13 @@ allprojects {
 
 // VERSIONS
 project.ext.version_apache_httpclient = "4.5.3"
-project.ext.version_asm = "5.2"
+project.ext.version_asm = "6.0"
 project.ext.version_fuel = "1.5.0"
 project.ext.version_guava = "23.2-jre"
 project.ext.version_guice = "4.1.0"
 project.ext.version_hamkrest = "1.4.2.2"
-project.ext.version_jackson = "2.9.2" // jackson-databind is actually 2.8.8.1
-project.ext.version_jackson_kotlin = "2.9.0"
+project.ext.version_jackson = "2.9.2"
+project.ext.version_jackson_kotlin = "2.9.2"
 project.ext.version_jacoco = "0.7.9"
 project.ext.version_jcl = "1.7.25"
 project.ext.version_jetty = "9.4.7.v20170914"
@@ -86,11 +86,9 @@ project.ext.version_mockito_kotlin = "1.5.0"
 project.ext.version_resteasy = "3.1.4.Final"
 project.ext.version_resteasy_jackson = "3.1.4.Final"
 project.ext.version_servlet = "3.1.0"
-// TODO  5.0.0.RELEASE
 project.ext.version_spring = "4.3.10.RELEASE"
 project.ext.version_testng = "6.13.1"
-// TODO 2.9.0
-project.ext.version_wiremock = "2.6.0" // wiremock 2.7.1 introduces some version incompatibilities
+project.ext.version_wiremock = "2.9.0"
 
 subprojects { subproject ->
 
