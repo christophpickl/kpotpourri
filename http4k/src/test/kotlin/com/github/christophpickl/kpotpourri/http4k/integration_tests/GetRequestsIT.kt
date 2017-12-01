@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.get
+import com.github.christophpickl.kpotpourri.http4k.non_test.toJson
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContains
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
+import com.github.christophpickl.kpotpourri.test4k.skip
 import com.github.christophpickl.kpotpourri.wiremock4k.request.verifyGetRequest
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.natpryce.hamkrest.assertion.assertThat
@@ -84,6 +86,17 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
         val actulJsonDto = http4k.getGeneric(mockEndpointUrl, object : TypeReference<List<PersonDto>>() {})
 
         actulJsonDto shouldMatchValue PersonDto.dummies
+    }
+
+    fun `Given default Http4k and wiremocke responses with list of persons, When GET, Then list should be returned`() {
+        skip("WIP") // FIXME implement me
+        // java type erasure hick hack... mapper.readValue(jsonString, new TypeReference<List<PersonDto>>(){});
+        val persons = listOf(PersonDto.dummy)
+        givenGetMockEndpointUrl(body = persons.toJson())
+
+        val actulJsonDto = http4k.get<List<PersonDto>>(mockEndpointUrl)
+
+        actulJsonDto shouldMatchValue persons
     }
 
 }

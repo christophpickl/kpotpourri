@@ -5,10 +5,12 @@ import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.http4k.SC_200_Ok
+import com.github.christophpickl.kpotpourri.http4k.integration_tests.testMapper
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientFactory
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientType
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
+import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.test4k.fail
 import org.testng.annotations.Test
 import kotlin.reflect.KClass
@@ -42,3 +44,5 @@ val Response4k.Companion.testDummy: Response4k get() = Response4k(
     }
 
 }
+
+fun Collection<Any>.toJson() = testMapper.asString(this)
