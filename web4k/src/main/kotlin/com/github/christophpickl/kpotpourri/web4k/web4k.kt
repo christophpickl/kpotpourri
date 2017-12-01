@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.christophpickl.kpotpourri.web4k
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
@@ -9,7 +11,6 @@ import org.springframework.web.WebApplicationInitializer
 import javax.servlet.ServletContext
 import kotlin.reflect.KClass
 
-@Suppress("DEPRECATION")
 class WebAppInitializingConfiguration : AnnotationConfiguration() {
 
     override fun preConfigure(context: WebAppContext) {
