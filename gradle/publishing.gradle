@@ -1,1 +1,88 @@
-// println "hello from publishing"
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+// plugin howto: https://github.com/bintray/gradle-bintray-plugin
+// how to ReSTful upload: https://bintray.com/docs/api/#_upload_content
+def pomConfig = {
+//    licenses {
+//        license {
+//            name "The Apache Software License, Version 2.0"
+//            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+//            distribution "repo"
+//        }
+//    }
+    developers {
+        developer {
+            id "cpickl"
+            name "Christoph Pickl"
+            email "christoph.pickl@gmail.com"
+        }
+    }
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId 'com.github.christophpickl.kpotpourri'
+            artifactId name
+            version myVersion
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'Some common extensions to kotlin which i am desperately missing')
+                root.appendNode('name', 'kpotpourri ' + name)
+                root.appendNode('url', 'https://github.com/christophpickl/kpotpourri/')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+
+//        publications = ['mavenJava']
+//        configurations = ['archives']
+    publications = ['MyPublication']
+
+//        dryRun = false //Whether to run this as dry-run, without deploying
+    //noinspection GroovyAssignabilityCheck
+    publish = true //If version should be auto published after an upload
+
+    pkg {
+        repo = 'cpickl'
+        name = 'kpotpourri'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/christophpickl/kpotpourri.git'
+//        labels = ['gear', 'gore', 'gorilla']
+        publicDownloadNumbers = true
+//        attributes= ['a': ['ay1', 'ay2'], 'b': ['bee'], c: 'cee'] //Optional package-level attributes
+        githubRepo = 'christophpickl/kpotpourri' //Optional Github repository
+        githubReleaseNotesFile = 'README.md' //Optional Github readme file
+
+        version {
+            name = myVersion
+            desc = "KPotpourri"
+            released = new Date()
+            vcsTag = "tags/$myVersion"
+            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
+    }
+}
+
+task verifyNotSnapshotVersion() {
+    doFirst {
+        println("[KPOT] Checking version for SNAPSHOT ...")
+        if (myVersion == "SNAPSHOT") {
+            println("Snapshot version detected!")
+            throw new GradleException("[KPOT] Tried to upload a SNAPSHOT version to bintray! Use the release script which defines -Dkpotpourri.version for that purpose.")
+        }
+    }
+}
+
+bintrayUpload.dependsOn verifyNotSnapshotVersion
