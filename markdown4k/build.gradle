@@ -15,9 +15,9 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-compiler'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-script-util'
     }
-    compile "org.jetbrains.kotlin:kotlin-runtime:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-compiler:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-script-util:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-runtime:$version_kotlin"
+    compile "org.jetbrains.kotlin:kotlin-compiler:$version_kotlin"
+    compile "org.jetbrains.kotlin:kotlin-script-util:$version_kotlin"
 
     testCompile "junit:junit:" + version_junit
 

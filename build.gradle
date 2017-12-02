@@ -9,12 +9,8 @@
 
 buildscript {
     ext.myVersion = System.getProperty("kpotpourri.version", "SNAPSHOT")
-    ext.version_kotlin = '1.2.0'
-    ext.version_bintray = '1.7.3'
-    ext.version_coveralls = '2.8.2'
-    ext.version_dokka = '0.9.13'
-    ext.version_versioneye = '1.5.0'
-
+    apply from: "$rootDir/gradle/dependency_versions.gradle"
+    
     repositories {
         mavenCentral()
         jcenter()
@@ -66,10 +62,6 @@ allprojects {
             maxParallelForks = 1
             minHeapSize = '128m'
         }
-    }
-
-    buildscript {
-        apply from: "$rootDir/gradle/dependency_versions.gradle"
     }
 }
 
