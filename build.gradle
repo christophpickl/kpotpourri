@@ -22,9 +22,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         classpath "org.jetbrains.kotlin:kotlin-noarg:$version_kotlin"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$version_kotlin"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$version_dokka"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$version_bintray"
-//        classpath "com.autoscout24.gradle:gradle-todo-plugin:1.0"
+//        classpath "com.autoscout24.gradle:gradle-todo-plugin:$version_todo"
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:$version_coveralls"
         classpath "org.standardout:gradle-versioneye-plugin:$version_versioneye"
     }
@@ -34,6 +33,7 @@ apply plugin: 'org.standardout.versioneye'
 versioneye {
     includeSubProjects = true
 }
+
 
 allprojects {
     group = 'com.github.christophpickl.kpotpourri'
@@ -59,8 +59,8 @@ allprojects {
 }
 
 
-subprojects { subproject ->
 
+subprojects { subproject ->
     // println("[KPOT] Configuring subproject '${subproject.name}' with version '${version}'")
 
     apply plugin: "kotlin"
@@ -140,55 +140,9 @@ subprojects { subproject ->
         }
     }
 
-    jar {
-        manifest {
-            attributes 'Implementation-Title': 'kpotpourri - ${subproject.name}',
-                    'Implementation-Vendor': 'Christoph Pickl',
-                    'Implementation-Version': myVersion
-        }
-    }
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    task testJar(type: Jar) {
-        classifier = 'tests'
-        from sourceSets.test.output
-    }
-
-    task testSourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'testSources'
-        from sourceSets.test.allSource
-    }
-
-    task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-        outputFormat = 'html'
-        outputDirectory = javadoc.destinationDir
-        inputs.dir 'src/main/kotlin'
-    }
-
-    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
-
-
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-        archives testJar
-    }
 
     // execute "gradle listDependencies" on root project, dumps dependencies for all submodules (hack needed in gradle)
     task listDependencies(type: DependencyReportTask) {}
-
-
-    dokka {
-//        moduleName = 'data'
-        outputFormat = 'html'
-    }
 
 }
 
