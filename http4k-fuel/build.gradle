@@ -4,7 +4,7 @@ dependencies {
     compile project(':common4k')
     compile project(':http4k')
 
-    compile "com.github.kittinunf.fuel:fuel:" + rootProject.version_fuel
+    compile "com.github.kittinunf.fuel:fuel:" + version_fuel
 
     testCompile project(':wiremock4k')
     testCompile project(':http4k').sourceSets.test.output

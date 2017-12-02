@@ -6,16 +6,16 @@ dependencies {
     compile project(':common4k')
 
     // web server
-    runtime "javax.servlet:javax.servlet-api:" + rootProject.version_servlet
-    compile "org.eclipse.jetty.aggregate:jetty-all:" + rootProject.version_jetty
-    compile "org.jboss.resteasy:resteasy-jaxrs:" + rootProject.version_resteasy
-    compile "org.jboss.resteasy:resteasy-servlet-initializer:" + rootProject.version_resteasy
-    compile "org.jboss.resteasy:resteasy-spring:" + rootProject.version_resteasy
-    compile "org.springframework:spring-web:" + rootProject.version_spring
-    compile "org.ow2.asm:asm:" + rootProject.version_asm
+    runtime "javax.servlet:javax.servlet-api:" + version_servlet
+    compile "org.eclipse.jetty.aggregate:jetty-all:" + version_jetty
+    compile "org.jboss.resteasy:resteasy-jaxrs:" + version_resteasy
+    compile "org.jboss.resteasy:resteasy-servlet-initializer:" + version_resteasy
+    compile "org.jboss.resteasy:resteasy-spring:" + version_resteasy
+    compile "org.springframework:spring-web:" + version_spring
+    compile "org.ow2.asm:asm:" + version_asm
 
     // json
-    compile "org.jboss.resteasy:resteasy-jackson2-provider:" + rootProject.version_resteasy_jackson
+    compile "org.jboss.resteasy:resteasy-jackson2-provider:" + version_resteasy_jackson
     compile project(':jackson4k')
 
 

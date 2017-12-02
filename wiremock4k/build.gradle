@@ -2,9 +2,9 @@
 dependencies {
     compile project(':common4k')
     compile project(':test4k')
-    compile "org.testng:testng:" + rootProject.version_testng
+    compile "org.testng:testng:" + version_testng
 
-    compile "com.github.tomakehurst:wiremock:" + rootProject.version_wiremock
+    compile "com.github.tomakehurst:wiremock:" + version_wiremock
 
-    testCompile "com.github.kittinunf.fuel:fuel:" + rootProject.version_fuel
+    testCompile "com.github.kittinunf.fuel:fuel:" + version_fuel
 }
