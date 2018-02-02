@@ -4,5 +4,5 @@ dependencies {
     compile project(':common4k')
 
     // classic includes core (access also available for jetty log stuff)
-    compile "ch.qos.logback:logback-classic:" + rootProject.version_logback
+    compile "ch.qos.logback:logback-classic:" + version_logback
 }

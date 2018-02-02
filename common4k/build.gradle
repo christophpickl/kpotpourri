@@ -1,5 +1,5 @@
 
 dependencies {
-    testCompile "ch.qos.logback:logback-core:" + rootProject.version_logback
-    testCompile "ch.qos.logback:logback-classic:" + rootProject.version_logback
+    testCompile "ch.qos.logback:logback-core:" + version_logback
+    testCompile "ch.qos.logback:logback-classic:" + version_logback
 }

@@ -1,0 +1,35 @@
+apply plugin: "jacoco"
+apply plugin: "com.github.kt3k.coveralls"
+
+test {
+    scanForTestClasses true
+    testLogging.showStandardStreams = false
+    
+    useTestNG() {
+//            excludeGroups 'uiTest', 'mTest'
+    }
+
+    reports {
+        junitXml.destination = file("${buildDir}/test-results/unit")
+        junitXml.enabled = true
+        html.enabled = true
+    }
+    testLogging {
+        events "skipped", "failed", "standardError"
+        exceptionFormat "full"
+    }
+    jacoco {
+        append = true
+    }
+}
+
+jacoco {
+    toolVersion = version_jacoco
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}

@@ -12,13 +12,10 @@ import com.github.christophpickl.kpotpourri.wiremock4k.request.withCookie
 import com.github.christophpickl.kpotpourri.wiremock4k.request.withHeader
 import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
 import com.github.christophpickl.kpotpourri.wiremock4k.response.withHeaders
-import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTestngListener
-import org.testng.annotations.Listeners
-import org.testng.annotations.Test
 
-
-@Test(enabled = false)
-@Listeners(WiremockTestngListener::class)
+// enable me :)
+//@Test(enabled = false)
+//@Listeners(WiremockTestngListener::class)
 class MyWiremockTest {
 
     private val path = "/rest"

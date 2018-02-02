@@ -89,7 +89,7 @@ abstract class GetRequestsIT(restClient: HttpImplProducer) : Http4kWiremockTest(
     }
 
     fun `Given default Http4k and wiremocke responses with list of persons, When GET, Then list should be returned`() {
-        skip("WIP") // FIXME implement me
+        skip("WIP") // MINOR ex-FIX-ME implement me
         // java type erasure hick hack... mapper.readValue(jsonString, new TypeReference<List<PersonDto>>(){});
         val persons = listOf(PersonDto.dummy)
         givenGetMockEndpointUrl(body = persons.toJson())

@@ -15,10 +15,11 @@ import kotlin.system.measureTimeMillis
 /**
  * Core entry function providing context to setup the release script.
  */
-inline fun release4k(func: Release4k.() -> Unit) {
+inline fun release4k(workingDirectory: File = File("."), func: Release4k.() -> Unit) {
     val msNeeded = measureTimeMillis {
         kout("Current working directory: ${File("./").canonicalPath}")
-        val impl = Release4kImpl()
+        kout("Configured working directory: ${workingDirectory.canonicalPath}")
+        val impl = Release4kImpl(workingDirectory = workingDirectory)
         func(impl)
         impl.onFinish()
     }

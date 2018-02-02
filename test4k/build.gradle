@@ -1,13 +1,13 @@
 
 dependencies {
     // no dependency to project :common, as this would lead to cyclic dependency
-    compile "org.testng:testng:" + rootProject.version_testng
-    compile "com.natpryce:hamkrest:" + rootProject.version_hamkrest
-    compile "com.nhaarman:mockito-kotlin:" + rootProject.version_mockito_kotlin
+    compile "org.testng:testng:" + version_testng
+    compile "com.natpryce:hamkrest:" + version_hamkrest
+    compile "com.nhaarman:mockito-kotlin:" + version_mockito_kotlin
 
-    runtime "ch.qos.logback:logback-core:" + rootProject.version_logback
+    runtime "ch.qos.logback:logback-core:" + version_logback
 
     // MINOR is this dependnecy necessary?!
-    testRuntime "com.google.inject:guice:" + rootProject.version_guice
+    testRuntime "com.google.inject:guice:" + version_guice
 
 }

@@ -48,7 +48,7 @@ fun String.htmlize() =
  * Save the string to the given file using Guava. No validation at all.
  */
 fun String.saveToFile(target: File) {
-    Files.write(this, target, Charsets.UTF_8)
+    Files.asCharSink(target, Charsets.UTF_8).write(this)
 }
 
 /**

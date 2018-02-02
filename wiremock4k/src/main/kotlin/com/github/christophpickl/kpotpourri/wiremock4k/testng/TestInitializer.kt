@@ -69,6 +69,7 @@ internal object TestInitializer {
     }
 
     private inline fun <T, R> KProperty1<T, R>.asMutable(withMutabe: KMutableProperty<R>.() -> Unit) {
+        @Suppress("UNCHECKED_CAST")
         withMutabe(this as? KMutableProperty<R> ?: throw TestInitializationException("Expected property '$name' to be mutable."))
     }
 

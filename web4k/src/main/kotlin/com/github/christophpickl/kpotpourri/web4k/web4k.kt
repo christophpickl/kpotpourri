@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.github.christophpickl.kpotpourri.web4k
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
