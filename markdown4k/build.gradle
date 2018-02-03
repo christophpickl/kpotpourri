@@ -21,7 +21,6 @@ dependencies {
 
     testCompile "junit:junit:" + version_junit
 
-    testRuntime project(':george4k')
     testRuntime project(':github4k')
     testRuntime project(':http4k')
     testRuntime project(':http4k-apache')
