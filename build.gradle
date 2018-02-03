@@ -42,6 +42,7 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap/" }
     }
 
     apply plugin: 'idea'
@@ -101,11 +102,10 @@ subprojects { subproject ->
     // execute "gradle listDependencies" on root project, dumps dependencies for all submodules (hack needed in gradle)
     task listDependencies(type: DependencyReportTask) {}
 
-
     // DOKKA DOKKA DOKKA DOKKA DOKKA DOKKA DOKKA DOKKA DOKKA DOKKA DOKKA DOKKA
 
     dokka {
-    //        moduleName = 'data'
+        //        moduleName = 'data'
         outputFormat = 'html'
     }
 
