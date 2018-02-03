@@ -14,9 +14,8 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap/" }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
@@ -42,7 +41,6 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "https://dl.bintray.com/kotlin/kotlin-eap/" }
     }
 
     apply plugin: 'idea'
