@@ -1,4 +1,6 @@
 ext {
+    version_kotlin = "1.2.21"
+
     version_apache_httpclient = "4.5.3"
     version_asm = "6.0"
     version_bintray = "1.7.3"
@@ -14,7 +16,6 @@ ext {
     version_jcl = "1.7.25"
     version_jetty = "9.4.7.v20170914"
     version_junit = "4.12"
-    /* KOTLIN KOTLIN KOTLIN */ version_kotlin = "1.2.0" /* KOTLIN KOTLIN KOTLIN */
     version_kotlin_logging = "1.4.6"
     version_kotlin_script = "1.1-SNAPSHOT"
     version_logback = "1.2.3"
