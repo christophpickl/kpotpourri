@@ -16,7 +16,8 @@ before_install:
   - "chmod +x gradlew"
 
 script:
-  - "./gradlew build jacocoTestReport versioneye-update"
+  - "./gradlew build jacocoTestReport"
+#  - "./gradlew build jacocoTestReport versioneye-update"
   # OR: ./gradlew build --debug
 
 after_success:
