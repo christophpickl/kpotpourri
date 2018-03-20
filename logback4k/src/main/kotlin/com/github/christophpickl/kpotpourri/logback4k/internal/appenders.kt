@@ -43,8 +43,6 @@ internal data class InternalFileAppenderBuilder(
 
         // file specific
         // MINOR would be nice to have some kind of internal logger
-        println("file: $file")
-        println("filePattern: $filePattern")
         file ?: throw Logback4kException("The mandatory property '${FileAppenderBuilder::file.name}' was not set!")
         filePattern
             ?: throw Logback4kException("The mandatory property '${FileAppenderBuilder::filePattern.name}' was not set!")
