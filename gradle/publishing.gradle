@@ -57,7 +57,7 @@ bintray {
     //noinspection GroovyAssignabilityCheck
     publish = true // If version should be auto published after an upload
     override = true // [Default: false] Whether to override version artifacts already published
-    dryRun = true // Whether to run this as dry-run, without deploying
+    dryRun = false // Whether to run this as dry-run, without deploying
 
 
     pkg {
