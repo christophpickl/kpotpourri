@@ -32,11 +32,17 @@ fun constructUrl(url: String, queryParams: QueryParams): String {
     }
     val urlSign = if (url.contains("?")) "&" else "?"
     return url + urlSign + queryParams
-            .map { (k, v) -> "${k.urlEencode()}=${v.urlEencode()}" }
+        .map { (k, v) -> "${k.urlEncode()}=${v.urlEncode()}" }
             .joinToString("&")
 }
 
 /**
  * Simplify usage of `URLEncoder.encode()` via extension method only.
  */
+@Deprecated(message = "got a typo ;)", replaceWith = ReplaceWith("urlEncode()"))
 fun String.urlEencode() = URLEncoder.encode(this, "UTF-8")
+
+/**
+ * Simplify usage of `URLEncoder.encode()` via extension method only.
+ */
+fun String.urlEncode() = URLEncoder.encode(this, "UTF-8")
