@@ -7,6 +7,7 @@ import ch.qos.logback.core.Appender
 import ch.qos.logback.core.filter.Filter
 import ch.qos.logback.core.spi.FilterReply
 import com.github.christophpickl.kpotpourri.logback4k.ConsoleAppenderBuilder
+import com.github.christophpickl.kpotpourri.logback4k.FileAppenderBuilder
 import com.github.christophpickl.kpotpourri.logback4k.LogbackConfig
 import org.slf4j.LoggerFactory
 
@@ -15,10 +16,9 @@ internal val context: LoggerContext = LoggerFactory.getILoggerFactory() as Logge
 internal data class InternalLogbackConfig(
         override var rootLevel: Level = Level.ALL
 ) : LogbackConfig {
-
     internal val packageLevels = mutableMapOf<String, Level>()
-    internal val appenders = mutableListOf<Appender<ILoggingEvent>>()
 
+    internal val appenders = mutableListOf<Appender<ILoggingEvent>>()
     @Suppress("KDocMissingDocumentation")
     override fun packageLevel(level: Level, vararg packageNames: String) {
         packageNames.forEach { packageLevels += it to level }
@@ -33,6 +33,13 @@ internal data class InternalLogbackConfig(
     // or advanced via directly: withAppender: ((ConsoleAppender<ILoggingEvent>) -> Unit) = {}
     override fun addConsoleAppender(withBuilder: ConsoleAppenderBuilder.() -> Unit) {
         appenders += InternalConsoleAppenderBuilder().let { builder ->
+            withBuilder(builder)
+            builder.build()
+        }
+    }
+
+    override fun addFileAppender(withBuilder: FileAppenderBuilder.() -> Unit) {
+        appenders += InternalFileAppenderBuilder().let { builder ->
             withBuilder(builder)
             builder.build()
         }

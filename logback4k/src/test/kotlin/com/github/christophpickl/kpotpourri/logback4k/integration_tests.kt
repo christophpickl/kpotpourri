@@ -3,16 +3,71 @@ package com.github.christophpickl.kpotpourri.logback4k
 import ch.qos.logback.classic.Level
 import com.github.christophpickl.kpotpourri.common.io.Io
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.not
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
+import com.google.common.io.Files
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.isEmpty
 import mu.KLogger
 import mu.KotlinLogging
 import org.testng.annotations.Test
+import java.io.File
+import java.nio.charset.Charset
+import java.util.Date
 
-@Test class Logback4kIntegrationTest {
+@Test
+class FileAppenderIntegrationTest {
+
+    private val anyFilePattern = "anyFilePattern"
+
+    private val anyFile = "anyFile"
+
+    @Test(expectedExceptions = [Logback4kException::class])
+    fun `fail - not defined mandatory file`() {
+        Logback4k.reconfigure {
+            addFileAppender {
+                filePattern = anyFilePattern
+            }
+        }
+        LOG {}
+    }
+
+    @Test(expectedExceptions = [Logback4kException::class])
+    fun `fail - not defined mandatory filePatter`() {
+        Logback4k.reconfigure {
+            addFileAppender {
+                file = anyFile
+            }
+        }
+        LOG {}
+    }
+
+    fun `success`() {
+        val filePrefix = File(System.getProperty("java.io.tmpdir"), "logback4k-${Date().time}").canonicalPath
+        val fileFile = File("$filePrefix.log")
+        Logback4k.reconfigure {
+            addFileAppender {
+                file = fileFile.canonicalPath
+                filePattern = "$filePrefix-%d{yyyy-MM-dd}.log"
+            }
+        }
+        val log = LOG {}
+        log.info { "anyLogMessage" }
+
+        assertThat(fileFile.exists(), equalTo(true))
+        val lines = Files.readLines(fileFile, Charset.defaultCharset())
+        assertThat(lines, not(isEmpty))
+    }
+
+}
+
+@Test
+class ConsoleAppenderIntegrationTest {
 
     private val simplePattern = "[%level] %msg%n"
 
-    fun `ConsoleAppender - sunshine`() {
+    fun `sunshine`() {
         Logback4k.reconfigure {
             addTestConsoleAppender(Level.ALL)
         }
@@ -20,7 +75,7 @@ import org.testng.annotations.Test
         executeLog { info { "logInfo" } } shouldMatchValue "[INFO] logInfo\n"
     }
 
-    fun `ConsoleAppender - root level to warn, appender to all, Should not be logged`() {
+    fun `root level to warn, appender to all, Should not be logged`() {
         Logback4k.reconfigure {
             rootLevel = Level.WARN
             addTestConsoleAppender(Level.ALL)
@@ -29,7 +84,7 @@ import org.testng.annotations.Test
         executeLog { info { "logInfo" } } shouldMatchValue ""
     }
 
-    fun `ConsoleAppender - root level to WARN and appender to ALL and package to INFO, Should be logged`() {
+    fun `root level to WARN and appender to ALL and package to INFO, Should be logged`() {
         Logback4k.reconfigure {
             rootLevel = Level.WARN
             addTestConsoleAppender(Level.ALL)
@@ -40,7 +95,7 @@ import org.testng.annotations.Test
 
     }
 
-    fun `ConsoleAppender - package limitted`() {
+    fun `package limitted`() {
         Logback4k.reconfigure {
             addTestConsoleAppender(Level.ALL)
             packageLevel(Level.WARN, "pkgLimit")
