@@ -32,14 +32,14 @@ interface FileAppenderBuilder {
      *
      * E.g.: /var/log4k/myapplication.log
      */
-    var file: String?
+    var file: String
 
     /**
      * Path to target log file.
      *
      * E.g.: /var/log4k/myapplication.%d{yyyy-MM-dd}.log
      */
-    var filePattern: String?
+    var filePattern: String
 
     /** The name of the appender. */
     var appenderName: String

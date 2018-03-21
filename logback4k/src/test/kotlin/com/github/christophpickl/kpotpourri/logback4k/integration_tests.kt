@@ -19,37 +19,12 @@ import java.util.Date
 @Test
 class FileAppenderIntegrationTest {
 
-    private val anyFilePattern = "anyFilePattern"
-
-    private val anyFile = "anyFile"
-
-    @Test(expectedExceptions = [Logback4kException::class])
-    fun `fail - not defined mandatory file`() {
-        Logback4k.reconfigure {
-            addFileAppender {
-                filePattern = anyFilePattern
-            }
-        }
-        LOG {}
-    }
-
-    @Test(expectedExceptions = [Logback4kException::class])
-    fun `fail - not defined mandatory filePatter`() {
-        Logback4k.reconfigure {
-            addFileAppender {
-                file = anyFile
-            }
-        }
-        LOG {}
-    }
-
     fun `success`() {
         val filePrefix = File(System.getProperty("java.io.tmpdir"), "logback4k-${Date().time}").canonicalPath
         val fileFile = File("$filePrefix.log")
         Logback4k.reconfigure {
-            addFileAppender {
-                file = fileFile.canonicalPath
-                filePattern = "$filePrefix-%d{yyyy-MM-dd}.log"
+            addFileAppender(file = fileFile.canonicalPath, filePattern = "$filePrefix-%d{yyyy-MM-dd}.log") {
+                level = Level.ALL
             }
         }
         val log = LOG {}
