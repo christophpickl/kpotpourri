@@ -1,6 +1,6 @@
 # some header
 
-this is code:
+this is some code:
 
 ```kotlin
 println("hello foo")

@@ -18,7 +18,6 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testCompile group: "com.github.christophpickl.kpotpourri", name: "markdown4k", version: "1.11", classifier: "tests"
-    testCompile "com.github.christophpickl.kpotpourri:markdown4k:1.11"
     testCompile "org.testng:testng:6.14.2"
 }
 
@@ -32,4 +31,8 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+test {
+    useTestNG()
 }
