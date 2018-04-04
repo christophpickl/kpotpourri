@@ -125,9 +125,9 @@ subprojects { subproject ->
         from sourceSets.test.allSource
     }
 
-
     artifacts {
         archives sourcesJar
         archives testJar
+        archives testSourcesJar
     }
 }
