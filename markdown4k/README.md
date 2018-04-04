@@ -1,6 +1,6 @@
 # Markdown4k
 
-Writing documentation is a good idea, we agree on that, right?
+Writing documentation is a good idea, we agree on that, right?!
 
 So you end up having tons of (Markdown) files with tons of Kotlin code snippets.
 After a while they get outdated, because writing documentation is good, but who cares about updating them, right?! ;)
