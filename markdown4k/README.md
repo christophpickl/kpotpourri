@@ -15,10 +15,7 @@ but first of all you need to declare a new dependency for markdown4k in your `bu
 
 ```groovy
 dependencies {
-  // for test support
   testCompile group: "com.github.christophpickl.kpotpourri", name: "markdown4k", version: versionKPotpourri, classifier: "tests"
-  // already included by the test support
-  // testCompile "com.github.christophpickl.kpotpourri:markdown4k:$versionKPotpourri"
 }
 
 repositories {
@@ -62,7 +59,8 @@ import com.github.christophpickl.kpotpourri.markdown4k.MarkdownTestngTest
 import org.testng.annotations.Test
 import java.io.File
 
-@Test class UsageTestngTest : MarkdownTestngTest(
+@Test
+class UsageTestngTest : MarkdownTestngTest(
     root = File(".")
 )
 ```
