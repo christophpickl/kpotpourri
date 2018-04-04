@@ -31,4 +31,4 @@
 /wiremock4k/build/
 /wiremock4k/out/
 /.gradle/**
-
+/.idea/
