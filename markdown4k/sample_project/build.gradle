@@ -17,8 +17,8 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testCompile group: "com.github.christophpickl.kpotpourri", name: "markdown4k", version: "1.10", classifier: "tests"
-    testCompile "com.github.christophpickl.kpotpourri:markdown4k:1.10"
+    testCompile group: "com.github.christophpickl.kpotpourri", name: "markdown4k", version: "1.11", classifier: "tests"
+    testCompile "com.github.christophpickl.kpotpourri:markdown4k:1.11"
     testCompile "org.testng:testng:6.14.2"
 }
 
