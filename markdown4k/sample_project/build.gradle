@@ -27,5 +27,6 @@ repositories {
 
 
 dependencies {
-    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "com.github.christophpickl.kpotpourri:markdown4k:1.10"
 }

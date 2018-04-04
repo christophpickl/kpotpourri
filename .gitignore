@@ -20,6 +20,8 @@
 /jackson4k/out/
 /markdown4k/build/
 /markdown4k/out/
+/markdown4k/sample_project/.gradle
+/markdown4k/sample_project/build
 /release4k/build/
 /release4k/out/
 /swing4k/build/
