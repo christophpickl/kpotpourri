@@ -7,7 +7,8 @@ import java.io.File
 /**
  * Checks all MD files in KPotopurri sourcefolder for compiling Kotlin code snippets.
  */
-@Test class KPotpourriMarkdownTest : MarkdownTestngTest(
+@Test
+class KPotpourriMarkdownTest : MarkdownTestngTest(
         root = File("../"),
         ignoreFolders = listOf("src", "build", ".git")
 )

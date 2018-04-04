@@ -7,7 +7,8 @@ import java.io.File
 /**
  * Example of using Markdown4k together with TestNG.
  */
-@Test class UsageTestngTest : MarkdownTestngTest(
+@Test
+class UsageTestngTest : MarkdownTestngTest(
         root = File("."), // assume the current working directory contains the MD files
-        ignoreFolders = listOf("src", "build", ".git")
+        ignoreFolders = listOf("src", "build", ".git", "out")
 )

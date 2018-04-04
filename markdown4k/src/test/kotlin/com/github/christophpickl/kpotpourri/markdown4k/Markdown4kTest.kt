@@ -5,7 +5,8 @@ import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
 import java.io.File
 
-@Test class Markdown4kTest {
+@Test
+class Markdown4kTest {
 
     private val resources = "src/test/resources"
 
