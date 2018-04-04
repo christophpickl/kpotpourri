@@ -59,8 +59,7 @@ import com.github.christophpickl.kpotpourri.markdown4k.MarkdownTestngTest
 import org.testng.annotations.Test
 import java.io.File
 
-@Test
-class UsageTestngTest : MarkdownTestngTest(
+@Testclass UsageTestngTest : MarkdownTestngTest(
     root = File(".")
 )
 ```
