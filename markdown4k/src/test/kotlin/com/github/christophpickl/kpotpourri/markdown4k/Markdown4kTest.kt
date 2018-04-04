@@ -20,7 +20,7 @@ import java.io.File
 
     }
 
-    fun `kompile - Given unsafed instruction, Then ignores uncompilable code`() {
+    fun `kompile - Given unsafed instruction, Then ignores uncompilable code and dont throw exception`() {
         assertKompileIgnored(CodeSnippet.testee.copy(code =
         """/// ignore
 this wont be compiled ;)

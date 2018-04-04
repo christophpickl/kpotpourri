@@ -21,7 +21,7 @@ import org.testng.annotations.Test
     fun `Given empty Kotlin snippet, Should extract Kotlin code`() {
         val result = MarkdownParser.extractKotlinCode("""```kotlin
 ```""")
-        assertThat(result, equalTo(listOf(CodeAndLineNumber(1, ""))))
+        assertThat(result, equalTo(listOf(LineNumberAndCode(1, ""))))
     }
 
     fun `Given Kotlin snippet with leading newline, Should extract Kotlin code`() {
@@ -30,7 +30,7 @@ import org.testng.annotations.Test
 single snippet
 ```
 """)
-        assertThat(result, equalTo(listOf(CodeAndLineNumber(2, "single snippet\n"))))
+        assertThat(result, equalTo(listOf(LineNumberAndCode(2, "single snippet\n"))))
     }
 
     fun `Given XML snippet, Should return empty`() {
@@ -70,7 +70,7 @@ some xml
 this is not kotlin
 ```
 """)
-        assertThat(result, equalTo(listOf(CodeAndLineNumber(6, "val realWorld = 42\n"))))
+        assertThat(result, equalTo(listOf(LineNumberAndCode(6, "val realWorld = 42\n"))))
     }
 
 }

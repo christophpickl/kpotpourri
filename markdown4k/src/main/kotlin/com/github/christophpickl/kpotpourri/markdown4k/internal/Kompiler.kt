@@ -7,29 +7,38 @@ import javax.script.Compilable
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
 
+/**
+ * Start a script engine and compile that thing.
+ */
 internal object Kompiler {
 
     private val log = LOG {}
+    private val kotlinEngineExtension = "kts"
 
     internal fun kompile(code: String): InternalKompilationResult {
-        val engine = ScriptEngineManager().getEngineByExtension("kts") ?: throw KPotpourriException("No script engine found to kompile Kotlin code.")
         log.trace { "Compiling Kotlin code:\n>>>\n$code\n<<<" }
-        try {
-            (engine as Compilable).compile(code) // no need to eval, just compile ;)
-            return InternalKompilationResult.Success()
-        } catch(e: ScriptException) {
-            return InternalKompilationResult.Failure(e)
+        return try {
+            val compiler = lookupKotlinCompiler()
+            compiler.compile(code) // no need to eval, just compile
+            InternalKompilationResult.Success()
+        } catch (e: ScriptException) {
+            InternalKompilationResult.Failure(e)
         }
     }
+
+    private fun lookupKotlinCompiler(): Compilable =
+            ScriptEngineManager().getEngineByExtension(kotlinEngineExtension) as? Compilable
+                    ?: throw KPotpourriException("No script engine found to kompile Kotlin code.")
 
 }
 
 /**
  * Introduce custom compilation result which does not include the `Ignored` state.
  */
-internal sealed class InternalKompilationResult(private val publicResult: KompilationResult) {
-    internal class Success : InternalKompilationResult(KompilationResult.Success())
+internal sealed class InternalKompilationResult(val result: KompilationResult) {
+
+    internal class Success : InternalKompilationResult(KompilationResult.Success)
+
     internal class Failure(exception: ScriptException) : InternalKompilationResult(KompilationResult.Failure(exception))
 
-    internal fun toKompilationResult() = publicResult
 }
