@@ -22,7 +22,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-noarg:$version_kotlin"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$version_kotlin"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$version_bintray"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$version_dokka"
 //        classpath "com.autoscout24.gradle:gradle-todo-plugin:$version_todo"
         classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:$version_coveralls"
         classpath "org.standardout:gradle-versioneye-plugin:$version_versioneye"
@@ -43,8 +42,6 @@ allprojects {
         mavenCentral()
     }
 
-    apply plugin: 'idea'
-
     // https://discuss.gradle.org/t/travis-ci-org-gradle-launcher-daemon-client-daemondisappearedexception-gradle-build-daemon-disappeared-unexpectedly-it-may-have-been-killed-or-may-have-crashed/13106/3
     if (System.env.TRAVIS == 'true') {
         tasks.withType(GroovyCompile) {
@@ -63,7 +60,6 @@ subprojects { subproject ->
     apply plugin: "kotlin"
     apply plugin: "kotlin-noarg"
     apply plugin: "java"
-//    apply plugin: "org.jetbrains.dokka"
     // apply plugin: 'com.autoscout24.gradle.todo'
     apply from: "$rootDir/gradle/test.gradle"
     apply from: "$rootDir/gradle/publishing.gradle"
@@ -106,11 +102,6 @@ subprojects { subproject ->
     // execute "gradle listDependencies" on root project, dumps dependencies for all submodules (hack needed in gradle)
     task listDependencies(type: DependencyReportTask) {}
 
-//    dokka {
-//        // moduleName = 'data'
-//        outputFormat = 'html'
-//    }
-
     jar {
         manifest {
             attributes 'Implementation-Title': 'kpotpourri - ${name}',
@@ -134,20 +125,9 @@ subprojects { subproject ->
         from sourceSets.test.allSource
     }
 
-//    task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-//        outputFormat = 'html'
-//        outputDirectory = javadoc.destinationDir
-//        inputs.dir 'src/main/kotlin'
-//    }
-
-//    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-//        classifier = 'javadoc'
-//        from javadoc.destinationDir
-//    }
 
     artifacts {
         archives sourcesJar
-//        archives javadocJar
         archives testJar
     }
 }
