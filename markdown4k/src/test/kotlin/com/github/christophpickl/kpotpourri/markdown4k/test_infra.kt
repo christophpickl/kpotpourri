@@ -12,8 +12,8 @@ import org.testng.annotations.Test
 import java.io.File
 import kotlin.reflect.KClass
 
-
-@Test abstract class MarkdownTestngTest(val root: File, val ignoreFolders: List<String> = emptyList()) {
+@Test
+abstract class MarkdownTestngTest(val root: File, val ignoreFolders: List<String> = emptyList()) {
 
     private val log = LOG {}
 

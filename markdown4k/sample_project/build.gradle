@@ -9,6 +9,19 @@ buildscript {
 
 apply plugin: 'kotlin'
 
+repositories {
+    mavenCentral()
+    maven { url "http://dl.bintray.com/christophpickl/cpickl" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    testCompile group: "com.github.christophpickl.kpotpourri", name: "markdown4k", version: "1.10", classifier: "tests"
+    testCompile "com.github.christophpickl.kpotpourri:markdown4k:1.10"
+    testCompile "org.testng:testng:6.14.2"
+}
+
 sourceCompatibility = 1.8
 compileKotlin {
     kotlinOptions {
@@ -19,14 +32,4 @@ compileTestKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-}
-
-repositories {
-    mavenCentral()
-}
-
-
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile "com.github.christophpickl.kpotpourri:markdown4k:1.10"
 }

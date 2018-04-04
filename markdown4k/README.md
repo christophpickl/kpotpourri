@@ -10,16 +10,27 @@ This is where Markdown4k gets handy, as it tries to **compile all of your Kotlin
 ## Usage
 
 The suggested approach is to integrate the check into a **testing framework** like TestNG or JUnit or whatever you prefer,
-but first of all you need to declare a new dependency for markdown4k.
+but first of all you need to declare a new dependency for markdown4k in your `build.gradle` file along with the additional repositories for kpotpourri and the kotlin scripting engine:
+
 
 ```groovy
-compile 'com.github.christophpickl.kpotpourri:markdown4k:$versionKPotpourri'
+dependencies {
+  compile 'com.github.christophpickl.kpotpourri:markdown4k:$versionKPotpourri'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://dl.bintray.com/christophpickl/cpickl" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
 ```
 
 Afterwards you only need to feed the test framework with your code snippets by passing a `root` directory which will be scanned for `*.md` files recursively,
 and then try to compile them and check for a proper `KompilationResult`.
 
 (The following examples assume all relevant markdown files reside in the current working directory)
+
+For a complete sample usage, I've prepared the sample project in the `sample_project/` directory.
 
 ### Manual invocation
 
