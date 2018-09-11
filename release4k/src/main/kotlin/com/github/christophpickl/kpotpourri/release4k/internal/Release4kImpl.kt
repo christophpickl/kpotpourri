@@ -76,7 +76,12 @@ import java.io.File
     }
 
     /*pseudo-internal*/ fun onFinish() {
-        process.execute("say", "\"Release build finished.\"", release4kDirectory, suppressOutput = true)
+        try {
+            // or maybe try to display (macOS) notification instead?
+            process.execute("say", "\"Release build finished.\"", release4kDirectory, suppressOutput = true)
+        } catch (e: Exception) {
+            println("Release build finished.")
+        }
     }
 
 }
