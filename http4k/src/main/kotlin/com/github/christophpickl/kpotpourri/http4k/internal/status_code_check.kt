@@ -1,7 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.control.throwIf
-import com.github.christophpickl.kpotpourri.common.enforceAllBranchesCovered
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.Http4kStatusCodeException
 import com.github.christophpickl.kpotpourri.http4k.Http4kStatusException
@@ -64,7 +63,7 @@ internal fun checkStatusCode(
                 is Fail -> {
                     throw Http4kStatusException(result.message)
                 }
-            }.enforceAllBranchesCovered
+            }
         }
     }
 }
