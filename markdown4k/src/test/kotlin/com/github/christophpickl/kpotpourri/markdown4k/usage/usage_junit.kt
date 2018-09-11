@@ -26,7 +26,7 @@ class UsageJUnitTest(private val snippet: CodeSnippet) {
     }
 
     @Test
-    fun `kompile`() {
+    fun kompile() {
         assertKompileSuccessOrIgnored(snippet)
     }
 

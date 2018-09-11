@@ -4,7 +4,9 @@ import com.github.christophpickl.kpotpourri.common.io.Keyboard
 import com.github.christophpickl.kpotpourri.release4k.Version.VersionParts2.Companion.readVersion2FromStdin
 import java.io.File
 
-private val relativeKpotPath = "../github2/kpotpourri" // navigate to proper checkout location :) or simply "."
+//private val relativeKpotPath = "../github2/kpotpourri" // navigate to proper checkout location :) or simply "."
+private val relativeKpotPath = "."
+
 private val liveKpotFolder = File(relativeKpotPath)
 private val gitUrl = "https://github.com/christophpickl/kpotpourri.git"
 private val versionTxtFilename = "version.txt"

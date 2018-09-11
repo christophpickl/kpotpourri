@@ -8,10 +8,9 @@ internal object MarkdownParser {
     private val snippetStart = "```kotlin"
     private val snippetEnd = "```"
 
-    // MINOR this part could be refactored a bit
-    internal fun extractKotlinCode(mdContent: String): List<CodeAndLineNumber> {
+    internal fun extractKotlinCode(mdContent: String): List<LineNumberAndCode> {
         var kotlinFlag = false
-        val result = mutableListOf<CodeAndLineNumber>()
+        val result = mutableListOf<LineNumberAndCode>()
         var tempLines = StringBuilder()
         var lineWhereSnippetStarted = -1
         mdContent.lines().forEachIndexed { lineNumber, line ->
@@ -21,7 +20,10 @@ internal object MarkdownParser {
                 kotlinFlag = true
             } else if (line == snippetEnd && kotlinFlag) {
                 kotlinFlag = false
-                result += CodeAndLineNumber(lineWhereSnippetStarted, tempLines.toString())
+                result += LineNumberAndCode(
+                        code = tempLines.toString(),
+                        lineNumber = lineWhereSnippetStarted
+                )
                 tempLines = StringBuilder()
             } else if (kotlinFlag) {
                 tempLines.appendln(line)
@@ -33,9 +35,9 @@ internal object MarkdownParser {
 }
 
 /**
- * Avoid non-informative Pair<String, Int> by defining an own type.
+ * Define own type instead of having a generic Pair.
  */
-internal data class CodeAndLineNumber(
+internal data class LineNumberAndCode(
         val lineNumber: Int,
         val code: String
 )

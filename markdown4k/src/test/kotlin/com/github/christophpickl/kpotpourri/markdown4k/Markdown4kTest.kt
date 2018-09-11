@@ -5,7 +5,8 @@ import com.natpryce.hamkrest.assertion.assertThat
 import org.testng.annotations.Test
 import java.io.File
 
-@Test class Markdown4kTest {
+@Test
+class Markdown4kTest {
 
     private val resources = "src/test/resources"
 
@@ -20,7 +21,7 @@ import java.io.File
 
     }
 
-    fun `kompile - Given unsafed instruction, Then ignores uncompilable code`() {
+    fun `kompile - Given unsafed instruction, Then ignores uncompilable code and dont throw exception`() {
         assertKompileIgnored(CodeSnippet.testee.copy(code =
         """/// ignore
 this wont be compiled ;)

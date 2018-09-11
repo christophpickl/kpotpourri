@@ -31,7 +31,8 @@ publishing {
         MyPublication(MavenPublication) {
             from components.java
             artifact sourcesJar
-//            artifact javadocJar
+            artifact testJar
+            artifact testSourcesJar
             groupId 'com.github.christophpickl.kpotpourri'
             artifactId projectName
             version myVersion

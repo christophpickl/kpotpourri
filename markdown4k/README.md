@@ -1,25 +1,36 @@
 # Markdown4k
 
-```groovy
-compile 'com.github.christophpickl.kpotpourri:markdown4k:$versionKPotpourri'
-```
+Writing documentation is a good idea, we agree on that, right?!
 
-Writing documentation is a good idea, right, we agree on that?
-
-So you end up having tons of markdown files with tons of kotlin code snippets.
-After a while they get outdated, because writing documentation is good, but who cares about updating them?!
+So you end up having tons of (Markdown) files with tons of Kotlin code snippets.
+After a while they get outdated, because writing documentation is good, but who cares about updating them, right?! ;)
 
 This is where Markdown4k gets handy, as it tries to **compile all of your Kotlin code snippets** and reports an error if something wrent wrong.
 
 ## Usage
 
 The suggested approach is to integrate the check into a **testing framework** like TestNG or JUnit or whatever you prefer,
-but first of all you need to declare a new dependency for markdown4k.
+but first of all you need to declare a new dependency for markdown4k in your `build.gradle` file along with the additional repositories for kpotpourri and the kotlin scripting engine:
+
+
+```groovy
+dependencies {
+  testCompile group: "com.github.christophpickl.kpotpourri", name: "markdown4k", version: versionKPotpourri, classifier: "tests"
+}
+
+repositories {
+    mavenCentral()
+    maven { url "http://dl.bintray.com/christophpickl/cpickl" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+```
 
 Afterwards you only need to feed the test framework with your code snippets by passing a `root` directory which will be scanned for `*.md` files recursively,
 and then try to compile them and check for a proper `KompilationResult`.
 
-(The following examples assume all relevant markdown files reside in the current working directory.)
+(The following examples assume all relevant markdown files reside in the current working directory)
+
+For a complete sample usage, I've prepared the sample project in the `sample_project/` directory.
 
 ### Manual invocation
 
@@ -36,17 +47,20 @@ Markdown4k.kollect(File("root_directory")).forEach {
 }
 ```
 
+PS: The snippet above is checked by markdown4k of course.
+
 ### TestNG
 
 For sake of simplicity there is a ready to use base class which only requires you to pass
-a root file (behind the scenes the base class is using TestNG's `@DataProvider` mechanism):
+a root file (under the hood the base class is using TestNG's `@DataProvider` mechanism):
 
 ```kotlin
 import com.github.christophpickl.kpotpourri.markdown4k.MarkdownTestngTest
 import org.testng.annotations.Test
 import java.io.File
 
-@Test class UsageTestngTest : MarkdownTestngTest(
+@Test
+class UsageTestngTest : MarkdownTestngTest(
     root = File(".")
 )
 ```
