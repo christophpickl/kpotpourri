@@ -75,6 +75,7 @@ checkLastCommand
 myEcho "Uploading to bintray"
 myEcho "------------------------------------"
 ./gradlew bintrayUpload ${NEXT_VERSION_SYSPROPERTY}
+checkLastCommand
 
 myEcho "Pushing to GIT"
 myEcho "------------------------------------"
