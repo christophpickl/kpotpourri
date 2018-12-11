@@ -103,19 +103,19 @@ class fileKtTest {
     }
 
     fun `scanForFilesRecursively - Given dir1 and search for txt, Should return file1`() {
-        assertScan(folder = "dir1", suffix = "txt", expected = "file1.txt")
+        assertScan(folder = "dir1", suffix = "txt", expected = arrayOf("file1.txt"))
     }
 
     fun `scanForFilesRecursively - Given dir1 and search for TXT, Should return file1`() {
-        assertScan(folder = "dir1", suffix = "TXT", expected = "file1.txt")
+        assertScan(folder = "dir1", suffix = "TXT", expected = arrayOf("file1.txt"))
     }
 
     fun `scanForFilesRecursively - Given dir2 and search for txt, Should return file1`() {
-        assertScan(folder = "dir2", suffix = "txt", expected = "file1.txt")
+        assertScan(folder = "dir2", suffix = "txt", expected = arrayOf("file1.txt"))
     }
 
     fun `scanForFilesRecursively - Given dir3 and search for txt with ignoring subdir, Should return file1`() {
-        assertScan(folder = "dir3", suffix = "txt", ignoreFolders = listOf("subdir"), expected = "file1.txt")
+        assertScan(folder = "dir3", suffix = "txt", ignoreFolders = listOf("subdir"), expected = arrayOf("file1.txt"))
     }
 
     @DataProvider
@@ -136,7 +136,7 @@ class fileKtTest {
     private fun scan(folder: String, suffix: String, ignoreFolders: List<String>) =
             File("./src/test/resources/$folder").scanForFilesRecursively(suffix, ignoreFolders).map { it.name }
 
-    private fun assertScan(folder: String, ignoreFolders: List<String> = emptyList(), suffix: String, vararg expected: String) {
+    private fun assertScan(folder: String, ignoreFolders: List<String> = emptyList(), suffix: String, expected: Array<String>) {
         assertThat(scan(folder, suffix, ignoreFolders), containsExactlyInAnyOrder(*expected))
     }
 

@@ -16,9 +16,9 @@ import java.io.IOException
 
     fun `execute - echo with argument foo, Should stdout containt echo and foo`() {
         val stdout = Io.readFromStdOut {
-            ProcessExecuterImpl().execute("echo", "foo", cwd)
+            ProcessExecuterImpl().execute("echo", "ProcessExecuterImplTest", cwd)
         }
-        assertThat(stdout, containsSubstrings("echo", "foo"))
+        assertThat(stdout, containsSubstrings("echo", "ProcessExecuterImplTest"))
     }
 
     fun `execute - when output suppressed, Then should be empty`() {
@@ -35,8 +35,8 @@ import java.io.IOException
     }
 
     fun `execute - command which fails should fail`() {
-        assertThrown<KPotpourriException>(expectedMessageParts = listOf("not_existing")) {
-            ProcessExecuterImpl().execute("ls", "not_existing", cwd)
+        assertThrown<KPotpourriException>(expectedMessageParts = listOf("ProcessExecuterImplTest")) {
+            ProcessExecuterImpl().execute("ls", "ProcessExecuterImplTest", cwd)
         }
     }
 
