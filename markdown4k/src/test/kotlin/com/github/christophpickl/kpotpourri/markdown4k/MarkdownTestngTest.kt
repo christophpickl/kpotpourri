@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.markdown4k
 
-import com.github.christophpickl.kpotpourri.common.enforceAllBranchesCovered
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.test4k.toDataProviding
 import org.testng.Assert
@@ -37,7 +36,7 @@ abstract class MarkdownTestngTest(
             is KompilationResult.Ignored -> {
                 throw IllegalStateException("This is actually not possible as suppressIgnoredSnippets was set to true!")
             }
-        }.enforceAllBranchesCovered
+        }
     }
 
 }

@@ -38,8 +38,8 @@ internal data class InternalLogbackConfig(
         }
     }
 
-    override fun addFileAppender(withBuilder: FileAppenderBuilder.() -> Unit) {
-        appenders += InternalFileAppenderBuilder().let { builder ->
+    override fun addFileAppender(file: String, filePattern: String, withBuilder: FileAppenderBuilder.() -> Unit) {
+        appenders += InternalFileAppenderBuilder(file = file, filePattern = filePattern).let { builder ->
             withBuilder(builder)
             builder.build()
         }

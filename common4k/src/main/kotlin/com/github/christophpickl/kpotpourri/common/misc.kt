@@ -11,9 +11,3 @@ package com.github.christophpickl.kpotpourri.common
  *   }
  */
 annotation class KotlinNoArg
-
-/**
- * Kotlin workaround to enforce the compiler to check all branches even when not using the when as a statement rather an expression.
- */
-@Suppress("unused")
-val Any.enforceAllBranchesCovered: Unit get() = Unit

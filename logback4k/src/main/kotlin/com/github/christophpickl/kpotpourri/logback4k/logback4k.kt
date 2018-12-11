@@ -33,7 +33,8 @@ object Logback4k {
 /**
  * Supported logback configuration options.
  */
-@Logback4kMarker interface LogbackConfig {
+@Logback4kMarker
+interface LogbackConfig {
     /** Change the global log level for all appenders and packages. */
     var rootLevel: Level
 
@@ -50,8 +51,15 @@ object Logback4k {
 
     /**
      * Enter nested DSL to create a new appender logging to a (rolling) file.
+     *
+     * @param file Path to target log file, e.g.: /var/log4k/myapplication.log
+     * @param filePattern Path pattern to rolling file, e.g.: /var/log4k/myapplication.%d{yyyy-MM-dd}.log
      */
-    fun addFileAppender(withBuilder: FileAppenderBuilder.() -> Unit = {})
+    fun addFileAppender(
+        file: String,
+        filePattern: String,
+        withBuilder: FileAppenderBuilder.() -> Unit = {}
+    )
 }
 
 @DslMarker

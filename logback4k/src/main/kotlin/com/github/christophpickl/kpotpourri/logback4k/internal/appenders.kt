@@ -28,8 +28,8 @@ internal data class InternalConsoleAppenderBuilder(
 }
 
 internal data class InternalFileAppenderBuilder(
-    override var file: String? = null,
-    override var filePattern: String? = null,
+    override var file: String,
+    override var filePattern: String,
     override var appenderName: String = "LogbackFileAppender_" + appenderCounter.getAndIncrement(),
     override var pattern: String = defaultPattern,
     override var level: Level = Level.ALL,
