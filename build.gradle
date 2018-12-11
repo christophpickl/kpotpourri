@@ -60,7 +60,7 @@ subprojects { subproject ->
     apply plugin: "kotlin"
     apply plugin: "kotlin-noarg"
     apply plugin: "java"
-    // apply plugin: 'com.autoscout24.gradle.todo'
+//    apply plugin: "com.autoscout24.gradle.todo"
     apply from: "$rootDir/gradle/test.gradle"
     apply from: "$rootDir/gradle/publishing.gradle"
 
@@ -94,6 +94,7 @@ subprojects { subproject ->
         annotation("com.github.christophpickl.kpotpourri.common.KotlinNoArg")
     }
 
+    // some weird error saying something about "org/apache/commons/io/FilenameUtils" ?!?
 //    todo {
 //        todoPattern = "//[\\t\\s]*(FIXME|TODO) (.*)"
 //        failIfFound = true

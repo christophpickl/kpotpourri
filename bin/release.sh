@@ -3,7 +3,7 @@
 START=`date +%s`
 CWD=`pwd`
 
-VERSION_PROPERTIES_FILE=version.properties
+VERSION_PROPERTIES_FILE=version.txt
 VERSION_PROPERTIES_PATH="$CWD/$VERSION_PROPERTIES_FILE"
 
 myEcho() {
@@ -22,10 +22,10 @@ changeVersion() {
     checkLastCommand
 }
 
-source ${VERSION_PROPERTIES_PATH}
+CURRENT_VERSION=`cat ${VERSION_PROPERTIES_PATH}`
 
-MAJOR_VERSION=$(echo ${version}| cut -d "." -f 1)
-CURRENT_MINOR_VERSION=$(echo ${version}| cut -d "." -f 2)
+MAJOR_VERSION=$(echo ${CURRENT_VERSION}| cut -d "." -f 1)
+CURRENT_MINOR_VERSION=$(echo ${CURRENT_VERSION}| cut -d "." -f 2)
 NEXT_MINOR_VERSION=$(($CURRENT_MINOR_VERSION + 1))
 NEXT_VERSION="$MAJOR_VERSION.$NEXT_MINOR_VERSION"
 NEXT_VERSION_SYSPROPERTY="-Dkpotpourri.version=${NEXT_VERSION}"
@@ -58,7 +58,8 @@ checkLastCommand
 echo
 myEcho "Verifying release build (TODOs, test)"
 myEcho "------------------------------------"
-./gradlew clean check checkTodo test ${NEXT_VERSION_SYSPROPERTY}
+#./gradlew clean check checkTodo test ${NEXT_VERSION_SYSPROPERTY}
+./gradlew clean check test ${NEXT_VERSION_SYSPROPERTY}
 checkLastCommand
 
 myEcho "Local changes"
