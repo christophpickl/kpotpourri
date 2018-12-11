@@ -65,8 +65,8 @@ subprojects { subproject ->
     apply from: "$rootDir/gradle/publishing.gradle"
 
     dependencies {
-        compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version_kotlin"
-        compile "org.jetbrains.kotlin:kotlin-reflect:$version_kotlin"
+        compile "org.jetbrains.kotlin:kotlin-stdlib"
+        compile "org.jetbrains.kotlin:kotlin-reflect"
 
 
         compile "io.github.microutils:kotlin-logging:" + version_kotlin_logging
