@@ -10,6 +10,9 @@ val slf4jLog = LoggerFactory.getLogger(javaClass)
 // then kotlin came:
 val kotlinLog = KotlinLogging.logger { }
 
+// with (cumbersome) static imports:
+val kotlinLog = logger { }
+
 // finally with common4k we do this now:
 val log = LOG {}
 
