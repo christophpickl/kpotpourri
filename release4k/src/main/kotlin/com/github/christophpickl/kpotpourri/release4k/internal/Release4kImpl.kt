@@ -3,6 +3,7 @@ package com.github.christophpickl.kpotpourri.release4k.internal
 import com.github.christophpickl.kpotpourri.common.file.resetDirectory
 import com.github.christophpickl.kpotpourri.common.file.verifyExists
 import com.github.christophpickl.kpotpourri.common.io.Keyboard
+import com.github.christophpickl.kpotpourri.common.process.ExecuteContext
 import com.github.christophpickl.kpotpourri.common.process.ProcessExecuter
 import com.github.christophpickl.kpotpourri.common.process.ProcessExecuterImpl
 import com.github.christophpickl.kpotpourri.github.GithubApi
@@ -46,7 +47,7 @@ import java.io.File
     }
 
     override fun checkoutGitProject(gitUrl: String) {
-        process.execute("/usr/bin/git", listOf("clone", gitUrl, gitCheckoutDirectory.name), release4kDirectory)
+        process.execute("/usr/bin/git", listOf("clone", gitUrl, gitCheckoutDirectory.name), ExecuteContext(cwd = release4kDirectory))
     }
 
     override fun promptUser(prompt: String): String {
@@ -67,17 +68,17 @@ import java.io.File
 
     override fun gradlew(args: List<String>) {
         // MINOR or: process.execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
-        process.execute("./gradlew", args, gitCheckoutDirectory)
+        process.execute("./gradlew", args, ExecuteContext(cwd = gitCheckoutDirectory))
     }
 
     override fun git(args: List<String>) {
-        process.execute("git", args, gitCheckoutDirectory)
+        process.execute("git", args, ExecuteContext(cwd = gitCheckoutDirectory))
     }
 
     /*pseudo-internal*/ fun onFinish() {
         try {
             // or maybe try to display (macOS) notification instead?
-            process.execute("say", listOf("Release build finished."), release4kDirectory, suppressOutput = true)
+            process.execute("say", listOf("Release build finished."), ExecuteContext(cwd = release4kDirectory, suppressOutput = true))
         } catch (e: Exception) {
             println("Release build finished.")
         }

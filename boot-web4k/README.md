@@ -1,3 +1,3 @@
-# Spring Boot Data 4k
+# Spring Boot Web 4k
 
-Extensions for the persistence layer of a Spring Boot application.
+Extensions for the web layer of a Spring Boot application.

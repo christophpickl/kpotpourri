@@ -1,3 +1,3 @@
-# Spring Boot Data 4k
+# Spring Boot AOP 4k
 
-Extensions for the persistence layer of a Spring Boot application.
+Extensions for the Spring Boot AOP.

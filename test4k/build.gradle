@@ -4,6 +4,7 @@ dependencies {
     compile "org.testng:testng:" + version_testng
     compile "com.natpryce:hamkrest:" + version_hamkrest
     compile "com.nhaarman:mockito-kotlin:" + version_mockito_kotlin
+    compile "org.assertj:assertj-core:" + version_assertj
 
     runtime "ch.qos.logback:logback-core:" + version_logback
 

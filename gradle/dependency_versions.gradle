@@ -4,6 +4,7 @@ ext {
 
     version_apache_httpclient = "4.5.3"
     version_asm = "6.0"
+    version_assertj = "3.11.1"
     version_bintray = "1.8.4"
     version_coveralls = "2.8.2"
     version_dokka = "0.9.16-eap-3"

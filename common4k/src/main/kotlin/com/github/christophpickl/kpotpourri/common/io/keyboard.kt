@@ -46,6 +46,16 @@ object Keyboard {
             }
         } while (true)
     }
+    
+    fun readWithDefault(prompt: String, default: String): String {
+        println(prompt)
+        print("[$default] $INPUT_SIGN ")
+        val read = readLine()
+        if (read.isEmpty()) {
+            return default
+        }
+        return read
+    }
 
     /**
      * Read input based on a predefined set of answers indexed by 1-based numbers.

@@ -13,6 +13,7 @@ buildscript {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://dl.bintray.com/kotlin/kotlin-eap/" }
@@ -71,7 +72,6 @@ subprojects { subproject ->
 
         compile "io.github.microutils:kotlin-logging:" + version_kotlin_logging
         runtime "org.slf4j:jcl-over-slf4j:" + version_jcl
-
         if (subproject.name != "test4k") {
             testCompile project(':test4k')
         }
@@ -86,6 +86,7 @@ subprojects { subproject ->
     compileTestKotlin {
         kotlinOptions.jvmTarget = versionJava.toString()
     }
+
 
     noArg {
         annotation("com.github.christophpickl.kpotpourri.common.KotlinNoArg")

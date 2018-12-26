@@ -4,6 +4,7 @@ import com.github.christophpickl.kpotpourri.release4k.Release4kException
 import com.github.christophpickl.kpotpourri.release4k.Version
 import com.github.christophpickl.kpotpourri.release4k.VersionType
 
+@Deprecated(message = "see build4k")
 internal object VersionParser {
 
     internal fun parse(inputString: String): Version {
@@ -27,4 +28,5 @@ internal object VersionParser {
 
 }
 
+@Deprecated(message = "see build4k")
 internal class VersionParseException(inputString: String) : Release4kException("Invalid version string: '$inputString'")

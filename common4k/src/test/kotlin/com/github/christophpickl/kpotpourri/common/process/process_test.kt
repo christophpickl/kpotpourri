@@ -8,16 +8,13 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isEmpty
 import org.testng.annotations.Test
-import java.io.File
 import java.io.IOException
 
 @Test class ProcessExecuterImplTest {
 
-    private val cwd = File(".")
-
     fun `execute - echo with argument foo, Should stdout containt echo and foo`() {
         val stdout = Io.readFromStdOut {
-            val returnCode = ProcessExecuterImpl.execute("echo", listOf("ProcessExecuterImplTest"), cwd)
+            val returnCode = ProcessExecuterImpl.execute("echo", listOf("ProcessExecuterImplTest"))
             assertThat(returnCode, equalTo(0))
         }
         assertThat(stdout, containsSubstrings("echo", "ProcessExecuterImplTest"))
@@ -25,7 +22,7 @@ import java.io.IOException
 
     fun `execute - when output suppressed, Then should be empty`() {
         val stdout = Io.readFromStdOut {
-            val returnCode = ProcessExecuterImpl.execute("echo", listOf("foo"), cwd, suppressOutput = true)
+            val returnCode = ProcessExecuterImpl.execute("echo", listOf("foo"), ExecuteContext(suppressOutput = true))
             assertThat(returnCode, equalTo(0))
         }
         
@@ -35,13 +32,13 @@ import java.io.IOException
 
     fun `execute - invalid command should fail`() {
         assertThrown<IOException>(expectedMessageParts = listOf("not_valid")) {
-            ProcessExecuterImpl.executeOrThrow("not_valid", listOf(""), cwd)
+            ProcessExecuterImpl.executeOrThrow("not_valid", listOf(""))
         }
     }
 
     fun `execute - command which fails should fail`() {
         assertThrown<KPotpourriException>(expectedMessageParts = listOf("ProcessExecuterImplTest")) {
-            ProcessExecuterImpl.executeOrThrow("ls", listOf("ProcessExecuterImplTest"), cwd)
+            ProcessExecuterImpl.executeOrThrow("ls", listOf("ProcessExecuterImplTest"))
         }
     }
 
