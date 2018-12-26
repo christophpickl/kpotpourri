@@ -41,24 +41,3 @@ a more complete overview of the provided functionality.
 * `fun File.verifyExists(): File`
 * `fun File.move(target: File)`
 * `fun File.touch()`
-
-## Logging
-
-The new [kotlin-logging](https://github.com/MicroUtils/kotlin-logging) library is a handy wrapper over good old slf4j, but we can do even better:
-
-```kotlin
-import com.github.christophpickl.kpotpourri.common.logging.LOG
-import mu.KotlinLogging
-import org.slf4j.LoggerFactory
-
-class Logee {
-    // first we did this with plain slf4j:
-    val slf4jLog = LoggerFactory.getLogger(javaClass)
-    
-    // then kotlin-logging came:
-    val kotlinLog = KotlinLogging.logger { }
-
-    // finally with common4k it became:
-    val log = LOG {}
-}
-```

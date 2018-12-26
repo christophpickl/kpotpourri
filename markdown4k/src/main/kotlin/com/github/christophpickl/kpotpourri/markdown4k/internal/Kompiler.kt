@@ -1,8 +1,8 @@
 package com.github.christophpickl.kpotpourri.markdown4k.internal
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.markdown4k.KompilationResult
+import mu.KotlinLogging.logger
 import javax.script.Compilable
 import javax.script.ScriptEngineManager
 import javax.script.ScriptException
@@ -12,7 +12,7 @@ import javax.script.ScriptException
  */
 internal object Kompiler {
 
-    private val log = LOG {}
+    private val log = logger {}
     private val kotlinEngineExtension = "kts"
 
     internal fun kompile(code: String): InternalKompilationResult {

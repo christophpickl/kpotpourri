@@ -2,7 +2,6 @@ package com.github.christophpickl.kpotpourri.logback4k
 
 import ch.qos.logback.classic.Level
 import com.github.christophpickl.kpotpourri.common.io.Io
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.not
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
@@ -10,6 +9,7 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isEmpty
 import mu.KLogger
 import mu.KotlinLogging
+import mu.KotlinLogging.logger
 import org.testng.annotations.Test
 import java.io.File
 import java.util.*
@@ -26,7 +26,7 @@ class FileAppenderIntegrationTest {
             }
         }
         
-        val log = LOG {}
+        val log = logger {}
         log.info { "anyLogMessage" }
 
         assertThat(logFile.exists(), equalTo(true))
@@ -94,7 +94,7 @@ class ConsoleAppenderIntegrationTest {
     }
 
     private fun executeLogAndReadStdOut(func: KLogger.() -> Unit): String {
-        val log = LOG {}
+        val log = logger {}
         return Io.readFromStdOut {
             func(log)
         }

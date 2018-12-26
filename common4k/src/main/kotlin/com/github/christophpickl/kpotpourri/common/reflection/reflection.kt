@@ -1,6 +1,6 @@
 package com.github.christophpickl.kpotpourri.common.reflection
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
+import mu.KotlinLogging.logger
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
@@ -22,7 +22,7 @@ interface Reflector {
  */
 class ReflectorImpl : Reflector {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     override fun lookupClass(className: String): Class<*>? =
         try {

@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.http4k_fuel
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
@@ -15,7 +14,7 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpPut
 import com.github.kittinunf.result.Result
-
+import mu.KotlinLogging.logger
 
 class FuelHttpClientFactory : HttpClientFactory {
     override fun build(metaMap: MetaMap) =
@@ -24,7 +23,7 @@ class FuelHttpClientFactory : HttpClientFactory {
 
 class FuelHttpClient(private val metaMap: MetaMap) : HttpClient {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     init {
         // get rid of: redirectResponseInterceptor(this), validatorResponseInterceptor(200..299)

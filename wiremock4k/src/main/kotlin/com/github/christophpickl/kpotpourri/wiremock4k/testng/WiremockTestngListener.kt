@@ -1,11 +1,11 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.testng
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.wiremock4k.DEFAULT_WIREMOCK4K_PORT
 import com.github.christophpickl.kpotpourri.wiremock4k.WIREMOCK4K_HOSTNAME
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import mu.KotlinLogging.logger
 import org.testng.IClassListener
 import org.testng.ITestClass
 import org.testng.ITestContext
@@ -44,7 +44,7 @@ annotation class DynamicMockPort
  */
 class WiremockTestngListener : IClassListener, ITestListener {
 
-    private val log = LOG {}
+    private val log = logger {}
     // MINOR inject base URL into tests
     private lateinit var server: WireMockServer
     private lateinit var wiremockBaseUrl: String

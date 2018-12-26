@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.markdown4k
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.test4k.toDataProviding
+import mu.KotlinLogging.logger
 import org.testng.Assert
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
@@ -13,7 +13,7 @@ abstract class MarkdownTestngTest(
         val ignoreFolders: List<String> = emptyList()
 ) {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     init {
         log.debug { "markdown4k root directory: ${root.canonicalPath}" }

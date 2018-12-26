@@ -1,5 +1,7 @@
 package com.github.christophpickl.kpotpourri.common.collection
 
+import java.util.*
+
 
 /**
  * Prints each item prefixed and joined.
@@ -23,4 +25,13 @@ fun <T> List<T>.plusIf(condition: Boolean, elementToAdd: T): List<T> {
     } else {
         this
     }
+}
+
+fun combineMaybeEmpty(first: String, other: List<String>): List<String> {
+    val list = ArrayList<String>(1 + other.size)
+    if (first.isNotEmpty()) {
+        list += first
+    }
+    list += other
+    return list
 }

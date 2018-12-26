@@ -1,0 +1,9 @@
+
+apply plugin: "kotlin-spring"
+
+dependencies {
+    implementation("org.springframework:spring-context:$version_spring")
+    
+//    testCompile "ch.qos.logback:logback-core:" + version_logback
+//    testCompile "ch.qos.logback:logback-classic:" + version_logback
+}

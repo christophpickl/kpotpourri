@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.github.internal
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.github.AssetUpload
 import com.github.christophpickl.kpotpourri.github.CreateReleaseRequest
 import com.github.christophpickl.kpotpourri.github.CreateReleaseResponse
@@ -18,6 +17,7 @@ import com.github.christophpickl.kpotpourri.http4k.buildHttp4k
 import com.github.christophpickl.kpotpourri.http4k.get
 import com.github.christophpickl.kpotpourri.http4k.patch
 import com.github.christophpickl.kpotpourri.http4k.post
+import mu.KotlinLogging.logger
 
 
 @Suppress("KDocMissingDocumentation")
@@ -30,7 +30,7 @@ internal class GithubApiImpl(
         private val GITHUB_MIMETYPE = "application/vnd.github.v3+json"
     }
 
-    private val log = LOG {}
+    private val log = logger {}
 
     private fun ServerConfig.toBaseUrlConfig() = BaseUrlConfig(
             protocol = protocol,

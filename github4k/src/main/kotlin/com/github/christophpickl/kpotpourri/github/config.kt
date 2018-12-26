@@ -1,11 +1,11 @@
 package com.github.christophpickl.kpotpourri.github
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.HttpProtocol
 import com.github.christophpickl.kpotpourri.http4k.ServerConfig
+import mu.KotlinLogging.logger
 
-private val log = LOG {}
+private val log = logger {}
 
 /**
  * Official GitHub.com server configuration: https://api.github.com:443

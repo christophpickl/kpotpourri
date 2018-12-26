@@ -1,7 +1,6 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.fasterxml.jackson.core.type.TypeReference
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.BodyfullRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.BodylessRequestOpts
@@ -9,6 +8,7 @@ import com.github.christophpickl.kpotpourri.http4k.GlobalHttp4kConfigurable
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
 import com.github.christophpickl.kpotpourri.http4k.Request4k
+import mu.KotlinLogging.logger
 import kotlin.reflect.KClass
 
 internal class Http4kImpl(
@@ -16,7 +16,7 @@ internal class Http4kImpl(
         private val globals: GlobalHttp4kConfigurable
 ) : Http4k {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     override fun <R : Any> getReturning(url: String, returnType: KClass<R>, withOpts: BodylessRequestOpts.() -> Unit): R =
             any(HttpMethod4k.GET, BodylessRequestOpts(), url, returnType.toOption(), withOpts)

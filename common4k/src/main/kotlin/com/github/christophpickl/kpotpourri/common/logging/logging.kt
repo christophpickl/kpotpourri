@@ -1,27 +1,32 @@
 package com.github.christophpickl.kpotpourri.common.logging
 
-import mu.KotlinLogging
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.slf4j.event.Level
 
-/*
+interface MyLoggerFactory {
+    fun getLogger(clazz: Class<*>): Logger
+}
 
-// first we did this:
-val slf4jLog = LoggerFactory.getLogger(javaClass)
+// in order to work, this system property must NOT be enabled: "slf4j.detectLoggerNameMismatch"
+object DefaultLoggerFactory : MyLoggerFactory {
+    override fun getLogger(clazz: Class<*>) = LoggerFactory.getLogger(clazz)!!
+}
 
-// then kotlin came:
-val kotlinLog = KotlinLogging.logger { }
+fun Level.invokeLog(targetLog: Logger, message: String) {
+    when (this) {
+        Level.ERROR -> targetLog.error(message)
+        Level.WARN -> targetLog.warn(message)
+        Level.INFO -> targetLog.info(message)
+        Level.DEBUG -> targetLog.debug(message)
+        Level.TRACE -> targetLog.trace(message)
+    }
+}
 
-// with (cumbersome) static imports:
-val kotlinLog = logger { }
-
-// finally with common4k we do this now:
-val log = LOG {}
-
-*/
-
-
-/**
- * Create Slf4j logger with automatic set logger name.
- *
- * Usage: val log = LOG {}
- */
-fun LOG(func: () -> Unit) = KotlinLogging.logger(func)
+fun Logger.isEnabled(level: Level): Boolean = when (level) {
+    Level.ERROR -> isErrorEnabled
+    Level.WARN -> isWarnEnabled
+    Level.INFO -> isInfoEnabled
+    Level.DEBUG -> isDebugEnabled
+    Level.TRACE -> isTraceEnabled
+}

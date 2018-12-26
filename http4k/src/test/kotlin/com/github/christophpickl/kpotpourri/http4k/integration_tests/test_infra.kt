@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.http4k.integration_tests
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.string.concatUrlParts
 import com.github.christophpickl.kpotpourri.http4k.Http4k
 import com.github.christophpickl.kpotpourri.http4k.Http4kBuilder
@@ -16,6 +15,7 @@ import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.christophpickl.kpotpourri.wiremock4k.response.givenWiremock
 import com.github.christophpickl.kpotpourri.wiremock4k.testng.WiremockTest
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
+import mu.KotlinLogging.logger
 import org.testng.annotations.BeforeMethod
 
 typealias HttpImplProducer = () -> HttpClient
@@ -33,7 +33,7 @@ abstract class Http4kWiremockTest(
     protected val headerName = "X-http4k-test"
     protected val headerValue = "testHeaderValue"
 
-    private val log = LOG {}
+    private val log = logger {}
     /** "http://localhost:8042/my" */
     protected val mockWiremockUrlAndEndpointUrl = concatUrlParts(wiremockBaseUrl, mockEndpointUrl)
     protected lateinit var http4k: Http4k

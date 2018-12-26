@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.github.christophpickl.kpotpourri.common.logging.LOG
+import mu.KotlinLogging.logger
 
-private val log = LOG {}
+private val log = logger {}
 
 /**
  * Simplify access to Jackson configuration.

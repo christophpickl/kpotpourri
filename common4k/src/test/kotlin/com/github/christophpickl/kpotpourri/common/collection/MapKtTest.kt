@@ -5,6 +5,7 @@ import com.github.christophpickl.kpotpourri.common.io.Io
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsSubstrings
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.mapContainsExactly
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.not
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.BeforeMethod
@@ -47,8 +48,7 @@ import org.testng.annotations.Test
 
     @Test(dataProvider = "provideMapsOfMaps")
     fun `mapsOf - sunshine`(givenMaps: Array<Map<Any, Any>>, expected: Map<Any, Any>) {
-        // MINOR (ex-FIX-ME) kotlin compiler cannot resolve reference!!! ??? !!! ???
-//        mapsOf(*givenMaps) shouldMatchValue expected
+        mapsOf(*givenMaps) shouldMatchValue expected
     }
 
 }

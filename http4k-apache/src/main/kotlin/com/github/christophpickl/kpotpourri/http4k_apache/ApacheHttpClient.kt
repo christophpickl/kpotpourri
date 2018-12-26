@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.http4k_apache
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
 import com.github.christophpickl.kpotpourri.http4k.HttpMethod4k
@@ -10,6 +9,7 @@ import com.github.christophpickl.kpotpourri.http4k.internal.HttpClient
 import com.github.christophpickl.kpotpourri.http4k.internal.HttpClientFactory
 import com.github.christophpickl.kpotpourri.http4k.internal.MetaMap
 import com.github.christophpickl.kpotpourri.http4k.internal.TimeoutException
+import mu.KotlinLogging.logger
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.client.methods.HttpDelete
@@ -35,7 +35,7 @@ class ApacheHttpClientFactory : HttpClientFactory {
 // https://hc.apache.org/httpcomponents-client-4.5.x/quickstart.html
 class ApacheHttpClient(private val metaMap: MetaMap) : HttpClient {
 
-    private val log = LOG {}
+    private val log = logger {}
 
 
     init {

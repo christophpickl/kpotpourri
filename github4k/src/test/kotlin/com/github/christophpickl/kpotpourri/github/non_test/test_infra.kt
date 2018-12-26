@@ -1,6 +1,5 @@
 package com.github.christophpickl.kpotpourri.github.non_test
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.github.AssetUpload
 import com.github.christophpickl.kpotpourri.github.CreateReleaseRequest
 import com.github.christophpickl.kpotpourri.github.CreateReleaseResponse
@@ -15,8 +14,9 @@ import com.github.christophpickl.kpotpourri.jackson4k.asString
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
+import mu.KotlinLogging.logger
 
-private val log = LOG {}
+private val log = logger {}
 
 private val mapper = buildJackson4kMapper()
 

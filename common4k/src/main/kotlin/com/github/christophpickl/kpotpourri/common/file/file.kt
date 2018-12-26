@@ -1,11 +1,11 @@
 package com.github.christophpickl.kpotpourri.common.file
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.logging.LOG
+import mu.KotlinLogging.logger
 import java.io.File
 import java.nio.file.Files
 
-private val log = LOG {}
+private val log = logger {}
 
 /**
  * Data structure containing the filename and the suffix (without leading dot).

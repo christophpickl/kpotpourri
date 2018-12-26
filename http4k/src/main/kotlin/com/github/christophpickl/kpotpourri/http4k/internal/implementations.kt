@@ -1,9 +1,9 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.reflection.Reflector
 import com.github.christophpickl.kpotpourri.common.reflection.ReflectorImpl
 import com.github.christophpickl.kpotpourri.http4k.Http4kException
+import mu.KotlinLogging.logger
 
 /**
  * By default supported HTTP client implementations.
@@ -29,7 +29,7 @@ internal class HttpClientFactoryDetector(
         private val reflector: Reflector = ReflectorImpl()
 ) {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     internal fun detect(): HttpClientFactory {
         val availableClients = HttpClientType.values().map { reflector.lookupClass(it.fqnToLookFor) }.filterNotNull()

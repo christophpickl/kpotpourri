@@ -12,3 +12,5 @@ val KPOT_DEFAULT_JOINER = "\n"
  * listOf(1 to "einz").toMutableMap() == mapOf(1 to "einz")
  */
 fun <K, V> Iterable<Pair<K, V>>.toMutableMap() = toMap().toMutableMap()
+
+fun <T, K> Collection<T>.hasNoDuplicatesBy(selector: (T) -> K) = distinctBy(selector).size == this.size

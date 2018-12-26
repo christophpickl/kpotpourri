@@ -1,15 +1,18 @@
 package com.github.christophpickl.kpotpourri.http4k.internal
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.http4k.AnyRequestOpts
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteBytesBody
 import com.github.christophpickl.kpotpourri.http4k.DefiniteRequestBody.DefiniteStringBody
-import com.github.christophpickl.kpotpourri.http4k.RequestBody.*
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.BytesBody
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.JsonBody
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.None
+import com.github.christophpickl.kpotpourri.http4k.RequestBody.StringBody
 import com.github.christophpickl.kpotpourri.http4k.RequestWithEntityOpts
 import com.github.christophpickl.kpotpourri.jackson4k.asString
+import mu.KotlinLogging.logger
 
-private val log = LOG {}
+private val log = logger {}
 
 /**
  * @return Pair of the content type and the actual response body content

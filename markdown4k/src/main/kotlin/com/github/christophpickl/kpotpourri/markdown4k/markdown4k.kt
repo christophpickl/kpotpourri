@@ -2,9 +2,9 @@ package com.github.christophpickl.kpotpourri.markdown4k
 
 import com.github.christophpickl.kpotpourri.common.file.nameStartingFrom
 import com.github.christophpickl.kpotpourri.common.file.scanForFilesRecursively
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.markdown4k.internal.Kompiler
 import com.github.christophpickl.kpotpourri.markdown4k.internal.MarkdownParser
+import mu.KotlinLogging.logger
 import java.io.File
 
 
@@ -13,7 +13,7 @@ import java.io.File
  */
 object Markdown4k {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     /**
      * Scan the given directory recursively for MD files containing Kotlin code snippets.

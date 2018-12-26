@@ -1,13 +1,13 @@
 package com.github.christophpickl.kpotpourri.wiremock4k.response
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.wiremock4k.WiremockMethod
 import com.github.tomakehurst.wiremock.client.ResponseDefinitionBuilder
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.http.HttpHeader
 import com.github.tomakehurst.wiremock.http.HttpHeaders
+import mu.KotlinLogging.logger
 
-private val log = LOG {}
+private val log = logger {}
 
 /**
  * @param path relative URL, like "/my"

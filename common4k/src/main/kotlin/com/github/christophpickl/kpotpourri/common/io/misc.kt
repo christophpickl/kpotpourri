@@ -1,9 +1,10 @@
 package com.github.christophpickl.kpotpourri.common.io
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
+import mu.KotlinLogging.logger
+import java.io.ByteArrayOutputStream
 import java.io.Closeable
 
-private val log = LOG {}
+private val log = logger {}
 
 /**
  * Ignores (logs) the thrown exception when invoking `Closeable.close()`.
@@ -14,4 +15,10 @@ fun Closeable.closeSilently() {
     } catch (ignored: Exception) {
         log.warn(ignored) { "Exception was thrown while trying to close: $this" }
     }
+}
+
+fun ByteArray.toByteArrayOutputStream(): ByteArrayOutputStream {
+    val stream = ByteArrayOutputStream(size)
+    stream.write(this, 0, size)
+    return stream
 }

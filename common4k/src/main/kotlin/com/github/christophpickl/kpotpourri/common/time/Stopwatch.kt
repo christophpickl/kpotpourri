@@ -1,13 +1,13 @@
 package com.github.christophpickl.kpotpourri.common.time
 
-import com.github.christophpickl.kpotpourri.common.logging.LOG
+import mu.KotlinLogging.logger
 
 /**
  * Enhanced Timing as measureTimeMillis isn't good enough ;)
  */
 object Stopwatch {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     /**
      * Prints a log message on level INFO containing the elapsed seconds.

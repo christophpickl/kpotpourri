@@ -3,7 +3,6 @@ package com.github.christophpickl.kpotpourri.release4k.internal
 import com.github.christophpickl.kpotpourri.common.file.resetDirectory
 import com.github.christophpickl.kpotpourri.common.file.verifyExists
 import com.github.christophpickl.kpotpourri.common.io.Keyboard
-import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.common.process.ProcessExecuter
 import com.github.christophpickl.kpotpourri.common.process.ProcessExecuterImpl
 import com.github.christophpickl.kpotpourri.github.GithubApi
@@ -13,6 +12,7 @@ import com.github.christophpickl.kpotpourri.http4k.ServerConfig
 import com.github.christophpickl.kpotpourri.release4k.Release4k
 import com.github.christophpickl.kpotpourri.release4k.Release4kException
 import com.github.christophpickl.kpotpourri.release4k.Version
+import mu.KotlinLogging.logger
 import java.io.File
 
 /**
@@ -24,7 +24,7 @@ import java.io.File
     private val process: ProcessExecuter = ProcessExecuterImpl
 ) : Release4k, ProcessExecuter by process {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     override val release4kDirectory = File(workingDirectory, "build/release4k").apply { resetDirectory() }
     override val gitCheckoutDirectory = File(release4kDirectory, "git_checkout")

@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.common.collection
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.logging.LOG
+import mu.KotlinLogging.logger
 
 /**
  * Limitted interface for a map, to be used as by delegation.
@@ -64,7 +64,7 @@ class KeyIgnoringCaseMap<V>(
         private val disableLoggingOfKeys: List<String>? = null
 ) : MapAddable<String, V> {
 
-    private val log = LOG {}
+    private val log = logger {}
 
     internal val _map = LinkedHashMap<String, V>()
 

@@ -1,0 +1,7 @@
+
+apply plugin: "kotlin-spring"
+
+dependencies {
+    compile project(":common4k")
+    implementation("org.springframework.boot:spring-boot-starter-aop:$version_springBoot")
+}
