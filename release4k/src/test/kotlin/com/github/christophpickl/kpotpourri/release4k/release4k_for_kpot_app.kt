@@ -1,6 +1,7 @@
 package com.github.christophpickl.kpotpourri.release4k
 
 import com.github.christophpickl.kpotpourri.common.io.Keyboard
+import com.github.christophpickl.kpotpourri.common.process.ExecuteContext
 import com.github.christophpickl.kpotpourri.release4k.Version.VersionParts2.Companion.readVersion2FromStdin
 import java.io.File
 
@@ -36,7 +37,7 @@ fun main(args: Array<String>) = release4k(workingDirectory = liveKpotFolder) {
 
     // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
-    execute("/usr/bin/git", listOf("status"), cwd = liveKpotFolder)
+    execute("/usr/bin/git", listOf("status"), ExecuteContext(cwd = liveKpotFolder))
     println()
     if (!Keyboard.readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
@@ -81,6 +82,6 @@ fun main(args: Array<String>) = release4k(workingDirectory = liveKpotFolder) {
 
     // =================================================================================================================
     printHeader("PULL LOCAL GIT")
-    execute("/usr/bin/git", listOf("pull"), cwd = liveKpotFolder)
-    execute("/usr/bin/git", listOf("fetch", "-p"), cwd = liveKpotFolder)
+    execute("/usr/bin/git", listOf("pull"), ExecuteContext(cwd = liveKpotFolder))
+    execute("/usr/bin/git", listOf("fetch", "-p"), ExecuteContext(cwd = liveKpotFolder))
 }

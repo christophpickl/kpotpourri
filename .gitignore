@@ -4,6 +4,12 @@
 /build/
 /out/
 
+/boot-aop4k/build/
+/boot-aop4k/out/
+/boot-data-jpa4k/build/
+/boot-data-jpa4k/out/
+/boot-web4k/build/
+/boot-web4k/out/
 /common4k/build/
 /common4k/out/
 /george4k/build/
@@ -31,6 +37,8 @@
 /release4k/out/
 /swing4k/build/
 /swing4k/out/
+/spring4k/build/
+/spring4k/out/
 /test4k/build/
 /test4k/out/
 /web4k/build/

@@ -7,7 +7,6 @@ import ch.qos.logback.core.rolling.RollingFileAppender
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy
 import com.github.christophpickl.kpotpourri.logback4k.ConsoleAppenderBuilder
 import com.github.christophpickl.kpotpourri.logback4k.FileAppenderBuilder
-import com.github.christophpickl.kpotpourri.logback4k.Logback4kException
 import java.util.concurrent.atomic.AtomicInteger
 
 private val appenderCounter = AtomicInteger(1)
@@ -40,8 +39,6 @@ internal data class InternalFileAppenderBuilder(
         appender.context = context
         appender.name = appenderName
         appender.encoder = patternLayout(pattern)
-        file ?: throw Logback4kException("The mandatory property '${FileAppenderBuilder::file.name}' was not set!")
-        filePattern ?: throw Logback4kException("The mandatory property '${FileAppenderBuilder::filePattern.name}' was not set!")
         appender.file = file
         appender.isAppend = true
         appender.isImmediateFlush = true

@@ -2,6 +2,7 @@ package com.github.christophpickl.kpotpourri.release4k.internal
 
 import com.github.christophpickl.kpotpourri.common.file.touch
 import com.github.christophpickl.kpotpourri.common.io.Io
+import com.github.christophpickl.kpotpourri.common.process.ExecuteContext
 import com.github.christophpickl.kpotpourri.common.process.ProcessExecuter
 import com.github.christophpickl.kpotpourri.github.RepositoryConfig
 import com.github.christophpickl.kpotpourri.github.non_test.testInstance
@@ -90,7 +91,7 @@ import java.io.File
     fun `checkoutGitProject - sunshine`() {
         release4k.checkoutGitProject("testGitUrl")
 
-        verify(process).execute("/usr/bin/git", listOf("clone","testGitUrl", release4k.gitCheckoutDirectory.name), cwd = release4k.release4kDirectory)
+        verify(process).execute("/usr/bin/git", listOf("clone","testGitUrl", release4k.gitCheckoutDirectory.name), ExecuteContext(cwd = release4k.release4kDirectory))
         verifyNoMoreInteractions(process)
 
     }
@@ -118,21 +119,21 @@ import java.io.File
     fun `gradlew - delegates to process executor`() {
         release4k.gradlew(listOf(command))
 
-        verify(process).execute("./gradlew", listOf(command), release4k.gitCheckoutDirectory)
+        verify(process).execute("./gradlew", listOf(command), ExecuteContext(cwd = release4k.gitCheckoutDirectory))
         verifyNoMoreInteractions(process)
     }
 
     fun `git - delegates to process executor`() {
         release4k.git(listOf(command))
 
-        verify(process).execute("git", listOf(command), release4k.gitCheckoutDirectory)
+        verify(process).execute("git", listOf(command), ExecuteContext(cwd = release4k.gitCheckoutDirectory))
         verifyNoMoreInteractions(process)
     }
 
     fun `onFinish - delegates say to process executor`() {
         release4k.onFinish()
 
-        verify(process).execute("say", listOf("Release build finished."), release4k.release4kDirectory, suppressOutput = true)
+        verify(process).execute("say", listOf("Release build finished."), ExecuteContext(cwd = release4k.release4kDirectory, suppressOutput = true))
         verifyNoMoreInteractions(process)
     }
 
