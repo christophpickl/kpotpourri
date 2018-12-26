@@ -1,0 +1,10 @@
+
+apply plugin: "kotlin-spring"
+
+dependencies {
+    compile project(":boot-data-jpa4k")
+    implementation("org.springframework.boot:spring-boot-starter-web:$version_springBoot")
+    
+//    testCompile "ch.qos.logback:logback-core:" + version_logback
+//    testCompile "ch.qos.logback:logback-classic:" + version_logback
+}

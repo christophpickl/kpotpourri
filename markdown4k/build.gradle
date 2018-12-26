@@ -21,6 +21,8 @@ dependencies {
 
     testCompile "junit:junit:" + version_junit
 
+    testRuntime project(':boot-data-jpa4k')
+    testRuntime project(':boot-web4k')
     testRuntime project(':github4k')
     testRuntime project(':http4k')
     testRuntime project(':http4k-apache')
@@ -30,6 +32,5 @@ dependencies {
     testRuntime project(':release4k')
     testRuntime project(':swing4k')
     testRuntime project(':test4k')
-    testRuntime project(':web4k')
     testRuntime project(':wiremock4k')
 }

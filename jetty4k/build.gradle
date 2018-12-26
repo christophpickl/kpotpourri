@@ -1,6 +1,0 @@
-
-dependencies {
-    compile project(':common4k')
-
-    testCompile project(':wiremock4k')
-}

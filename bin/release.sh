@@ -3,8 +3,8 @@
 START=`date +%s`
 CWD=`pwd`
 
-VERSION_PROPERTIES_FILE=version.txt
-VERSION_PROPERTIES_PATH="$CWD/$VERSION_PROPERTIES_FILE"
+VERSION_FILENAME=version.txt
+VERSION_FILEPATH="$CWD/$VERSION_FILENAME"
 
 myEcho() {
     echo "[RELEASE] $1"
@@ -17,12 +17,12 @@ checkLastCommand() {
 }
 changeVersion() {
     echo
-    myEcho "Changing version in [${VERSION_PROPERTIES_FILE}] to: $1"
-    echo "version=$1" > ${VERSION_PROPERTIES_FILE}
+    myEcho "Changing version in [${VERSION_FILENAME}] to: $1"
+    echo "$1" > ${VERSION_FILENAME}
     checkLastCommand
 }
 
-CURRENT_VERSION=`cat ${VERSION_PROPERTIES_PATH}`
+CURRENT_VERSION=`cat ${VERSION_FILEPATH}`
 
 MAJOR_VERSION=$(echo ${CURRENT_VERSION}| cut -d "." -f 1)
 CURRENT_MINOR_VERSION=$(echo ${CURRENT_VERSION}| cut -d "." -f 2)
@@ -33,6 +33,7 @@ NEXT_VERSION_SYSPROPERTY="-Dkpotpourri.version=${NEXT_VERSION}"
 myEcho "Release Summary:"
 myEcho "------------------------------------"
 myEcho "  Next version: $NEXT_VERSION"
+myEcho "  System property: $NEXT_VERSION_SYSPROPERTY"
 
 
 while true; do
