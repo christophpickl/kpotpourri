@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: kpotpourri - ${name}
-Implementation-Version: 2.1
-Implementation-Vendor: Christoph Pickl
-
