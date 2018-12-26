@@ -1,14 +1,14 @@
 package com.github.christophpickl.kpotpourri.common.string
 
+import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsExactlyInOrder
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
-import java.io.File
 
 
-@Test class StringExtensionsTest {
+@Test class StringKtTest {
 
     @DataProvider
     fun nullIfEmptyProvider(): Array<Array<out Any?>> = arrayOf(
@@ -144,6 +144,12 @@ import java.io.File
     @Test(dataProvider = "provideCutOffStringWithCustomSymbol")
     fun `cutOff - custom symbol`(givenString: String, length: Int, cutOffSymbol: String, expected: String) {
         assertThat(givenString.cutOffAt(length, cutOffSymbol), equalTo(expected))
+    }
+    
+    fun `splitMaxWidth sunshine`() {
+        val actual = "12345".splitMaxWidth(2)
+        
+        assertThat(actual, containsExactlyInOrder("12", "34", "5"))
     }
 
 }

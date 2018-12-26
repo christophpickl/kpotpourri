@@ -71,12 +71,12 @@ interface Release4k : ProcessExecuter {
     /**
      * Execute any valid GIT command.
      */
-    fun git(command: String)
+    fun git(args: List<String>)
 
     /**
      * Execute any valid gradle command.
      */
-    fun gradlew(command: String)
+    fun gradlew(args: List<String>)
 
     /**
      * Ask the user for input.

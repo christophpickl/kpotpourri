@@ -4,8 +4,9 @@ import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.io.Io
 import com.github.christophpickl.kpotpourri.test4k.assertThrown
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.containsSubstrings
-import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.isEmpty
 import org.testng.annotations.Test
 import java.io.File
 import java.io.IOException
@@ -16,27 +17,31 @@ import java.io.IOException
 
     fun `execute - echo with argument foo, Should stdout containt echo and foo`() {
         val stdout = Io.readFromStdOut {
-            ProcessExecuterImpl().execute("echo", "ProcessExecuterImplTest", cwd)
+            val returnCode = ProcessExecuterImpl.execute("echo", listOf("ProcessExecuterImplTest"), cwd)
+            assertThat(returnCode, equalTo(0))
         }
         assertThat(stdout, containsSubstrings("echo", "ProcessExecuterImplTest"))
     }
 
     fun `execute - when output suppressed, Then should be empty`() {
         val stdout = Io.readFromStdOut {
-            ProcessExecuterImpl().execute("echo", "foo", cwd, suppressOutput = true)
+            val returnCode = ProcessExecuterImpl.execute("echo", listOf("foo"), cwd, suppressOutput = true)
+            assertThat(returnCode, equalTo(0))
         }
-        stdout shouldMatchValue ""
+        
+        val stdoutWithoutLog = stdout.lines().filter { !it.contains("[TESTLOG]") && !it.isEmpty() }
+        assertThat(stdoutWithoutLog, isEmpty)
     }
 
     fun `execute - invalid command should fail`() {
         assertThrown<IOException>(expectedMessageParts = listOf("not_valid")) {
-            ProcessExecuterImpl().execute("not_valid", "", cwd)
+            ProcessExecuterImpl.executeOrThrow("not_valid", listOf(""), cwd)
         }
     }
 
     fun `execute - command which fails should fail`() {
         assertThrown<KPotpourriException>(expectedMessageParts = listOf("ProcessExecuterImplTest")) {
-            ProcessExecuterImpl().execute("ls", "ProcessExecuterImplTest", cwd)
+            ProcessExecuterImpl.executeOrThrow("ls", listOf("ProcessExecuterImplTest"), cwd)
         }
     }
 

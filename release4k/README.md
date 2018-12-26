@@ -37,7 +37,7 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
-    git("status")
+    git(listOf("status"))
     println()
     if (!Keyboard.readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
@@ -62,7 +62,7 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("GRADLE BUILD")
-    gradlew("clean check checkTodo test build $syspropNextVersion")
+    gradlew(listOf("clean", "check", "checkTodo", "test", "build", syspropNextVersion))
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")
@@ -70,13 +70,13 @@ fun main(args: Array<String>) = release4k {
 
     // =================================================================================================================
     printHeader("GIT COMMIT")
-    git("status")
-    git("add .")
-    git("commit -m \"[Auto-Release] Preparing release $nextVersionString\"")
-    git("tag $nextVersionString")
+    git(listOf("status"))
+    git(listOf("add", "."))
+    git(listOf("commit", "-m", "[Auto-Release] Preparing release $nextVersionString"))
+    git(listOf("tag", nextVersionString))
 
-    git("push")
-    git("push origin --tags")
+    git(listOf("push"))
+    git(listOf("push", "origin", "--tags"))
 
 }
 ```

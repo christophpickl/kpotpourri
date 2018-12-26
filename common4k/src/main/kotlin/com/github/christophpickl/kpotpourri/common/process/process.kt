@@ -1,7 +1,7 @@
 package com.github.christophpickl.kpotpourri.common.process
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
-import com.github.christophpickl.kpotpourri.common.string.splitAsArguments
+import mu.KotlinLogging.logger
 import java.io.File
 
 /**
@@ -14,34 +14,44 @@ interface ProcessExecuter {
      * @param args the arguments for the process, e.g.: "co master"
      * @param cwd the current working directory.
      */
-    fun execute(command: String, args: String, cwd: File, suppressOutput: Boolean = false)
+    fun execute(command: String, args: List<String>, cwd: File, suppressOutput: Boolean = false): Int
+
+    /**
+     * @see execute but throws exception when return code is not equals 0.
+     */
+    fun executeOrThrow(command: String, args: List<String>, cwd: File, suppressOutput: Boolean = false)
 }
 
 /**
  * Implementation which should be used in production code.
  */
-class ProcessExecuterImpl : ProcessExecuter {
+object ProcessExecuterImpl : ProcessExecuter {
 
-    override fun execute(command: String, args: String, cwd: File, suppressOutput: Boolean) {
+    private val log = logger {}
+
+    override fun execute(command: String, args: List<String>, cwd: File, suppressOutput: Boolean): Int {
+        val commandList = listOf(command).plus(args)
+        val commandString = commandList.joinToString(" ")
+        log.info { "Executing command: $commandString" }
         if (!suppressOutput) {
-            println("[${cwd.canonicalPath}] $command $args")
+            println("[${cwd.canonicalPath}] $commandString")
         }
-        val cmdAndArgs = buildCmdAndArgs(command, args)
-        val processBuilder = ProcessBuilder(cmdAndArgs)
-        processBuilder.inheritIO()
-        processBuilder.directory(cwd)
-        val process = processBuilder.start()
+        val builder = ProcessBuilder().apply {
+            command(commandList)
+            inheritIO() // redirect IN/OUT/ERR to be same as of java process
+            directory(cwd)
+        }
+        val process = builder.start()
         val exitCode = process.waitFor()
-        if (exitCode != 0) {
-            throw KPotpourriException("Failed to execute '$command $args' with exit code $exitCode!")
-        }
+        log.debug { "Command returned exit code: $exitCode" }
+        return exitCode
     }
 
-    private fun buildCmdAndArgs(cmd: String, args: String): List<String> =
-            ArrayList<String>().apply {
-                add(cmd)
-                addAll(args.splitAsArguments())
-
-            }
+    override fun executeOrThrow(command: String, args: List<String>, cwd: File, suppressOutput: Boolean) {
+        val exitCode = execute(command, args, cwd, suppressOutput)
+        if (exitCode != 0) {
+            throw KPotpourriException("Failed to execute '$command ${args.joinToString(" ")}' with exit code $exitCode! (CWD: ${cwd.canonicalPath})")
+        }
+    }
 
 }

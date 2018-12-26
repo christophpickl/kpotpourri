@@ -56,7 +56,7 @@ git push
 checkLastCommand
 
 echo
-myEcho "Verifying release build (TODOs, test)"
+myEcho "Verifying release build"
 myEcho "------------------------------------"
 #./gradlew clean check checkTodo test ${NEXT_VERSION_SYSPROPERTY}
 ./gradlew clean check test ${NEXT_VERSION_SYSPROPERTY}

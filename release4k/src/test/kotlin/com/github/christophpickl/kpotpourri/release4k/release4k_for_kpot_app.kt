@@ -36,7 +36,7 @@ fun main(args: Array<String>) = release4k(workingDirectory = liveKpotFolder) {
 
     // =================================================================================================================
     printHeader("VERIFY NO CHANGES")
-    execute("/usr/bin/git", "status", liveKpotFolder)
+    execute("/usr/bin/git", listOf("status"), cwd = liveKpotFolder)
     println()
     if (!Keyboard.readConfirmation(prompt = "Are you sure there are no changes and everything was pushed?!")) {
         return
@@ -62,25 +62,25 @@ fun main(args: Array<String>) = release4k(workingDirectory = liveKpotFolder) {
     // =================================================================================================================
     printHeader("GRADLE BUILD")
 //    gradlew("clean check checkTodo test build $syspropNextVersion")
-    gradlew("clean check test build $syspropNextVersion")
+    gradlew(listOf("clean", "check", "test", "build", syspropNextVersion))
 
     // =================================================================================================================
     printHeader("CHANGE VERSION")
     File(gitCheckoutDirectory, versionTxtFilename).writeText(nextVersionString)
 
-    git("status")
-    git("add .")
-    git("commit -m \"[Auto-Release] Preparing release $nextVersionString\"")
-    git("tag $nextVersionString")
+    git(listOf("status"))
+    git(listOf("add", "."))
+    git(listOf("commit", "-m", "[Auto-Release] Preparing release $nextVersionString"))
+    git(listOf("tag", nextVersionString))
 
     // =================================================================================================================
     printHeader("BINTRAY UPLOAD")
-    gradlew("bintrayUpload $syspropNextVersion")
-    git("push")
-    git("push origin --tags")
+    gradlew(listOf("bintrayUpload", "syspropNextVersion"))
+    git(listOf("push"))
+    git(listOf("push", "origin", "--tags"))
 
     // =================================================================================================================
     printHeader("PULL LOCAL GIT")
-    execute("/usr/bin/git", "pull", liveKpotFolder)
-    execute("/usr/bin/git", "fetch -p", liveKpotFolder)
+    execute("/usr/bin/git", listOf("pull"), cwd = liveKpotFolder)
+    execute("/usr/bin/git", listOf("fetch", "-p"), cwd = liveKpotFolder)
 }

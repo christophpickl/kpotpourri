@@ -77,7 +77,7 @@ fun String.splitAsArguments(): List<String> {
     val result = mutableListOf<String>()
     var stringCollect = StringBuilder()
     var quoteOpen = false
-    (0..length - 1).forEach { index ->
+    (0 until length).forEach { index ->
         val char = this[index]
         if (char == '\"') {
             if (quoteOpen) {
@@ -128,4 +128,24 @@ fun String.cutOffAt(cutOffLength: Int, indicationSymbol: String = " ..."): Strin
         return this.substring(0, cutOffLength)
     }
     return this.substring(0, cutOffLength - indicationSymbol.length) + indicationSymbol
+}
+
+/**
+ * Split this string into parts having each a maximum length of given maxLength.
+ */
+fun String.splitMaxWidth(maxLength: Int): List<String> {
+    require(maxLength > 0) { "Max length must be > 0! (was: $maxLength)" }
+    val lines = mutableListOf<String>()
+    var currentText = this
+    do {
+        val line = currentText.take(maxLength)
+        currentText = currentText.drop(line.length)
+        lines += line
+    } while (currentText.length > maxLength)
+
+    if (currentText.isNotEmpty()) {
+        lines += currentText
+    }
+
+    return lines
 }

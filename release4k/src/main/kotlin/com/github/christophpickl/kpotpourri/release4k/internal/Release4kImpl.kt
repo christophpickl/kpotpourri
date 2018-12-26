@@ -20,8 +20,8 @@ import java.io.File
  */
 @Suppress("KDocMissingDocumentation")
 /*pseudo-internal*/ class Release4kImpl(
-        private val workingDirectory: File = File("."),
-        private val process: ProcessExecuter = ProcessExecuterImpl()
+    private val workingDirectory: File = File("."),
+    private val process: ProcessExecuter = ProcessExecuterImpl
 ) : Release4k, ProcessExecuter by process {
 
     private val log = LOG {}
@@ -46,7 +46,7 @@ import java.io.File
     }
 
     override fun checkoutGitProject(gitUrl: String) {
-        process.execute("/usr/bin/git", "clone $gitUrl ${gitCheckoutDirectory.name}", release4kDirectory)
+        process.execute("/usr/bin/git", listOf("clone", gitUrl, gitCheckoutDirectory.name), release4kDirectory)
     }
 
     override fun promptUser(prompt: String): String {
@@ -65,19 +65,19 @@ import java.io.File
         return version
     }
 
-    override fun gradlew(command: String) {
+    override fun gradlew(args: List<String>) {
         // MINOR or: process.execute(File(gitCheckoutDirectory, "gradlew").canonicalPath, command)
-        process.execute("./gradlew", command, gitCheckoutDirectory)
+        process.execute("./gradlew", args, gitCheckoutDirectory)
     }
 
-    override fun git(command: String) {
-        process.execute("git", command, gitCheckoutDirectory)
+    override fun git(args: List<String>) {
+        process.execute("git", args, gitCheckoutDirectory)
     }
 
     /*pseudo-internal*/ fun onFinish() {
         try {
             // or maybe try to display (macOS) notification instead?
-            process.execute("say", "\"Release build finished.\"", release4kDirectory, suppressOutput = true)
+            process.execute("say", listOf("Release build finished."), release4kDirectory, suppressOutput = true)
         } catch (e: Exception) {
             println("Release build finished.")
         }

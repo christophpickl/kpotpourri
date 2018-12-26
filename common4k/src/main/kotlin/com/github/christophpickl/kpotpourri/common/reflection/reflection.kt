@@ -1,6 +1,9 @@
 package com.github.christophpickl.kpotpourri.common.reflection
 
 import com.github.christophpickl.kpotpourri.common.logging.LOG
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.memberProperties
 
 /**
  * In order to create behaviour of java reflection.
@@ -21,12 +24,22 @@ class ReflectorImpl : Reflector {
 
     private val log = LOG {}
 
-    override fun lookupClass(className: String): Class<*>? {
+    override fun lookupClass(className: String): Class<*>? =
         try {
-            return Class.forName(className)
+            Class.forName(className)
         } catch(e: ClassNotFoundException) {
-            log.trace { "Class not found: $className" }
-            return null
+            log.debug { "Class not found: $className" }
+            null
         }
-    }
+
 }
+
+/**
+ * Detects all properties of at least type T based on the given instance thiz of type C.
+ * 
+ * @return suitable member properties in any unpredictable order.
+ */
+inline fun <reified C : Any, reified T> propertiesOfType(thiz: C): List<T> =
+    C::class.memberProperties
+        .filter { it.returnType.isSubtypeOf(T::class.createType()) }
+        .map { it.get(thiz) as T }
