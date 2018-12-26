@@ -3,7 +3,6 @@ package com.github.christophpickl.kpotpourri.http4k.internal
 import com.github.christophpickl.kpotpourri.http4k.Request4k
 import com.github.christophpickl.kpotpourri.http4k.Response4k
 import com.github.christophpickl.kpotpourri.jackson4k.buildJackson4kMapper
-import com.google.common.base.MoreObjects
 import java.net.SocketTimeoutException
 
 
@@ -24,9 +23,7 @@ open class MetaMap {
     protected val map = HashMap<String, Any>()
     operator fun get(key: String) = map[key]
 
-    override fun toString() = MoreObjects.toStringHelper(this)
-            .add("map", map)
-            .toString()
+    override fun toString() = "${this.javaClass.simpleName}[map=$map]"
 }
 
 class MutableMetaMap : MetaMap() {

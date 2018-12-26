@@ -5,7 +5,6 @@ import com.github.christophpickl.kpotpourri.common.io.Io
 import com.github.christophpickl.kpotpourri.common.logging.LOG
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.not
 import com.github.christophpickl.kpotpourri.test4k.hamkrest_matcher.shouldMatchValue
-import com.google.common.io.Files
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isEmpty
@@ -13,25 +12,25 @@ import mu.KLogger
 import mu.KotlinLogging
 import org.testng.annotations.Test
 import java.io.File
-import java.nio.charset.Charset
-import java.util.Date
+import java.util.*
 
 @Test
 class FileAppenderIntegrationTest {
 
-    fun `success`() {
+    fun `Given file appender configured When log Then file contains lines`() {
         val filePrefix = File(System.getProperty("java.io.tmpdir"), "logback4k-${Date().time}").canonicalPath
-        val fileFile = File("$filePrefix.log")
+        val logFile = File("$filePrefix.log")
         Logback4k.reconfigure {
-            addFileAppender(file = fileFile.canonicalPath, filePattern = "$filePrefix-%d{yyyy-MM-dd}.log") {
+            addFileAppender(file = logFile.canonicalPath, filePattern = "$filePrefix-%d{yyyy-MM-dd}.log") {
                 level = Level.ALL
             }
         }
+        
         val log = LOG {}
         log.info { "anyLogMessage" }
 
-        assertThat(fileFile.exists(), equalTo(true))
-        val lines = Files.readLines(fileFile, Charset.defaultCharset())
+        assertThat(logFile.exists(), equalTo(true))
+        val lines = logFile.readLines()
         assertThat(lines, not(isEmpty))
     }
 
@@ -42,12 +41,12 @@ class ConsoleAppenderIntegrationTest {
 
     private val simplePattern = "[%level] %msg%n"
 
-    fun `sunshine`() {
+    fun `Given console appender When log Then stdout contains entry`() {
         Logback4k.reconfigure {
             addTestConsoleAppender(Level.ALL)
         }
 
-        executeLog { info { "logInfo" } } shouldMatchValue "[INFO] logInfo\n"
+        executeLogAndReadStdOut { info { "logInfo" } } shouldMatchValue "[INFO] logInfo\n"
     }
 
     fun `root level to warn, appender to all, Should not be logged`() {
@@ -56,7 +55,7 @@ class ConsoleAppenderIntegrationTest {
             addTestConsoleAppender(Level.ALL)
         }
 
-        executeLog { info { "logInfo" } } shouldMatchValue ""
+        executeLogAndReadStdOut { info { "logInfo" } } shouldMatchValue ""
     }
 
     fun `root level to WARN and appender to ALL and package to INFO, Should be logged`() {
@@ -94,7 +93,7 @@ class ConsoleAppenderIntegrationTest {
         } shouldMatchValue expectedStdout
     }
 
-    private fun executeLog(func: KLogger.() -> Unit): String {
+    private fun executeLogAndReadStdOut(func: KLogger.() -> Unit): String {
         val log = LOG {}
         return Io.readFromStdOut {
             func(log)

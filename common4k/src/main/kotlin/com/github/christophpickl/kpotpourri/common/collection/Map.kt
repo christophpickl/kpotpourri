@@ -2,7 +2,6 @@ package com.github.christophpickl.kpotpourri.common.collection
 
 import com.github.christophpickl.kpotpourri.common.KPotpourriException
 import com.github.christophpickl.kpotpourri.common.logging.LOG
-import com.google.common.annotations.VisibleForTesting
 
 /**
  * Limitted interface for a map, to be used as by delegation.
@@ -67,7 +66,7 @@ class KeyIgnoringCaseMap<V>(
 
     private val log = LOG {}
 
-    @VisibleForTesting internal val _map = LinkedHashMap<String, V>()
+    internal val _map = LinkedHashMap<String, V>()
 
     // MINOR fun getIncasesensitive(key: String): V
 

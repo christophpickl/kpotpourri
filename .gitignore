@@ -1,5 +1,9 @@
 
+/.gradle/
+/.idea/
 /build/
+/out/
+
 /common4k/build/
 /common4k/out/
 /george4k/build/
@@ -20,8 +24,9 @@
 /jackson4k/out/
 /markdown4k/build/
 /markdown4k/out/
-/markdown4k/sample_project/.gradle
-/markdown4k/sample_project/build
+/markdown4k/sample_project/.gradle/
+/markdown4k/sample_project/build/
+/markdown4k/sample_project/out/
 /release4k/build/
 /release4k/out/
 /swing4k/build/
@@ -32,5 +37,3 @@
 /web4k/out/
 /wiremock4k/build/
 /wiremock4k/out/
-/.gradle/**
-/.idea/

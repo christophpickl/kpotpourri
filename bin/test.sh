@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-echo "./gradlew clean test"
 
-./gradlew clean test
-RESULT_CODE=$?
+source bin/includes.sh
 
-if [[ ${RESULT_CODE} -eq 0 ]]; then
-    echo "[KPOT] tests SUCCESS."
-else
-    echo "[KPOT] tests FAILED."
-fi
+safeEval "./gradlew clean test"
+
+SUCESS_MESSAGE="Test build finished successfully ✅"
+echo ${SUCESS_MESSAGE}
+osascript -e "display notification \"${SUCESS_MESSAGE}\" with title \"KPotPourri Test\""

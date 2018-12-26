@@ -13,7 +13,6 @@ import com.github.christophpickl.kpotpourri.http4k.ServerConfig
 import com.github.christophpickl.kpotpourri.release4k.Release4k
 import com.github.christophpickl.kpotpourri.release4k.Release4kException
 import com.github.christophpickl.kpotpourri.release4k.Version
-import com.google.common.annotations.VisibleForTesting
 import java.io.File
 
 /**
@@ -31,7 +30,7 @@ import java.io.File
     override val gitCheckoutDirectory = File(release4kDirectory, "git_checkout")
 
     private var github: GithubApi? = null
-    @VisibleForTesting internal val _github: GithubApi? get() = github
+    internal val _github: GithubApi? get() = github
 
     init {
         log.debug { "workingDirectory: ${workingDirectory.canonicalPath}" }

@@ -1,8 +1,5 @@
 package com.github.christophpickl.kpotpourri.common.string
 
-import com.google.common.io.Files
-import java.io.File
-
 
 /**
  * Returns `null` if `isEmpty()` evaluates to true.
@@ -43,13 +40,6 @@ fun String.removePreAndSuffix(search: String) =
  */
 fun String.htmlize() =
         "<html>" + this.replace("\n", "<br/>") + "</html>"
-
-/**
- * Save the string to the given file using Guava. No validation at all.
- */
-fun String.saveToFile(target: File) {
-    Files.asCharSink(target, Charsets.UTF_8).write(this)
-}
 
 /**
  * Synonym for concatUrlParts().

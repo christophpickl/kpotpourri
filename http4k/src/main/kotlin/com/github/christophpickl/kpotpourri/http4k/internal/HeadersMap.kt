@@ -2,7 +2,6 @@ package com.github.christophpickl.kpotpourri.http4k.internal
 
 import com.github.christophpickl.kpotpourri.common.collection.KeyIgnoringCaseMap
 import com.github.christophpickl.kpotpourri.common.collection.MapAddable
-import com.google.common.annotations.VisibleForTesting
 
 /**
  * Abstraction of a regular [Map] supporting specifics for a HTTP header (e.g. case-insensitive keys).
@@ -14,6 +13,6 @@ class HeadersMap(
 ) : MapAddable<String, String> by _map {
 
     /** Increase readability for tests, but read-only only. */
-    @VisibleForTesting internal val map: Map<String, String> = _map.toImmutableMap()
+    internal val map: Map<String, String> = _map.toImmutableMap()
 
 }

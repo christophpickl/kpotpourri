@@ -6,14 +6,6 @@ import java.io.Closeable
 
 @Test class MiscTest {
 
-    fun `Any println - simple`() {
-        Io.readFromStdOut { "a".println() } shouldMatchValue "a\n"
-    }
-
-    fun `Any println - null`() {
-        Io.readFromStdOut { null.println() } shouldMatchValue "null\n"
-    }
-
     fun `Closeable closeSilently - When thrown, Then nothing thrown`() {
         Closeable { throw Exception() }.closeSilently()
     }

@@ -106,13 +106,6 @@ import java.io.File
         sb.toString() shouldMatchValue "c"
     }
 
-    fun `saveToFile - sunshine`() {
-        val temp = File.createTempFile("temp", ".txt")
-        "some content".saveToFile(temp)
-
-        assertThat(temp.readText(), equalTo("some content"))
-    }
-
     fun `containsAll - sunshine`() {
         "ab".containsAll("a") shouldMatchValue true
         "ab".containsAll("a", "b") shouldMatchValue true

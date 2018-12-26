@@ -3,8 +3,6 @@ package com.github.christophpickl.kpotpourri.release4k.internal
 import com.github.christophpickl.kpotpourri.release4k.Release4kException
 import com.github.christophpickl.kpotpourri.release4k.Version
 import com.github.christophpickl.kpotpourri.release4k.VersionType
-import com.google.common.annotations.VisibleForTesting
-
 
 internal object VersionParser {
 
@@ -17,7 +15,7 @@ internal object VersionParser {
         return buildVersion(onlyInts) ?: throw VersionParseException(inputString)
     }
 
-    @VisibleForTesting internal fun buildVersion(numbers: List<Int>): Version? {
+    internal fun buildVersion(numbers: List<Int>): Version? {
         return when (numbers.size) {
             1 -> Version.VersionParts1(VersionType.Release, numbers[0])
             2 -> Version.VersionParts2(VersionType.Release, numbers[0], numbers[1])
