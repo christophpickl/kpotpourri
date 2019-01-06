@@ -1,4 +1,4 @@
-package com.github.christophpickl.kpotpourri.build
+package com.github.christophpickl.kpotpourri.common.version
 
 import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.DataProvider

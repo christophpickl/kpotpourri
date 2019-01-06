@@ -8,6 +8,8 @@ import com.github.christophpickl.kpotpourri.common.process.ExecuteContext
 import com.github.christophpickl.kpotpourri.common.process.ProcessExecuterImpl
 import com.github.christophpickl.kpotpourri.common.process.StringCapture
 import com.github.christophpickl.kpotpourri.common.string.times
+import com.github.christophpickl.kpotpourri.common.version.Version
+import com.github.christophpickl.kpotpourri.common.version.VersionParser
 import mu.KotlinLogging.logger
 import java.io.File
 import kotlin.reflect.full.companionObjectInstance
