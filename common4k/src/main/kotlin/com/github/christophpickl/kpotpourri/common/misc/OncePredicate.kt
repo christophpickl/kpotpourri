@@ -9,6 +9,8 @@ open class OncePredicate(
 
     private var wasEnabled = false
 
+    val enabled get() = wasEnabled
+    
     /**
      * Evaluate and store result if true.
      */
