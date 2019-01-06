@@ -15,6 +15,7 @@ class GitHub(
      */
     fun createRelease(tagName: String, releaseBody: String): String {
         val url = "https://api.github.com/repos/$repoOwner/$repoName/releases"
+        Out.info("Creating release '$tagName' at: $url")
         return httpRequest(
             url = url,
             method = "POST"
@@ -50,6 +51,8 @@ class GitHub(
         }
 
         val fullUrl = "$uploadUrl?name=${URLEncoder.encode(file.name, Charsets.UTF_8.name())}"
+        Out.info("Uploading release artifact: ${file.canonicalPath}")
+        Out.info("Upload URL: $fullUrl")
         httpRequest(
             url = fullUrl,
             method = "POST"
