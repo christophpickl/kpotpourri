@@ -1,5 +1,10 @@
 package com.github.christophpickl.kpotpourri.build
 
+import com.github.christophpickl.kpotpourri.common.version.Version
+import com.github.christophpickl.kpotpourri.common.version.Version1
+import com.github.christophpickl.kpotpourri.common.version.Version2
+import com.github.christophpickl.kpotpourri.common.version.Version3
+import com.github.christophpickl.kpotpourri.common.version.Version4
 import org.assertj.core.api.Assertions.assertThat
 import org.testng.annotations.Test
 import java.io.File
