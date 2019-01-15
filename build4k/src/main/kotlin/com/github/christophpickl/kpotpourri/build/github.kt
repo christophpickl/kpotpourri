@@ -28,7 +28,7 @@ class GitHub(
                         {
                           "tag_name": "$tagName",
                           "name": "$tagName",
-                          "body": "${releaseBody.replace("\"", "\\\"")}",
+                          "body": "${releaseBody.replace("\"", "\\\"").replace("\n", "<br/>")}",
                           "target_commitish": "master",
                           "draft": false,
                           "prerelease": false
