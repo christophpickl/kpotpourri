@@ -9,16 +9,11 @@ repositories {
 dependencies {
     compile project(':common4k')
 
-    // unfortunately this got a dependency on kotlin-compiler:1.1-SNAPSHOT which got the runtime library bundled into it :-/
-    compile("org.jetbrains.kotlin:kotlin-jsr223-local-example:$version_kotlin_script") {
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-runtime'
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-compiler'
-        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-script-util'
-    }
-    compile "org.jetbrains.kotlin:kotlin-script-runtime:$version_kotlin"
-    compile "org.jetbrains.kotlin:kotlin-compiler:$version_kotlin"
+    compile "org.jetbrains.kotlin:kotlin-compiler-embeddable:$version_kotlin"
     compile "org.jetbrains.kotlin:kotlin-script-util:$version_kotlin"
+    compile "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:$version_kotlin"
 
+    compile "com.google.guava:guava:28.1-jre"
     testCompile "junit:junit:" + version_junit
 
     testRuntime project(':boot-aop4k')

@@ -13,7 +13,7 @@ import javax.script.ScriptException
 internal object Kompiler {
 
     private val log = logger {}
-    private val kotlinEngineExtension = "kts"
+    private const val kotlinEngineExtension = "kts"
 
     internal fun kompile(code: String): InternalKompilationResult {
         log.trace { "Compiling Kotlin code:\n>>>\n$code\n<<<" }
